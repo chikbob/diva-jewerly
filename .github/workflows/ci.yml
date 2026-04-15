@@ -53,6 +53,10 @@ jobs:
           php artisan key:generate
           php artisan migrate --force
 
+      - name: Validate operational scripts
+        run: |
+          bash -n scripts/*.sh
+
       - name: Verify health routes are registered
         run: |
           php artisan route:list --path=live > /dev/null

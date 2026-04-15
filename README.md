@@ -16,6 +16,7 @@ Laravel 10 + Inertia.js + Vue 3 application for a jewelry storefront with:
 - MySQL 8 for local development
 - SQLite in-memory for automated tests
 - MoonShine for back-office management
+- Redis for cache and queue workers in Docker runtime
 
 ## Local Development
 
@@ -43,6 +44,11 @@ docker compose up --build
 - run migrations
 - publish MoonShine assets when they are missing
 
+4. Background services started by Docker:
+
+- `redis` for cache and queue transport
+- `queue` worker for asynchronous jobs and failed-job capture
+
 ## Test Commands
 
 Run the backend test suite inside Docker:
@@ -63,6 +69,19 @@ Run HTTP smoke checks against a running environment:
 ./scripts/smoke-check.sh http://localhost
 ```
 
+Create a compressed database backup:
+
+```bash
+DB_HOST=127.0.0.1 DB_PORT=3306 DB_DATABASE=diva_jewelry DB_USERNAME=root DB_PASSWORD=root \
+./scripts/backup-database.sh
+```
+
+Create a storage backup:
+
+```bash
+./scripts/backup-storage.sh
+```
+
 ## Security Notes
 
 - checkout no longer stores raw card numbers
@@ -73,6 +92,7 @@ Run HTTP smoke checks against a running environment:
 - every HTTP response now includes an `X-Request-Id` header for request correlation
 - container logging uses JSON on `stderr` by default for production-friendly aggregation
 - audit logs now cover auth, checkout and privileged admin access events with structured context
+- Docker runtime now uses Redis-backed cache and queue profiles instead of file/sync defaults
 
 ## Project Structure
 
@@ -85,6 +105,7 @@ Run HTTP smoke checks against a running environment:
 - `database/migrations` schema changes
 - `tests` feature and unit tests
 - `docs/operations.md` release, backup, recovery and environment runbook
+- `scripts` operational smoke-check, backup and restore helpers
 
 ## CI
 
