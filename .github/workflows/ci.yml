@@ -41,10 +41,40 @@ jobs:
       - name: Prepare environment
         run: |
           cp .env.example .env
+          cat <<EOF >> .env
+          APP_ENV=ci
+          APP_DEBUG=false
+          DB_CONNECTION=sqlite
+          DB_DATABASE=${GITHUB_WORKSPACE}/database/database.sqlite
+          CACHE_DRIVER=file
+          SESSION_DRIVER=file
+          EOF
+          touch database/database.sqlite
           php artisan key:generate
+          php artisan migrate --force
+
+      - name: Verify health routes are registered
+        run: |
+          php artisan route:list --path=live > /dev/null
+          php artisan route:list --path=ready > /dev/null
 
       - name: Build frontend
         run: npm run build
+
+      - name: Smoke-check live HTTP endpoints
+        run: |
+          php artisan serve --host=127.0.0.1 --port=8000 > /tmp/laravel-serve.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill $SERVER_PID' EXIT
+          for attempt in $(seq 1 20); do
+            if curl -fsS http://127.0.0.1:8000/live > /dev/null; then
+              break
+            fi
+            sleep 1
+          done
+          ./scripts/smoke-check.sh http://127.0.0.1:8000
+          kill $SERVER_PID
+          wait $SERVER_PID || true
 
       - name: Run tests
         env:

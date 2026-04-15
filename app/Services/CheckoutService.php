@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\CartItem;
 use App\Models\Order;
 use App\Models\User;
+use App\Support\AuditLogger;
 use App\Support\CartCounter;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -46,6 +47,14 @@ class CheckoutService
                 ->where('user_id', $user->id)
                 ->delete();
             CartCounter::forgetForUserId($user->id);
+            AuditLogger::info('checkout.order.created', [
+                'auth_user_id' => $user->getAuthIdentifier(),
+                'order_id' => $order->getKey(),
+                'item_count' => $items->sum('quantity'),
+                'total' => $order->total,
+                'payment_method' => $order->payment_method,
+                'payment_reference' => $order->payment_reference,
+            ]);
 
             return $order->load('items.product');
         });

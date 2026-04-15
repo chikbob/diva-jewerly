@@ -11,6 +11,7 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use MoonShine\Models\MoonshineUser;
 use MoonShine\Models\MoonshineUserRole;
 use Tests\TestCase;
@@ -21,6 +22,8 @@ class AdminSecurityTest extends TestCase
 
     public function test_non_super_moonshine_users_cannot_access_admin_panel(): void
     {
+        Log::spy();
+
         $role = MoonshineUserRole::query()->create([
             'name' => 'Support',
         ]);
@@ -35,6 +38,11 @@ class AdminSecurityTest extends TestCase
         $response = $this->actingAs($user, 'moonshine')->get('/admin');
 
         $response->assertForbidden();
+        Log::shouldHaveReceived('warning')->withArgs(
+            fn (string $message, array $context): bool => $message === 'admin.access.denied'
+                && $context['moonshine_user_id'] === $user->getAuthIdentifier()
+                && $context['admin_path'] === 'admin'
+        )->once();
     }
 
     public function test_admin_policies_keep_orders_and_carts_read_only(): void

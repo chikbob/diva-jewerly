@@ -12,6 +12,10 @@ trait CreatesApplication
      */
     public function createApplication(): Application
     {
+        putenv('LOG_CHANNEL=stack');
+        $_ENV['LOG_CHANNEL'] = 'stack';
+        $_SERVER['LOG_CHANNEL'] = 'stack';
+
         $app = require __DIR__.'/../bootstrap/app.php';
 
         $app->make(Kernel::class)->bootstrap();

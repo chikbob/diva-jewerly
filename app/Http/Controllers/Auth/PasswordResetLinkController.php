@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Support\AuditLogger;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
@@ -41,6 +42,10 @@ class PasswordResetLinkController extends Controller
         );
 
         if ($status == Password::RESET_LINK_SENT) {
+            AuditLogger::info('auth.password.reset_link_requested', [
+                'email_hash' => AuditLogger::hashIdentifier((string) $request->input('email')),
+            ]);
+
             return back()->with('status', __($status));
         }
 

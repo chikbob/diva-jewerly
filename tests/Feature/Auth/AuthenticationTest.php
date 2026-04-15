@@ -5,6 +5,7 @@ namespace Tests\Feature\Auth;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Log;
 use Tests\TestCase;
 
 class AuthenticationTest extends TestCase
@@ -20,6 +21,8 @@ class AuthenticationTest extends TestCase
 
     public function test_users_can_authenticate_using_the_login_screen(): void
     {
+        Log::spy();
+
         $user = User::factory()->create();
 
         $response = $this->post('/login', [
@@ -29,6 +32,11 @@ class AuthenticationTest extends TestCase
 
         $this->assertAuthenticated();
         $response->assertRedirect(RouteServiceProvider::HOME);
+        Log::shouldHaveReceived('info')->withArgs(
+            fn (string $message, array $context): bool => $message === 'auth.login.succeeded'
+                && $context['auth_user_id'] === $user->getAuthIdentifier()
+                && isset($context['request_id'])
+        )->once();
     }
 
     public function test_users_can_not_authenticate_with_invalid_password(): void

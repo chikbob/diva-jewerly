@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Log;
 use Tests\TestCase;
 
 class CheckoutTest extends TestCase
@@ -15,6 +16,8 @@ class CheckoutTest extends TestCase
 
     public function test_checkout_creates_an_order_without_storing_card_data(): void
     {
+        Log::spy();
+
         $user = User::factory()->create();
         $category = Category::factory()->create();
         $product = Product::factory()->create([
@@ -47,6 +50,11 @@ class CheckoutTest extends TestCase
         ]);
         $this->assertDatabaseCount('order_items', 1);
         $this->assertDatabaseCount('cart_items', 0);
+        Log::shouldHaveReceived('info')->withArgs(
+            fn (string $message, array $context): bool => $message === 'checkout.order.created'
+                && $context['auth_user_id'] === $user->getAuthIdentifier()
+                && $context['item_count'] === 2
+        )->once();
     }
 
     public function test_checkout_rejects_an_empty_cart(): void

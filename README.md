@@ -30,7 +30,9 @@ docker compose up --build
 - storefront: `http://localhost`
 - Vite HMR: `http://localhost:5173`
 - admin: `http://localhost/admin`
-- health: `http://localhost/up`
+- liveness: `http://localhost/live`
+- readiness: `http://localhost/ready`
+- compatibility health alias: `http://localhost/up`
 
 3. The app container will automatically:
 
@@ -55,6 +57,12 @@ Run the frontend production build:
 docker compose run --rm vite npm run build
 ```
 
+Run HTTP smoke checks against a running environment:
+
+```bash
+./scripts/smoke-check.sh http://localhost
+```
+
 ## Security Notes
 
 - checkout no longer stores raw card numbers
@@ -64,6 +72,7 @@ docker compose run --rm vite npm run build
 - CORS and session cookie behavior are now controlled through env variables instead of permissive hard-coded defaults
 - every HTTP response now includes an `X-Request-Id` header for request correlation
 - container logging uses JSON on `stderr` by default for production-friendly aggregation
+- audit logs now cover auth, checkout and privileged admin access events with structured context
 
 ## Project Structure
 
@@ -75,6 +84,7 @@ docker compose run --rm vite npm run build
 - `resources/js` Inertia pages and Vue components
 - `database/migrations` schema changes
 - `tests` feature and unit tests
+- `docs/operations.md` release, backup, recovery and environment runbook
 
 ## CI
 
@@ -84,5 +94,7 @@ GitHub Actions validates:
 - Composer audit
 - frontend dependency install
 - npm audit
+- health routes registration
 - Vite production build
+- live HTTP smoke checks through `php artisan serve`
 - Laravel test suite

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
+use App\Support\AuditLogger;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
@@ -19,6 +20,9 @@ class EmailVerificationNotificationController extends Controller
         }
 
         $request->user()->sendEmailVerificationNotification();
+        AuditLogger::info('auth.email.verification_requested', [
+            'auth_user_id' => $request->user()->getAuthIdentifier(),
+        ]);
 
         return back()->with('status', 'verification-link-sent');
     }
