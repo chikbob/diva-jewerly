@@ -1,0 +1,43 @@
+<template>
+    <page-layout>
+        <div class="min-h-[100dvh] flex items-center justify-center px-4">
+            <div class="w-full max-w-md bg-white p-8 rounded-3xl shadow-lg border border-[#F2DCDC]">
+                <h2 class="text-3xl font-bold text-center text-[#B46D6D] mb-6">Ласкаво просимо!</h2>
+                <form @submit.prevent="submit">
+                    <div class="mb-5">
+                        <label class="block text-sm text-gray-600 mb-2">Пошта
+                        </label>
+                        <input v-model="form.email" type="email"
+                               class="w-full px-4 py-2 border border-[#F2DCDC] rounded-full focus:outline-none focus:ring-2 focus:ring-[#B46D6D] transition"
+                               required/>
+                    </div>
+                    <div class="mb-6">
+                        <label class="block text-sm text-gray-600 mb-2">Пароль</label>
+                        <input v-model="form.password" type="password"
+                               class="w-full px-4 py-2 border border-[#F2DCDC] rounded-full focus:outline-none focus:ring-2 focus:ring-[#B46D6D] transition"
+                               required/>
+                    </div>
+                    <button
+                        class="w-full bg-[#B46D6D] hover:bg-[#a15656] text-white py-2 rounded-full transition duration-200"
+                        :disabled="form.processing">
+                        Увійти
+                    </button>
+                </form>
+            </div>
+        </div>
+    </page-layout>
+</template>
+
+<script setup>
+import {useForm} from '@inertiajs/vue3'
+import PageLayout from '@/Components/page-layout.vue'
+
+const form = useForm({
+    email: '',
+    password: '',
+})
+
+function submit() {
+    form.post('/login')
+}
+</script>
