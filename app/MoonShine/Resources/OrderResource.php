@@ -32,7 +32,9 @@ class OrderResource extends ModelResource
             Text::make('ПІБ', 'full_name')->required(),
             Email::make('Email')->required(),
             Text::make('Спосіб оплати', 'payment_method')->required(),
+            Text::make('Платіжний провайдер', 'payment_provider')->readonly(),
             Text::make('Платіжне посилання', 'payment_reference')->readonly(),
+            Text::make('Статус оплати', 'payment_status')->readonly(),
             Text::make('Статус', 'status'),
             Number::make('Сума', 'total')->min(0)->step(0.01),
         ];
@@ -45,7 +47,9 @@ class OrderResource extends ModelResource
             'full_name' => ['required', 'string'],
             'email' => ['required', 'email'],
             'payment_method' => ['required', 'string'],
+            'payment_provider' => ['nullable', 'string'],
             'payment_reference' => ['nullable', 'string'],
+            'payment_status' => ['nullable', 'string'],
             'status' => ['required', 'string'],
             'total' => ['required', 'numeric', 'min:0'],
         ];

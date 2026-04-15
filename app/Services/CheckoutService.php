@@ -4,7 +4,9 @@ namespace App\Services;
 
 use App\Models\CartItem;
 use App\Models\Order;
+use App\Models\PaymentTransaction;
 use App\Models\User;
+use App\Services\Payments\PaymentManager;
 use App\Support\AuditLogger;
 use App\Support\CartCounter;
 use App\Support\MetricStore;
@@ -16,8 +18,10 @@ use Throwable;
 
 class CheckoutService
 {
-    public function __construct(private readonly MetricStore $metricStore)
-    {
+    public function __construct(
+        private readonly MetricStore $metricStore,
+        private readonly PaymentManager $paymentManager,
+    ) {
     }
 
     public function createOrderFromCart(User $user, array $payload): Order
@@ -34,15 +38,33 @@ class CheckoutService
                     ->get();
 
                 $this->guardAgainstInvalidCart($items);
+                $gateway = $this->paymentManager->gatewayForMethod((string) $payload['payment_method']);
 
                 $order = Order::create([
                     'user_id' => $user->id,
                     'full_name' => $payload['full_name'],
                     'email' => $payload['email'],
                     'payment_method' => $payload['payment_method'],
+                    'payment_provider' => $gateway->key(),
                     'payment_reference' => $this->generatePaymentReference(),
+                    'payment_status' => 'pending',
                     'total' => $items->sum(fn (CartItem $item) => $item->product->price * $item->quantity),
-                    'status' => $payload['payment_method'] === 'cash_on_delivery' ? 'pending' : 'paid',
+                    'status' => 'pending',
+                ]);
+
+                $paymentSnapshot = $gateway->initiate($order);
+
+                PaymentTransaction::query()->create([
+                    'order_id' => $order->id,
+                    'provider' => $paymentSnapshot['provider'],
+                    'payment_method' => $paymentSnapshot['payment_method'],
+                    'reference' => $order->payment_reference,
+                    'provider_reference' => $paymentSnapshot['provider_reference'],
+                    'amount' => $order->total,
+                    'currency' => (string) config('payments.currency', 'UAH'),
+                    'status' => $paymentSnapshot['status'],
+                    'checkout_url' => $paymentSnapshot['checkout_url'],
+                    'provider_payload' => $paymentSnapshot['provider_payload'] ?? [],
                 ]);
 
                 foreach ($items as $item) {
@@ -63,10 +85,12 @@ class CheckoutService
                     'item_count' => $items->sum('quantity'),
                     'total' => $order->total,
                     'payment_method' => $order->payment_method,
+                    'payment_provider' => $order->payment_provider,
                     'payment_reference' => $order->payment_reference,
+                    'payment_status' => $order->payment_status,
                 ]);
 
-                return $order->load('items.product');
+                return $order->load(['items.product', 'paymentTransaction']);
             });
 
             $this->recordCheckoutMetrics('success', $paymentMethod, $startedAt);

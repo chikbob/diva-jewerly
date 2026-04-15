@@ -20,9 +20,11 @@ class OrderFactory extends Factory
             'full_name' => fake()->name(),
             'email' => fake()->safeEmail(),
             'payment_method' => fake()->randomElement(['demo_card', 'cash_on_delivery']),
+            'payment_provider' => fake()->randomElement(['demo_card', 'cash_on_delivery']),
             'payment_reference' => 'DIVA-' . strtoupper(fake()->bothify('############')),
+            'payment_status' => fake()->randomElement(['pending', 'paid', 'failed']),
             'total' => fake()->randomFloat(2, 100, 10000),
-            'status' => fake()->randomElement(['pending', 'paid']),
+            'status' => fake()->randomElement(['pending', 'paid', 'failed']),
         ];
     }
 }

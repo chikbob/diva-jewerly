@@ -16,7 +16,7 @@
                 class="mb-8 rounded-[2rem] border border-[#E7C5C5] bg-white p-5 shadow-sm"
                 @submit.prevent="applyFilters"
             >
-                <div class="grid gap-4 md:grid-cols-2">
+                <div class="grid gap-4 md:grid-cols-3">
                     <label class="flex flex-col gap-2 text-sm font-medium text-[#6D4C4C]">
                         <span>Статус</span>
                         <select
@@ -24,6 +24,18 @@
                             class="rounded-2xl border border-[#E3BEBE] px-4 py-3 focus:border-[#B46D6D] focus:outline-none focus:ring-2 focus:ring-[#E7B7B7]"
                         >
                             <option v-for="option in statusOptions" :key="option.value || 'all'" :value="option.value">
+                                {{ option.label }}
+                            </option>
+                        </select>
+                    </label>
+
+                    <label class="flex flex-col gap-2 text-sm font-medium text-[#6D4C4C]">
+                        <span>Статус оплати</span>
+                        <select
+                            v-model="localFilters.payment_status"
+                            class="rounded-2xl border border-[#E3BEBE] px-4 py-3 focus:border-[#B46D6D] focus:outline-none focus:ring-2 focus:ring-[#E7B7B7]"
+                        >
+                            <option v-for="option in paymentStatusOptions" :key="`payment-${option.value || 'all'}`" :value="option.value">
                                 {{ option.label }}
                             </option>
                         </select>
@@ -84,6 +96,12 @@
                             >
                                 {{ statusLabel(order.status) }}
                             </span>
+                            <span
+                                :class="paymentStatusClass(order.payment_status)"
+                                class="rounded-full px-3 py-1 font-semibold"
+                            >
+                                {{ paymentStatusLabel(order.payment_status) }}
+                            </span>
                         </div>
                     </div>
 
@@ -109,7 +127,16 @@
                     </ul>
 
                     <div class="mt-5 flex flex-col gap-2 text-sm text-[#8D6767] md:flex-row md:items-center md:justify-between">
-                        <span>Payment reference: {{ order.payment_reference }}</span>
+                        <div class="flex flex-wrap items-center gap-3">
+                            <span>Payment reference: {{ order.payment_reference }}</span>
+                            <Link
+                                v-if="order.payment_method === 'demo_card'"
+                                :href="route('payments.show', { paymentReference: order.payment_reference })"
+                                class="text-sm font-semibold text-[#B46D6D] transition hover:text-[#9E5757]"
+                            >
+                                Відкрити payment status
+                            </Link>
+                        </div>
                         <strong class="text-lg text-[#B46D6D]">Разом: {{ formatPrice(order.total) }} ₴</strong>
                     </div>
                 </article>
@@ -120,13 +147,14 @@
 
 <script setup>
 import { ref, watch } from 'vue'
-import { router } from '@inertiajs/vue3'
+import { Link, router } from '@inertiajs/vue3'
 import PageLayout from '@/Components/page-layout.vue'
 
 const props = defineProps({
     orders: Array,
     filters: Object,
     statusOptions: Array,
+    paymentStatusOptions: Array,
     sortOptions: Array,
 })
 
@@ -140,6 +168,7 @@ watch(() => props.filters, (filters) => {
 function buildFilters(filters = {}) {
     return {
         status: filters.status ?? '',
+        payment_status: filters.payment_status ?? '',
         sort: filters.sort ?? 'newest',
     }
 }
@@ -172,6 +201,7 @@ function statusLabel(status) {
     return {
         paid: 'Сплачено',
         pending: 'В очікуванні',
+        failed: 'Помилка',
         cancelled: 'Скасовано',
     }[status] ?? status
 }
@@ -180,7 +210,26 @@ function statusClass(status) {
     return {
         'bg-green-50 text-green-700': status === 'paid',
         'bg-orange-50 text-orange-700': status === 'pending',
+        'bg-red-50 text-red-700': status === 'failed',
         'bg-gray-100 text-gray-600': status === 'cancelled',
+    }
+}
+
+function paymentStatusLabel(status) {
+    return {
+        paid: 'Payment paid',
+        pending: 'Payment pending',
+        failed: 'Payment failed',
+        cancelled: 'Payment cancelled',
+    }[status] ?? status
+}
+
+function paymentStatusClass(status) {
+    return {
+        'bg-emerald-50 text-emerald-700': status === 'paid',
+        'bg-amber-50 text-amber-700': status === 'pending',
+        'bg-rose-50 text-rose-700': status === 'failed',
+        'bg-slate-100 text-slate-600': status === 'cancelled',
     }
 }
 

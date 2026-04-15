@@ -57,7 +57,7 @@
                 <form class="rounded-[2rem] border border-[#E7C5C5] bg-white p-8 shadow-sm" @submit.prevent="submit">
                     <h2 class="text-2xl font-semibold text-[#B46D6D]">Контактні дані</h2>
                     <p class="mt-2 text-sm leading-6 text-[#8D6767]">
-                        Демо-оплата не запитує номер картки. Система зберігає лише спосіб оплати та внутрішній payment reference.
+                        Демо-оплата не запитує номер картки. Після створення замовлення ви перейдете на окремий payment status screen, а система збереже лише технічний transaction state без чутливих карткових даних.
                     </p>
 
                     <div class="mt-8 space-y-6">

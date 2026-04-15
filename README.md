@@ -35,6 +35,7 @@ docker compose up --build
 - readiness: `http://localhost/ready`
 - metrics: `http://localhost/metrics`
 - compatibility health alias: `http://localhost/up`
+- demo payment webhook: `POST http://localhost/api/payments/webhooks/demo_card`
 
 3. The app container will automatically:
 
@@ -74,6 +75,12 @@ Validate runtime metrics after deploy:
 
 ```bash
 ./scripts/metrics-check.sh http://localhost
+```
+
+Reconcile payment state against stored provider transactions:
+
+```bash
+php artisan payments:reconcile
 ```
 
 Render Prometheus and Alertmanager configuration from the current threshold env vars:

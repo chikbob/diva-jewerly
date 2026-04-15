@@ -5,6 +5,7 @@
 - `GET /live`: liveness probe. Confirms the HTTP stack is responsive.
 - `GET /ready`: readiness probe. Confirms the application can talk to the database and cache, and checks failed-job / queue-backlog thresholds.
 - `GET /metrics`: Prometheus-compatible metrics endpoint for runtime visibility, including HTTP/auth/checkout/queue counters and latency histograms.
+- `POST /api/payments/webhooks/demo_card`: signed demo-card webhook endpoint for payment status updates.
 - `GET /up`: legacy compatibility alias for the readiness probe.
 
 Recommended usage:
@@ -13,6 +14,7 @@ Recommended usage:
 - deploy smoke check: `curl -fsS https://example.com/ready`
 - post-release verification: `./scripts/smoke-check.sh https://example.com`
 - metrics verification: `./scripts/metrics-check.sh https://example.com`
+- payment reconciliation: `php artisan payments:reconcile`
 - monitoring config rendering: `./scripts/render-monitoring-config.sh`
 
 Every response includes `X-Request-Id` so probe results can be correlated with structured logs.

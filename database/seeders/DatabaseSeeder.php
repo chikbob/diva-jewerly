@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\PaymentTransaction;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -62,7 +63,10 @@ class DatabaseSeeder extends Seeder
             'full_name' => 'Anton Diva',
             'email' => $user->email,
             'payment_method' => 'demo_card',
+            'payment_provider' => 'demo_card',
             'payment_reference' => 'DIVA-SEED-000001',
+            'payment_status' => 'paid',
+            'paid_at' => now(),
             'total' => 0,
             'status' => 'paid',
         ]);
@@ -82,5 +86,21 @@ class DatabaseSeeder extends Seeder
         }
 
         $order->update(['total' => $total]);
+
+        PaymentTransaction::query()->create([
+            'order_id' => $order->id,
+            'provider' => 'demo_card',
+            'payment_method' => 'demo_card',
+            'reference' => $order->payment_reference,
+            'provider_reference' => 'DEMO-SEED-000001',
+            'amount' => $total,
+            'currency' => 'UAH',
+            'status' => 'paid',
+            'provider_payload' => [
+                'provider_status' => 'paid',
+                'source' => 'database_seeder',
+            ],
+            'paid_at' => now(),
+        ]);
     }
 }

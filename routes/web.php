@@ -7,6 +7,7 @@ use App\Http\Controllers\HealthCheckController;
 use App\Http\Controllers\LivenessCheckController;
 use App\Http\Controllers\MetricsController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -31,6 +32,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
     Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
+
+    Route::get('/payments/{paymentReference}', [PaymentController::class, 'show'])->name('payments.show');
+    Route::post('/payments/{paymentReference}/simulate/{status}', [PaymentController::class, 'simulate'])->name('payments.simulate');
 });
 
 // Главная страница - отображаем категории

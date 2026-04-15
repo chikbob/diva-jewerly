@@ -14,9 +14,19 @@ class Order extends Model
         'full_name',
         'email',
         'payment_method',
+        'payment_provider',
         'payment_reference',
+        'payment_status',
+        'paid_at',
+        'payment_reconciled_at',
         'total',
         'status',
+    ];
+
+    protected $casts = [
+        'total' => 'decimal:2',
+        'paid_at' => 'datetime',
+        'payment_reconciled_at' => 'datetime',
     ];
 
     public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -27,6 +37,11 @@ class Order extends Model
     public function items(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(OrderItem::class);
+    }
+
+    public function paymentTransaction(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(PaymentTransaction::class);
     }
 
 }

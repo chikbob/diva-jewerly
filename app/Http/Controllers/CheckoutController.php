@@ -27,7 +27,13 @@ class CheckoutController extends Controller
 
     public function store(CheckoutStoreRequest $request): \Illuminate\Http\RedirectResponse
     {
-        $this->checkoutService->createOrderFromCart($request->user(), $request->validated());
+        $order = $this->checkoutService->createOrderFromCart($request->user(), $request->validated());
+
+        if ($order->payment_provider === 'demo_card') {
+            return redirect()
+                ->route('payments.show', ['paymentReference' => $order->payment_reference])
+                ->with('message', 'Order created. Confirm the demo payment to complete the checkout flow.');
+        }
 
         return redirect('/')
             ->with('message', 'Order placed successfully. Payment details were processed without storing card data.');

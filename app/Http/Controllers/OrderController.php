@@ -12,16 +12,21 @@ class OrderController extends Controller
     public function index(Request $request): \Inertia\Response
     {
         $filters = $request->validate([
-            'status' => ['nullable', 'in:pending,paid,cancelled'],
+            'status' => ['nullable', 'in:pending,paid,failed,cancelled'],
+            'payment_status' => ['nullable', 'in:pending,paid,failed,cancelled'],
             'sort' => ['nullable', 'in:newest,oldest,total_asc,total_desc'],
         ]);
 
         $query = Order::query()
-            ->with(['items.product'])
+            ->with(['items.product', 'paymentTransaction'])
             ->where('user_id', Auth::id())
             ->when(
                 ! empty($filters['status']),
                 static fn ($builder) => $builder->where('status', $filters['status'])
+            )
+            ->when(
+                ! empty($filters['payment_status']),
+                static fn ($builder) => $builder->where('payment_status', $filters['payment_status'])
             );
 
         match ($filters['sort'] ?? 'newest') {
@@ -40,7 +45,15 @@ class OrderController extends Controller
                 ['value' => '', 'label' => 'Усі статуси'],
                 ['value' => 'pending', 'label' => 'В очікуванні'],
                 ['value' => 'paid', 'label' => 'Сплачено'],
+                ['value' => 'failed', 'label' => 'Помилка оплати'],
                 ['value' => 'cancelled', 'label' => 'Скасовано'],
+            ],
+            'paymentStatusOptions' => [
+                ['value' => '', 'label' => 'Будь-який payment status'],
+                ['value' => 'pending', 'label' => 'Payment pending'],
+                ['value' => 'paid', 'label' => 'Payment paid'],
+                ['value' => 'failed', 'label' => 'Payment failed'],
+                ['value' => 'cancelled', 'label' => 'Payment cancelled'],
             ],
             'sortOptions' => [
                 ['value' => 'newest', 'label' => 'Спочатку нові'],
