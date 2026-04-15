@@ -3,21 +3,21 @@
 namespace App\Policies;
 
 use App\Models\CartItem;
-use App\Policies\Concerns\ChecksMoonShineSuperUser;
+use App\Policies\Concerns\ChecksBackofficePermissions;
 use MoonShine\Models\MoonshineUser;
 
 class CartItemPolicy
 {
-    use ChecksMoonShineSuperUser;
+    use ChecksBackofficePermissions;
 
     public function viewAny(MoonshineUser $user): bool
     {
-        return $this->canManage($user);
+        return $this->canAccessDomain($user, 'operations', 'viewAny', true);
     }
 
     public function view(MoonshineUser $user, CartItem $cartItem): bool
     {
-        return $this->canManage($user);
+        return $this->canAccessDomain($user, 'operations', 'view', true);
     }
 
     public function create(MoonshineUser $user): bool

@@ -3,18 +3,24 @@
 namespace App\Http\Middleware;
 
 use App\Support\AuditLogger;
+use App\Support\BackofficeAccess;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
-class EnsureMoonShineSuperUser
+class EnsureMoonShineStaffAccess
 {
+    public function __construct(
+        private readonly BackofficeAccess $backofficeAccess,
+    ) {
+    }
+
     public function handle(Request $request, Closure $next): Response
     {
         $user = Auth::guard(config('moonshine.auth.guard', 'moonshine'))->user();
 
-        if ($user !== null && ! $user->isSuperUser()) {
+        if ($user !== null && ! $this->backofficeAccess->canAccessPanel($user)) {
             AuditLogger::warning('admin.access.denied', [
                 'admin_path' => $request->path(),
                 'admin_method' => $request->method(),

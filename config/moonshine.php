@@ -2,7 +2,7 @@
 
 use MoonShine\Exceptions\MoonShineNotFoundException;
 use MoonShine\Forms\LoginForm;
-use App\Http\Middleware\EnsureMoonShineSuperUser;
+use App\Http\Middleware\EnsureMoonShineStaffAccess;
 use MoonShine\Http\Middleware\Authenticate;
 use MoonShine\Http\Middleware\SecurityHeadersMiddleware;
 use MoonShine\Models\MoonshineUser;
@@ -24,7 +24,7 @@ return [
         'index' => 'moonshine.index',
         'middlewares' => [
             SecurityHeadersMiddleware::class,
-            EnsureMoonShineSuperUser::class,
+            EnsureMoonShineStaffAccess::class,
         ],
         'notFoundHandler' => MoonShineNotFoundException::class,
     ],
