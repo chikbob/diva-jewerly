@@ -21,6 +21,9 @@ class OperationalProfileTest extends TestCase
     {
         $scripts = [
             'scripts/smoke-check.sh',
+            'scripts/metrics-check.sh',
+            'scripts/post-deploy.sh',
+            'scripts/render-monitoring-config.sh',
             'scripts/backup-database.sh',
             'scripts/backup-storage.sh',
             'scripts/restore-database.sh',

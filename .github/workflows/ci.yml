@@ -56,6 +56,7 @@ jobs:
       - name: Validate operational scripts
         run: |
           bash -n scripts/*.sh
+          ./scripts/render-monitoring-config.sh deploy/monitoring/generated
 
       - name: Verify health routes are registered
         run: |

@@ -1,0 +1,42 @@
+name: Post-Deploy Checks
+
+on:
+  workflow_dispatch:
+    inputs:
+      base_url:
+        description: Base URL of the deployed application
+        required: true
+        type: string
+      metrics_token:
+        description: Optional bearer token for the /metrics endpoint
+        required: false
+        type: string
+  workflow_call:
+    inputs:
+      base_url:
+        required: true
+        type: string
+      metrics_token:
+        required: false
+        type: string
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate operational scripts
+        run: bash -n scripts/*.sh
+
+      - name: Run post-deploy HTTP checks
+        env:
+          BASE_URL: ${{ inputs.base_url || github.event.inputs.base_url }}
+          METRICS_TOKEN: ${{ inputs.metrics_token || github.event.inputs.metrics_token }}
+        run: |
+          ./scripts/smoke-check.sh "${BASE_URL}"
+          ./scripts/metrics-check.sh "${BASE_URL}"
+
+      - name: Render monitoring configuration
+        run: ./scripts/render-monitoring-config.sh deploy/monitoring/generated

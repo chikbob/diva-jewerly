@@ -76,6 +76,12 @@ Validate runtime metrics after deploy:
 ./scripts/metrics-check.sh http://localhost
 ```
 
+Render Prometheus and Alertmanager configuration from the current threshold env vars:
+
+```bash
+./scripts/render-monitoring-config.sh
+```
+
 Create a compressed database backup:
 
 ```bash
@@ -108,6 +114,8 @@ POST_DEPLOY_DB_BACKUP=1 POST_DEPLOY_STORAGE_BACKUP=1 \
 - audit logs now cover auth, checkout and privileged admin access events with structured context
 - Docker runtime now uses Redis-backed cache and queue profiles instead of file/sync defaults
 - readiness now degrades on failed-jobs and queue-backlog thresholds, and `/metrics` exposes Prometheus-compatible operational signals
+- `/metrics` now also exports HTTP/auth/checkout/queue counters and latency histograms for production monitoring
+- generated Prometheus rules and Alertmanager routing can be rendered from local env vars with `scripts/render-monitoring-config.sh`
 
 ## Project Structure
 
@@ -121,6 +129,7 @@ POST_DEPLOY_DB_BACKUP=1 POST_DEPLOY_STORAGE_BACKUP=1 \
 - `tests` feature and unit tests
 - `docs/operations.md` release, backup, recovery and environment runbook
 - `scripts` operational smoke-check, backup and restore helpers
+- `.github/workflows/post-deploy-checks.yml` reusable post-deploy smoke/metrics verification workflow
 - `config/operations.php` metrics token and alert threshold configuration
 
 ## CI
@@ -136,4 +145,5 @@ GitHub Actions validates:
 - Vite production build
 - live HTTP smoke checks through `php artisan serve`
 - runtime metrics checks through `/metrics`
+- monitoring rule rendering
 - Laravel test suite

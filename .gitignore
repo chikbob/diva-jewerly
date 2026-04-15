@@ -4,6 +4,7 @@
 /public/hot
 /public/storage
 /public/vendor/moonshine
+/deploy/monitoring/generated
 /backups
 /storage/*.key
 /vendor

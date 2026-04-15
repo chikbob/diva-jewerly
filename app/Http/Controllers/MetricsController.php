@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Support\MetricStore;
 use App\Support\OperationalStatus;
 use Illuminate\Http\Response;
 
 class MetricsController extends Controller
 {
-    public function __construct(private readonly OperationalStatus $operationalStatus)
+    public function __construct(
+        private readonly OperationalStatus $operationalStatus,
+        private readonly MetricStore $metricStore
+    )
     {
     }
 
@@ -85,8 +89,172 @@ class MetricsController extends Controller
             $lines[] = sprintf('%s_operational_signal_status{signal="none"} 0', $namespace);
         }
 
+        $lines = array_merge($lines, $this->renderRuntimeMetrics($namespace));
+        $lines = array_merge($lines, $this->renderSloAndAlertMetadata($namespace));
+
         return response(implode("\n", $lines) . "\n", Response::HTTP_OK, [
             'Content-Type' => 'text/plain; version=0.0.4; charset=utf-8',
         ]);
+    }
+
+    private function renderRuntimeMetrics(string $namespace): array
+    {
+        $lines = [];
+
+        foreach (collect($this->metricStore->snapshot())->groupBy('name') as $series) {
+            $firstMetric = $series->first();
+            $metricName = sprintf('%s_%s', $namespace, $firstMetric['name']);
+
+            $lines[] = sprintf('# HELP %s %s', $metricName, $firstMetric['help']);
+            $lines[] = sprintf('# TYPE %s %s', $metricName, $firstMetric['type']);
+
+            foreach ($series as $metric) {
+                if (($metric['type'] ?? null) === 'histogram') {
+                    foreach ($metric['buckets'] as $bucket) {
+                        $labels = array_merge($metric['labels'], ['le' => $this->formatNumeric($bucket['le'])]);
+                        $lines[] = sprintf(
+                            '%s%s %s',
+                            $metricName . '_bucket',
+                            $this->formatLabels($labels),
+                            $this->formatNumeric($bucket['value'])
+                        );
+                    }
+
+                    $lines[] = sprintf(
+                        '%s%s %s',
+                        $metricName . '_bucket',
+                        $this->formatLabels(array_merge($metric['labels'], ['le' => '+Inf'])),
+                        $this->formatNumeric($metric['count'])
+                    );
+                    $lines[] = sprintf(
+                        '%s_sum%s %s',
+                        $metricName,
+                        $this->formatLabels($metric['labels']),
+                        $this->formatNumeric($metric['sum'])
+                    );
+                    $lines[] = sprintf(
+                        '%s_count%s %s',
+                        $metricName,
+                        $this->formatLabels($metric['labels']),
+                        $this->formatNumeric($metric['count'])
+                    );
+
+                    continue;
+                }
+
+                $lines[] = sprintf(
+                    '%s%s %s',
+                    $metricName,
+                    $this->formatLabels($metric['labels'] ?? []),
+                    $this->formatNumeric($metric['value'] ?? 0)
+                );
+            }
+        }
+
+        return $lines;
+    }
+
+    private function renderSloAndAlertMetadata(string $namespace): array
+    {
+        $lines = [
+            "# HELP {$namespace}_slo_target_ratio Declared SLO target ratios.",
+            "# TYPE {$namespace}_slo_target_ratio gauge",
+            sprintf(
+                '%s_slo_target_ratio{service="platform",objective="availability"} %s',
+                $namespace,
+                $this->formatNumeric(((float) config('operations.slo.availability', 99.9)) / 100)
+            ),
+            sprintf(
+                '%s_slo_target_ratio{service="checkout",objective="success_rate"} %s',
+                $namespace,
+                $this->formatNumeric(((float) config('operations.slo.checkout_success_rate', 99)) / 100)
+            ),
+            sprintf(
+                '%s_slo_target_ratio{service="auth",objective="login_success_rate"} %s',
+                $namespace,
+                $this->formatNumeric(((float) config('operations.slo.login_success_rate', 95)) / 100)
+            ),
+            "# HELP {$namespace}_slo_target_seconds Declared SLO latency targets in seconds.",
+            "# TYPE {$namespace}_slo_target_seconds gauge",
+            sprintf(
+                '%s_slo_target_seconds{service="http",objective="p95_latency"} %s',
+                $namespace,
+                $this->formatNumeric(config('operations.slo.http_p95_seconds', 0.5))
+            ),
+            sprintf(
+                '%s_slo_target_seconds{service="queue",objective="p95_runtime"} %s',
+                $namespace,
+                $this->formatNumeric(config('operations.slo.queue_job_p95_seconds', 15))
+            ),
+            "# HELP {$namespace}_alert_threshold_ratio Configured alert thresholds expressed as ratios.",
+            "# TYPE {$namespace}_alert_threshold_ratio gauge",
+            sprintf(
+                '%s_alert_threshold_ratio{signal="checkout_error_rate"} %s',
+                $namespace,
+                $this->formatNumeric(config('operations.alerts.checkout_error_rate_threshold', 0.1))
+            ),
+            sprintf(
+                '%s_alert_threshold_ratio{signal="login_failure_rate"} %s',
+                $namespace,
+                $this->formatNumeric(config('operations.alerts.login_failure_rate_threshold', 0.25))
+            ),
+            "# HELP {$namespace}_alert_threshold_seconds Configured alert thresholds expressed as seconds.",
+            "# TYPE {$namespace}_alert_threshold_seconds gauge",
+            sprintf(
+                '%s_alert_threshold_seconds{signal="http_request_p95"} %s',
+                $namespace,
+                $this->formatNumeric(config('operations.alerts.http_p95_seconds_threshold', 0.75))
+            ),
+            sprintf(
+                '%s_alert_threshold_seconds{signal="queue_job_p95"} %s',
+                $namespace,
+                $this->formatNumeric(config('operations.alerts.queue_job_p95_seconds_threshold', 30))
+            ),
+            "# HELP {$namespace}_alert_route_info Configured alert routing labels.",
+            "# TYPE {$namespace}_alert_route_info gauge",
+            sprintf(
+                '%s_alert_route_info{severity="default",receiver="%s"} 1',
+                $namespace,
+                config('operations.alerting.default_receiver', 'platform-default')
+            ),
+            sprintf(
+                '%s_alert_route_info{severity="warning",receiver="%s"} 1',
+                $namespace,
+                config('operations.alerting.warning_receiver', 'platform-warning')
+            ),
+            sprintf(
+                '%s_alert_route_info{severity="critical",receiver="%s"} 1',
+                $namespace,
+                config('operations.alerting.critical_receiver', 'platform-critical')
+            ),
+        ];
+
+        return $lines;
+    }
+
+    private function formatLabels(array $labels): string
+    {
+        if ($labels === []) {
+            return '';
+        }
+
+        $pairs = [];
+
+        foreach ($labels as $key => $value) {
+            $pairs[] = sprintf('%s="%s"', $key, addcslashes((string) $value, "\\\"\n"));
+        }
+
+        return sprintf('{%s}', implode(',', $pairs));
+    }
+
+    private function formatNumeric(int|float|string $value): string
+    {
+        if (is_int($value)) {
+            return (string) $value;
+        }
+
+        $number = is_float($value) ? $value : (float) $value;
+
+        return rtrim(rtrim(sprintf('%.6F', $number), '0'), '.');
     }
 }
