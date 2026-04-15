@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\HealthCheckController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
@@ -31,6 +32,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 // Главная страница - отображаем категории
 Route::get('/', [ProductController::class, 'home'])->name('home');
+Route::get('/up', HealthCheckController::class)->name('health.up');
 
 Route::get('/contacts', function () {
     return Inertia::render('Contacts/Index');

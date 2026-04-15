@@ -1,6 +1,6 @@
 FROM php:8.1-fpm-bookworm
 
-ARG NODE_MAJOR=20
+ARG NODE_MAJOR=22
 
 WORKDIR /var/www/html
 

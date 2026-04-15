@@ -30,6 +30,7 @@ docker compose up --build
 - storefront: `http://localhost`
 - Vite HMR: `http://localhost:5173`
 - admin: `http://localhost/admin`
+- health: `http://localhost/up`
 
 3. The app container will automatically:
 
@@ -61,6 +62,8 @@ docker compose run --rm vite npm run build
 - password changes use Laravel's dedicated password update flow
 - account deletion requires current password confirmation
 - CORS and session cookie behavior are now controlled through env variables instead of permissive hard-coded defaults
+- every HTTP response now includes an `X-Request-Id` header for request correlation
+- container logging uses JSON on `stderr` by default for production-friendly aggregation
 
 ## Project Structure
 
@@ -78,6 +81,8 @@ docker compose run --rm vite npm run build
 GitHub Actions validates:
 
 - Composer install
+- Composer audit
 - frontend dependency install
+- npm audit
 - Vite production build
 - Laravel test suite
