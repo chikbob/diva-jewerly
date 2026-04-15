@@ -33,6 +33,7 @@ docker compose up --build
 - admin: `http://localhost/admin`
 - liveness: `http://localhost/live`
 - readiness: `http://localhost/ready`
+- metrics: `http://localhost/metrics`
 - compatibility health alias: `http://localhost/up`
 
 3. The app container will automatically:
@@ -69,6 +70,12 @@ Run HTTP smoke checks against a running environment:
 ./scripts/smoke-check.sh http://localhost
 ```
 
+Validate runtime metrics after deploy:
+
+```bash
+./scripts/metrics-check.sh http://localhost
+```
+
 Create a compressed database backup:
 
 ```bash
@@ -82,6 +89,13 @@ Create a storage backup:
 ./scripts/backup-storage.sh
 ```
 
+Run post-deploy automation on the target host:
+
+```bash
+POST_DEPLOY_DB_BACKUP=1 POST_DEPLOY_STORAGE_BACKUP=1 \
+./scripts/post-deploy.sh https://your-domain
+```
+
 ## Security Notes
 
 - checkout no longer stores raw card numbers
@@ -93,6 +107,7 @@ Create a storage backup:
 - container logging uses JSON on `stderr` by default for production-friendly aggregation
 - audit logs now cover auth, checkout and privileged admin access events with structured context
 - Docker runtime now uses Redis-backed cache and queue profiles instead of file/sync defaults
+- readiness now degrades on failed-jobs and queue-backlog thresholds, and `/metrics` exposes Prometheus-compatible operational signals
 
 ## Project Structure
 
@@ -106,6 +121,7 @@ Create a storage backup:
 - `tests` feature and unit tests
 - `docs/operations.md` release, backup, recovery and environment runbook
 - `scripts` operational smoke-check, backup and restore helpers
+- `config/operations.php` metrics token and alert threshold configuration
 
 ## CI
 
@@ -116,6 +132,8 @@ GitHub Actions validates:
 - frontend dependency install
 - npm audit
 - health routes registration
+- metrics route registration
 - Vite production build
 - live HTTP smoke checks through `php artisan serve`
+- runtime metrics checks through `/metrics`
 - Laravel test suite

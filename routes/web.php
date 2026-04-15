@@ -5,6 +5,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\HealthCheckController;
 use App\Http\Controllers\LivenessCheckController;
+use App\Http\Controllers\MetricsController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
@@ -36,6 +37,9 @@ Route::get('/', [ProductController::class, 'home'])->name('home');
 Route::get('/live', LivenessCheckController::class)->name('health.live');
 Route::get('/ready', HealthCheckController::class)->name('health.ready');
 Route::get('/up', HealthCheckController::class)->name('health.up');
+Route::get('/metrics', MetricsController::class)
+    ->middleware(\App\Http\Middleware\EnsureMetricsToken::class)
+    ->name('metrics.index');
 
 Route::get('/contacts', function () {
     return Inertia::render('Contacts/Index');

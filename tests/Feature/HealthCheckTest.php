@@ -29,7 +29,9 @@ class HealthCheckTest extends TestCase
             ->assertHeader('X-Request-Id')
             ->assertJsonPath('status', 'ok')
             ->assertJsonPath('checks.database.ok', true)
-            ->assertJsonPath('checks.cache.ok', true);
+            ->assertJsonPath('checks.cache.ok', true)
+            ->assertJsonPath('checks.failed_jobs.ok', true)
+            ->assertJsonPath('checks.queue_backlog.ok', true);
     }
 
     public function test_incoming_request_id_is_preserved(): void
@@ -51,6 +53,8 @@ class HealthCheckTest extends TestCase
         $response
             ->assertOk()
             ->assertJsonPath('checks.database.ok', true)
-            ->assertJsonPath('checks.cache.ok', true);
+            ->assertJsonPath('checks.cache.ok', true)
+            ->assertJsonPath('checks.failed_jobs.ok', true)
+            ->assertJsonPath('checks.queue_backlog.ok', true);
     }
 }
