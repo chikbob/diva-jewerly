@@ -26,6 +26,7 @@ use Inertia\Inertia;
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
     Route::post('/cart/remove', [CartController::class, 'remove'])->name('cart.remove');
+    Route::patch('/cart/quantity', [CartController::class, 'update'])->name('cart.update');
     Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
 
     Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');

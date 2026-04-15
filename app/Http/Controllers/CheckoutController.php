@@ -16,7 +16,13 @@ class CheckoutController extends Controller
     public function index(): \Inertia\Response
     {
         $items = CartItem::with('product')->where('user_id', auth()->id())->get();
-        return Inertia::render('Checkout/Index', ['items' => $items]);
+        return Inertia::render('Checkout/Index', [
+            'items' => $items,
+            'defaults' => [
+                'full_name' => auth()->user()?->name ?? '',
+                'email' => auth()->user()?->email ?? '',
+            ],
+        ]);
     }
 
     public function store(CheckoutStoreRequest $request): \Illuminate\Http\RedirectResponse

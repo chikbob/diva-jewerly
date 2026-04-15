@@ -58,12 +58,18 @@
 </template>
 
 <script setup>
-import {computed} from 'vue'
+import {computed, watch} from 'vue'
 import {Link, usePage} from '@inertiajs/vue3'
+import {useCartUi} from '@/composables/useCartUi'
 
 import {HomeIcon, PhoneIcon, UserIcon, ShoppingCartIcon, SparklesIcon, TruckIcon, ArrowRightOnRectangleIcon, UserPlusIcon} from '@heroicons/vue/24/outline'
 
 const page = usePage()
+const {count, sync} = useCartUi()
 const user = computed(() => page.props.auth?.user)
-const cartCount = computed(() => page.props.cartCount || 0)
+const cartCount = computed(() => count.value ?? page.props.cartCount ?? 0)
+
+watch(() => page.props.cartCount ?? 0, (value) => {
+    sync(value)
+}, {immediate: true})
 </script>

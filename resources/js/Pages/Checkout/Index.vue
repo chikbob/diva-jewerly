@@ -1,89 +1,171 @@
 <template>
     <page-layout>
-        <div class="min-h-screen flex flex-col justify-between">
-            <div class="container mx-auto px-6 py-16 max-w-6xl flex-grow">
-                <h1 class="text-4xl font-extrabold tracking-wide text-center mb-12 text-[#B46D6D]">Оформлення замовлення</h1>
+        <section class="container mx-auto max-w-6xl px-6 py-16">
+            <div class="mb-10">
+                <p class="text-xs font-semibold uppercase tracking-[0.35em] text-[#D09A9A]">Secure Checkout</p>
+                <h1 class="mt-2 text-4xl font-extrabold tracking-wide text-[#B46D6D]">Оформлення замовлення</h1>
+            </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
-                    <!-- Товари -->
-                    <div class="border p-8 rounded-xl bg-white shadow-lg max-w-3xl w-full">
-                        <h2 class="text-2xl font-semibold mb-6 text-[#B46D6D]">Ваше замовлення</h2>
-                        <ul class="space-y-6">
-                            <li v-for="item in items" :key="item.id" class="flex items-center justify-between">
-                                <div class="flex items-center space-x-6">
-                                    <img :src="item.product.image_path" alt="Зображення товару"
-                                         class="w-20 h-20 object-cover rounded-md shadow-md">
-                                    <span class="text-lg font-medium">{{ item.product.name }} × {{
-                                            item.quantity
-                                        }}</span>
-                                </div>
-                                <span class="font-semibold text-[#B46D6D] text-lg">{{
-                                        item.quantity * item.product.price
-                                    }} грн</span>
-                            </li>
-                        </ul>
-                        <p class="font-bold mt-6 text-xl text-[#B46D6D]">
-                            Загальна сума: {{ total }} грн
-                        </p>
+            <div v-if="items.length === 0" class="rounded-[2rem] border border-dashed border-[#E7C5C5] bg-[#FFF9F9] px-6 py-16 text-center">
+                <h2 class="text-2xl font-bold text-[#B46D6D]">У кошику ще немає товарів</h2>
+                <p class="mt-3 text-sm text-[#8D6767]">Поверніться до каталогу, щоб додати прикраси та перейти до оплати.</p>
+                <Link
+                    :href="route('catalog')"
+                    class="mt-6 inline-flex rounded-full bg-[#B46D6D] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#9E5757]"
+                >
+                    До каталогу
+                </Link>
+            </div>
+
+            <div v-else class="grid grid-cols-1 gap-10 lg:grid-cols-[1.05fr_0.95fr]">
+                <section class="rounded-[2rem] border border-[#E7C5C5] bg-white p-8 shadow-sm">
+                    <div class="mb-6 flex items-center justify-between">
+                        <h2 class="text-2xl font-semibold text-[#B46D6D]">Ваше замовлення</h2>
+                        <span class="rounded-full bg-[#FFF2F2] px-4 py-2 text-sm font-semibold text-[#A05F5F]">
+                            {{ items.length }} позицій
+                        </span>
                     </div>
 
-                    <!-- Форма -->
-                    <form @submit.prevent="submit" class="space-y-8">
-                        <div class="mb-6">
-                            <label class="block mb-2 text-lg font-semibold">ПІБ</label>
-                            <input v-model="form.full_name" type="text" placeholder="Введіть ваше ПІБ"
-                                   class="w-full border rounded-lg px-6 py-3 shadow-md focus:outline-none focus:ring-2 focus:ring-[#B46D6D]"/>
+                    <ul class="space-y-5">
+                        <li
+                            v-for="item in items"
+                            :key="item.id"
+                            class="flex flex-col gap-4 border-b border-[#F1E1E1] pb-5 sm:flex-row sm:items-center sm:justify-between"
+                        >
+                            <div class="flex items-center gap-4">
+                                <img
+                                    :src="item.product.image_path"
+                                    :alt="`Фото товару ${item.product.name}`"
+                                    class="h-20 w-20 rounded-[1.25rem] object-cover"
+                                />
+                                <div>
+                                    <p class="text-lg font-semibold text-[#6D4C4C]">{{ item.product.name }}</p>
+                                    <p class="mt-1 text-sm text-[#8D6767]">Кількість: {{ item.quantity }}</p>
+                                </div>
+                            </div>
+
+                            <p class="text-lg font-semibold text-[#B46D6D]">{{ formatPrice(item.quantity * item.product.price) }} ₴</p>
+                        </li>
+                    </ul>
+
+                    <div class="mt-6 rounded-[1.5rem] bg-[#FFF8F8] px-5 py-4">
+                        <p class="text-sm uppercase tracking-[0.25em] text-[#C49B9B]">Загальна сума</p>
+                        <p class="mt-2 text-3xl font-extrabold text-[#B46D6D]" aria-live="polite">{{ formatPrice(total) }} ₴</p>
+                    </div>
+                </section>
+
+                <form class="rounded-[2rem] border border-[#E7C5C5] bg-white p-8 shadow-sm" @submit.prevent="submit">
+                    <h2 class="text-2xl font-semibold text-[#B46D6D]">Контактні дані</h2>
+                    <p class="mt-2 text-sm leading-6 text-[#8D6767]">
+                        Демо-оплата не запитує номер картки. Система зберігає лише спосіб оплати та внутрішній payment reference.
+                    </p>
+
+                    <div class="mt-8 space-y-6">
+                        <div>
+                            <label for="checkout-full-name" class="mb-2 block text-sm font-semibold text-[#6D4C4C]">ПІБ</label>
+                            <input
+                                id="checkout-full-name"
+                                v-model="form.full_name"
+                                type="text"
+                                autocomplete="name"
+                                placeholder="Введіть ваше ПІБ"
+                                class="w-full rounded-2xl border px-5 py-3 shadow-sm focus:outline-none focus:ring-2"
+                                :class="fieldClass(form.errors.full_name)"
+                                :aria-invalid="form.errors.full_name ? 'true' : 'false'"
+                            />
                             <p v-if="form.errors.full_name" class="mt-2 text-sm text-red-600">{{ form.errors.full_name }}</p>
                         </div>
 
-                        <div class="mb-6">
-                            <label class="block mb-2 text-lg font-semibold">Email</label>
-                            <input v-model="form.email" type="email" placeholder="Введіть ваш email"
-                                   class="w-full border rounded-lg px-6 py-3 shadow-md focus:outline-none focus:ring-2 focus:ring-[#B46D6D]"/>
+                        <div>
+                            <label for="checkout-email" class="mb-2 block text-sm font-semibold text-[#6D4C4C]">Email</label>
+                            <input
+                                id="checkout-email"
+                                v-model="form.email"
+                                type="email"
+                                autocomplete="email"
+                                placeholder="Введіть ваш email"
+                                class="w-full rounded-2xl border px-5 py-3 shadow-sm focus:outline-none focus:ring-2"
+                                :class="fieldClass(form.errors.email)"
+                                :aria-invalid="form.errors.email ? 'true' : 'false'"
+                            />
                             <p v-if="form.errors.email" class="mt-2 text-sm text-red-600">{{ form.errors.email }}</p>
                         </div>
 
-                        <div class="mb-6">
-                            <label class="block mb-2 text-lg font-semibold">Спосіб оплати</label>
-                            <select
-                                v-model="form.payment_method"
-                                class="w-full border rounded-lg px-6 py-3 shadow-md focus:outline-none focus:ring-2 focus:ring-[#B46D6D]"
-                            >
-                                <option value="demo_card">Демо-оплата карткою</option>
-                                <option value="cash_on_delivery">Післяплата</option>
-                            </select>
-                            <p class="mt-2 text-sm text-gray-500">
-                                Номер картки не запитується і не зберігається. Замовлення створюється лише з референсом платежу.
-                            </p>
+                        <fieldset>
+                            <legend class="mb-3 text-sm font-semibold text-[#6D4C4C]">Спосіб оплати</legend>
+                            <div class="grid gap-3">
+                                <label
+                                    v-for="option in paymentMethods"
+                                    :key="option.value"
+                                    class="flex cursor-pointer items-start gap-3 rounded-2xl border px-4 py-4 transition"
+                                    :class="form.payment_method === option.value ? 'border-[#B46D6D] bg-[#FFF4F4]' : 'border-[#E7C5C5] hover:bg-[#FFF9F9]'"
+                                >
+                                    <input
+                                        v-model="form.payment_method"
+                                        type="radio"
+                                        name="payment_method"
+                                        :value="option.value"
+                                        class="mt-1"
+                                    />
+                                    <span>
+                                        <span class="block text-sm font-semibold text-[#6D4C4C]">{{ option.label }}</span>
+                                        <span class="mt-1 block text-sm text-[#8D6767]">{{ option.description }}</span>
+                                    </span>
+                                </label>
+                            </div>
                             <p v-if="form.errors.payment_method" class="mt-2 text-sm text-red-600">{{ form.errors.payment_method }}</p>
-                        </div>
+                        </fieldset>
 
-                        <p v-if="form.errors.cart" class="text-sm text-red-600">{{ form.errors.cart }}</p>
+                        <div
+                            v-if="form.errors.cart"
+                            class="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
+                        >
+                            {{ form.errors.cart }}
+                        </div>
 
                         <button
                             type="submit"
                             :disabled="form.processing"
-                            class="w-full bg-green-500 text-white px-6 py-4 rounded-lg hover:bg-green-600 transition-colors duration-300">
-                            {{ form.processing ? 'Обробка...' : 'Підтвердити замовлення' }}
+                            class="w-full rounded-full bg-green-600 px-6 py-4 text-sm font-semibold text-white transition hover:bg-green-700 disabled:cursor-not-allowed disabled:opacity-60"
+                        >
+                            {{ form.processing ? 'Створюємо замовлення...' : 'Підтвердити замовлення' }}
                         </button>
-                    </form>
-                </div>
+                    </div>
+                </form>
             </div>
-        </div>
+        </section>
     </page-layout>
 </template>
 
 <script setup>
-import {useForm} from '@inertiajs/vue3'
-import {computed} from 'vue'
-import PageLayout from "@/Components/page-layout.vue";
+import { computed } from 'vue'
+import { Link, useForm } from '@inertiajs/vue3'
+import PageLayout from '@/Components/page-layout.vue'
+import { useToast } from '@/composables/useToast'
 
-const props = defineProps({items: Array})
+const props = defineProps({
+    items: Array,
+    defaults: Object,
+})
+
+const { error } = useToast()
+const paymentMethods = [
+    {
+        value: 'demo_card',
+        label: 'Демо-оплата карткою',
+        description: 'Сценарій для демонстрації checkout без зберігання чутливих карткових даних.',
+    },
+    {
+        value: 'cash_on_delivery',
+        label: 'Післяплата',
+        description: 'Оплата при отриманні замовлення.',
+    },
+]
 
 const form = useForm({
-    full_name: '',
-    email: '',
-    payment_method: 'demo_card'
+    full_name: props.defaults?.full_name ?? '',
+    email: props.defaults?.email ?? '',
+    payment_method: 'demo_card',
 })
 
 const total = computed(() =>
@@ -91,17 +173,23 @@ const total = computed(() =>
 )
 
 function submit() {
-    form.post('/checkout')
+    form.post(route('checkout.store'), {
+        onError: () => {
+            error('Будь ласка, перевірте форму замовлення та спробуйте ще раз.')
+        },
+    })
+}
+
+function formatPrice(value) {
+    return Number(value ?? 0).toLocaleString('uk-UA', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2,
+    })
+}
+
+function fieldClass(hasError) {
+    return hasError
+        ? 'border-red-300 focus:border-red-400 focus:ring-red-200'
+        : 'border-[#E3BEBE] focus:border-[#B46D6D] focus:ring-[#E7B7B7]'
 }
 </script>
-
-<style scoped>
-.container {
-    /* Убираем фон полупрозрачный */
-    background: none;
-}
-
-input::placeholder {
-    color: #B46D6D;
-}
-</style>
