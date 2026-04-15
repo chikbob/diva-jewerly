@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\CartItem;
 use App\Models\Order;
 use App\Models\User;
+use App\Support\CartCounter;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -44,6 +45,7 @@ class CheckoutService
             CartItem::query()
                 ->where('user_id', $user->id)
                 ->delete();
+            CartCounter::forgetForUserId($user->id);
 
             return $order->load('items.product');
         });

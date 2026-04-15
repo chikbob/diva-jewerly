@@ -21,6 +21,8 @@ class CategoryResource extends ModelResource
 
     protected string $title = 'Категорії';
 
+    protected bool $withPolicy = true;
+
     public function fields(): array
     {
         return [

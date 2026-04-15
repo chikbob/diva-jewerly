@@ -23,6 +23,8 @@ class ProductResource extends ModelResource
 
     protected string $title = 'Товари';
 
+    protected bool $withPolicy = true;
+
     public function fields(): array
     {
         return [

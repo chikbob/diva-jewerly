@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\AddToCartRequest;
 use App\Http\Requests\RemoveFromCartRequest;
 use App\Models\CartItem;
+use App\Support\CartCounter;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
@@ -48,8 +49,8 @@ class CartController extends Controller
         CartItem::where('user_id', auth()->id())
             ->where('product_id', $request->integer('product_id'))
             ->delete();
+        CartCounter::forgetForUserId($request->user()->id);
 
         return redirect()->back()->with('message', 'Удалено из корзины!');
     }
-
 }

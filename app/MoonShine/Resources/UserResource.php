@@ -21,6 +21,8 @@ class UserResource extends ModelResource
 
     protected string $title = 'Користувачі';
 
+    protected bool $withPolicy = true;
+
     public function fields(): array
     {
         return [

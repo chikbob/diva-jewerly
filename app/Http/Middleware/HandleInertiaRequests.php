@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Support\CartCounter;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -38,10 +39,9 @@ class HandleInertiaRequests extends Middleware
                 'message' => fn () => $request->session()->get('message'),
                 'error' => fn () => $request->session()->get('error'),
             ],
-            'cartCount' => fn() => $request->user()
-                ? $request->user()->cartItems()->count() // или по-другому, если другая структура
+            'cartCount' => fn () => $request->user()
+                ? CartCounter::countFor($request->user())
                 : 0,
         ]);
     }
-
 }

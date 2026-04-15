@@ -2,7 +2,18 @@
 
 namespace App\Providers;
 
-// use Illuminate\Support\Facades\Gate;
+use App\Models\CartItem;
+use App\Models\Category;
+use App\Models\Order;
+use App\Models\OrderItem;
+use App\Models\Product;
+use App\Models\User;
+use App\Policies\CartItemPolicy;
+use App\Policies\CategoryPolicy;
+use App\Policies\OrderItemPolicy;
+use App\Policies\OrderPolicy;
+use App\Policies\ProductPolicy;
+use App\Policies\UserPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -13,7 +24,12 @@ class AuthServiceProvider extends ServiceProvider
      * @var array<class-string, class-string>
      */
     protected $policies = [
-        //
+        CartItem::class => CartItemPolicy::class,
+        Category::class => CategoryPolicy::class,
+        Order::class => OrderPolicy::class,
+        OrderItem::class => OrderItemPolicy::class,
+        Product::class => ProductPolicy::class,
+        User::class => UserPolicy::class,
     ];
 
     /**
@@ -21,6 +37,6 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        $this->registerPolicies();
     }
 }

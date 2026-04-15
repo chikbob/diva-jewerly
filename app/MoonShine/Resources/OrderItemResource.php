@@ -20,6 +20,8 @@ class OrderItemResource extends ModelResource
 
     protected string $title = 'Товари замовлення';
 
+    protected bool $withPolicy = true;
+
     public function fields(): array
     {
         return [

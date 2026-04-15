@@ -20,6 +20,8 @@ class CartItemResource extends ModelResource
 
     protected string $title = 'Кошик';
 
+    protected bool $withPolicy = true;
+
     public function fields(): array
     {
         return [
