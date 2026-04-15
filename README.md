@@ -38,6 +38,7 @@ docker compose up --build
 - install frontend dependencies
 - generate an application key
 - run migrations
+- publish MoonShine assets when they are missing
 
 ## Test Commands
 
@@ -59,6 +60,7 @@ docker compose run --rm vite npm run build
 - orders keep only payment method and generated payment reference
 - password changes use Laravel's dedicated password update flow
 - account deletion requires current password confirmation
+- CORS and session cookie behavior are now controlled through env variables instead of permissive hard-coded defaults
 
 ## Project Structure
 

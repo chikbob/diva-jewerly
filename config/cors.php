@@ -19,7 +19,13 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['*'],
+    'allowed_origins' => array_values(array_filter(array_map(
+        static fn (string $origin): string => trim($origin),
+        explode(',', (string) env(
+            'CORS_ALLOWED_ORIGINS',
+            'http://localhost,http://127.0.0.1,http://localhost:5173,http://127.0.0.1:5173'
+        ))
+    ))),
 
     'allowed_origins_patterns' => [],
 
@@ -29,6 +35,6 @@ return [
 
     'max_age' => 0,
 
-    'supports_credentials' => false,
+    'supports_credentials' => env('CORS_SUPPORTS_CREDENTIALS', true),
 
 ];

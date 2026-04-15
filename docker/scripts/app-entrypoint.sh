@@ -33,4 +33,8 @@ if [ ! -L public/storage ] && [ ! -e public/storage ]; then
     php artisan storage:link
 fi
 
+if [ ! -f public/vendor/moonshine/manifest.json ]; then
+    php artisan vendor:publish --tag=moonshine-assets --force
+fi
+
 exec "$@"
