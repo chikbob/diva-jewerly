@@ -2,88 +2,38 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CatalogIndexRequest;
 use App\Models\Category;
+use App\Models\Favorite;
 use App\Models\Product;
-use Illuminate\Support\Facades\Cache;
+use App\Services\CatalogService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Inertia\Inertia;
 
 class ProductController extends Controller
 {
-    public function index(Request $request): \Inertia\Response
+    public function __construct(private readonly CatalogService $catalogService) {}
+
+    public function index(CatalogIndexRequest $request): \Inertia\Response
     {
-        $filters = $request->validate([
-            'search' => ['nullable', 'string', 'max:255'],
-            'category_id' => ['nullable', 'integer', 'exists:categories,id'],
-            'min_price' => ['nullable', 'numeric', 'min:0'],
-            'max_price' => ['nullable', 'numeric', 'min:0'],
-            'sort' => ['nullable', 'in:name_asc,name_desc,price_asc,price_desc,newest'],
-        ]);
-
-        if (array_key_exists('category_id', $filters) && $filters['category_id'] !== null) {
-            $filters['category_id'] = (int) $filters['category_id'];
-        }
-
-        if (array_key_exists('min_price', $filters) && $filters['min_price'] !== null) {
-            $filters['min_price'] = (float) $filters['min_price'];
-        }
-
-        if (array_key_exists('max_price', $filters) && $filters['max_price'] !== null) {
-            $filters['max_price'] = (float) $filters['max_price'];
-        }
-
-        $query = Product::query()->with('category');
-
-        if (! empty($filters['search'])) {
-            $query->where('name', 'like', '%' . $filters['search'] . '%');
-        }
-
-        if (! empty($filters['category_id'])) {
-            $query->where('category_id', $filters['category_id']);
-        }
-
-        if (array_key_exists('min_price', $filters) && $filters['min_price'] !== null) {
-            $query->where('price', '>=', $filters['min_price']);
-        }
-
-        if (array_key_exists('max_price', $filters) && $filters['max_price'] !== null) {
-            $query->where('price', '<=', $filters['max_price']);
-        }
-
-        $sort = $filters['sort'] ?? 'name_asc';
-
-        match ($sort) {
-            'name_desc' => $query->orderByDesc('name'),
-            'price_asc' => $query->orderBy('price')->orderBy('name'),
-            'price_desc' => $query->orderByDesc('price')->orderBy('name'),
-            'newest' => $query->latest(),
-            default => $query->orderBy('name'),
-        };
-
-        $products = $query
-            ->paginate(12)
-            ->withQueryString();
-
-        $categories = Cache::remember(
-            'catalog.categories',
-            now()->addMinutes(10),
-            static fn () => Category::query()->orderBy('name')->get()
-        );
-
-        $priceRange = Cache::remember(
-            'catalog.price_range',
-            now()->addMinutes(10),
-            static fn (): array => [
-                'min' => (float) (Product::query()->min('price') ?? 0),
-                'max' => (float) (Product::query()->max('price') ?? 0),
-            ]
-        );
+        $filters = $request->filters();
+        $products = $this->catalogService->products($filters);
+        $favoriteIds = $request->user() === null
+            ? []
+            : Favorite::query()
+                ->where('user_id', $request->user()->id)
+                ->whereIn('product_id', collect($products->items())->pluck('id'))
+                ->pluck('product_id')
+                ->map(static fn (int $id): int => $id)
+                ->all();
 
         return Inertia::render('Products/Catalog', [
             'products' => $products,
-            'categories' => $categories,
+            'categories' => $this->catalogService->categories(),
             'filters' => $filters,
-            'priceRange' => $priceRange,
+            'favoriteIds' => $favoriteIds,
+            'priceRange' => $this->catalogService->priceRange(),
             'sortOptions' => [
                 ['value' => 'name_asc', 'label' => 'Назва: А-Я'],
                 ['value' => 'name_desc', 'label' => 'Назва: Я-А'],
@@ -103,8 +53,25 @@ class ProductController extends Controller
         );
 
         return Inertia::render('Products/Home', [
-            'categories' => $categories
+            'categories' => $categories,
         ]);
     }
 
+    public function show(Request $request, Product $product): \Inertia\Response
+    {
+        $product->load('category');
+
+        return Inertia::render('Products/Show', [
+            'product' => $product,
+            'availability' => [
+                'code' => 'available',
+                'label' => 'Доступно до замовлення',
+            ],
+            'isFavorited' => $request->user() !== null
+                && Favorite::query()
+                    ->where('user_id', $request->user()->id)
+                    ->where('product_id', $product->id)
+                    ->exists(),
+        ]);
+    }
 }

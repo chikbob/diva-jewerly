@@ -1,8 +1,8 @@
 <?php
 
+use App\Http\Middleware\EnsureMoonShineStaffAccess;
 use MoonShine\Exceptions\MoonShineNotFoundException;
 use MoonShine\Forms\LoginForm;
-use App\Http\Middleware\EnsureMoonShineStaffAccess;
 use MoonShine\Http\Middleware\Authenticate;
 use MoonShine\Http\Middleware\SecurityHeadersMiddleware;
 use MoonShine\Models\MoonshineUser;
@@ -19,7 +19,7 @@ return [
 
     'route' => [
         'domain' => env('MOONSHINE_URL', ''),
-        'prefix' => env('MOONSHINE_ROUTE_PREFIX', 'admin'),
+        'prefix' => env('MOONSHINE_ROUTE_PREFIX', 'moonshine'),
         'single_page_prefix' => 'page',
         'index' => 'moonshine.index',
         'middlewares' => [
@@ -45,22 +45,22 @@ return [
         'js' => [
             'script_attributes' => [
                 'defer',
-            ]
+            ],
         ],
         'css' => [
             'link_attributes' => [
                 'rel' => 'stylesheet',
-            ]
-        ]
+            ],
+        ],
     ],
 
     'forms' => [
-        'login' => LoginForm::class
+        'login' => LoginForm::class,
     ],
 
     'pages' => [
         'dashboard' => App\MoonShine\Pages\Dashboard::class,
-        'profile' => ProfilePage::class
+        'profile' => ProfilePage::class,
     ],
 
     'model_resources' => [

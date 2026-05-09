@@ -74,4 +74,44 @@ class ProductCatalogTest extends TestCase
                 ->where('products.data.0.id', $highest->id)
             );
     }
+
+    public function test_catalog_can_filter_new_products_only(): void
+    {
+        $category = Category::factory()->create();
+
+        $newProduct = Product::factory()->create([
+            'category_id' => $category->id,
+            'created_at' => now()->subDays(3),
+            'updated_at' => now()->subDays(3),
+        ]);
+
+        Product::factory()->create([
+            'category_id' => $category->id,
+            'created_at' => now()->subDays(45),
+            'updated_at' => now()->subDays(45),
+        ]);
+
+        $this->get(route('catalog', ['only_new' => 1]))
+            ->assertInertia(fn (Assert $page) => $page
+                ->component('Products/Catalog')
+                ->where('filters.only_new', true)
+                ->has('products.data', 1)
+                ->where('products.data.0.id', $newProduct->id)
+            );
+    }
+
+    public function test_product_detail_page_can_be_opened(): void
+    {
+        $product = Product::factory()->for(Category::factory())->create([
+            'name' => 'Signature Necklace',
+        ]);
+
+        $this->get(route('products.show', $product))
+            ->assertInertia(fn (Assert $page) => $page
+                ->component('Products/Show')
+                ->where('product.id', $product->id)
+                ->where('product.name', 'Signature Necklace')
+                ->where('availability.code', 'available')
+            );
+    }
 }

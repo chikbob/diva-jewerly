@@ -2,10 +2,11 @@
 
 namespace Tests\Feature;
 
-use App\Models\Category;
 use App\Models\CartItem;
+use App\Models\Category;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\PaymentTransaction;
 use App\Models\Product;
 use App\Models\User;
 use App\Support\BackofficeAccess;
@@ -57,10 +58,11 @@ class AdminSecurityTest extends TestCase
         $response->assertOk();
 
         $this->assertTrue(Gate::forUser($support)->allows('viewAny', Order::class));
+        $this->assertTrue(Gate::forUser($support)->allows('viewAny', PaymentTransaction::class));
         $this->assertTrue(Gate::forUser($support)->allows('viewAny', User::class));
         $this->assertFalse(Gate::forUser($support)->allows('create', Product::class));
-        $this->assertFalse(Gate::forUser($support)->allows('update', new User()));
-        $this->assertFalse(Gate::forUser($support)->allows('delete', new Order()));
+        $this->assertFalse(Gate::forUser($support)->allows('update', new User));
+        $this->assertFalse(Gate::forUser($support)->allows('delete', new Order));
     }
 
     public function test_operations_manager_can_review_orders_and_customers_without_mutating_them(): void
@@ -71,8 +73,8 @@ class AdminSecurityTest extends TestCase
         $this->assertTrue(Gate::forUser($operations)->allows('viewAny', CartItem::class));
         $this->assertTrue(Gate::forUser($operations)->allows('viewAny', User::class));
         $this->assertFalse(Gate::forUser($operations)->allows('create', Category::class));
-        $this->assertFalse(Gate::forUser($operations)->allows('update', new CartItem()));
-        $this->assertFalse(Gate::forUser($operations)->allows('delete', new OrderItem()));
+        $this->assertFalse(Gate::forUser($operations)->allows('update', new CartItem));
+        $this->assertFalse(Gate::forUser($operations)->allows('delete', new OrderItem));
     }
 
     public function test_catalog_manager_can_manage_catalog_but_not_customers_or_operations(): void
@@ -80,7 +82,7 @@ class AdminSecurityTest extends TestCase
         $catalogManager = $this->createMoonshineUser('Catalog Manager');
 
         $this->assertTrue(Gate::forUser($catalogManager)->allows('create', Product::class));
-        $this->assertTrue(Gate::forUser($catalogManager)->allows('update', new Category()));
+        $this->assertTrue(Gate::forUser($catalogManager)->allows('update', new Category));
         $this->assertFalse(Gate::forUser($catalogManager)->allows('viewAny', Order::class));
         $this->assertFalse(Gate::forUser($catalogManager)->allows('create', User::class));
     }
@@ -91,18 +93,18 @@ class AdminSecurityTest extends TestCase
 
         $this->assertTrue(Gate::forUser($admin)->allows('viewAny', Order::class));
         $this->assertFalse(Gate::forUser($admin)->allows('create', Order::class));
-        $this->assertFalse(Gate::forUser($admin)->allows('delete', new Order()));
-        $this->assertFalse(Gate::forUser($admin)->allows('update', new CartItem()));
-        $this->assertFalse(Gate::forUser($admin)->allows('delete', new OrderItem()));
+        $this->assertFalse(Gate::forUser($admin)->allows('delete', new Order));
+        $this->assertFalse(Gate::forUser($admin)->allows('update', new CartItem));
+        $this->assertFalse(Gate::forUser($admin)->allows('delete', new OrderItem));
 
         $this->assertTrue(Gate::forUser($admin)->allows('create', Product::class));
-        $this->assertTrue(Gate::forUser($admin)->allows('update', new Category()));
-        $this->assertTrue(Gate::forUser($admin)->allows('delete', new User()));
+        $this->assertTrue(Gate::forUser($admin)->allows('update', new Category));
+        $this->assertTrue(Gate::forUser($admin)->allows('delete', new User));
 
         $access = app(BackofficeAccess::class);
 
-        $this->assertTrue($access->canAccessResource($admin, new MoonShineUserResource(), 'viewAny'));
-        $this->assertTrue($access->canAccessResource($admin, new MoonShineUserRoleResource(), 'viewAny'));
+        $this->assertTrue($access->canAccessResource($admin, new MoonShineUserResource, 'viewAny'));
+        $this->assertTrue($access->canAccessResource($admin, new MoonShineUserRoleResource, 'viewAny'));
     }
 
     public function test_non_admin_staff_cannot_manage_staff_resources(): void
@@ -111,8 +113,8 @@ class AdminSecurityTest extends TestCase
 
         $access = app(BackofficeAccess::class);
 
-        $this->assertFalse($access->canAccessResource($support, new MoonShineUserResource(), 'viewAny'));
-        $this->assertFalse($access->canAccessResource($support, new MoonShineUserRoleResource(), 'viewAny'));
+        $this->assertFalse($access->canAccessResource($support, new MoonShineUserResource, 'viewAny'));
+        $this->assertFalse($access->canAccessResource($support, new MoonShineUserRoleResource, 'viewAny'));
     }
 
     public function test_app_user_passwords_are_hashed_when_assigned_directly(): void
@@ -125,6 +127,12 @@ class AdminSecurityTest extends TestCase
         $this->assertTrue(Hash::check('changed-from-admin-panel', $user->fresh()->password));
     }
 
+    public function test_guest_is_redirected_to_admin_login(): void
+    {
+        $this->get('/admin')
+            ->assertRedirect('/admin/login');
+    }
+
     private function createMoonshineUser(string $roleName): MoonshineUser
     {
         $role = MoonshineUserRole::query()->firstOrCreate([
@@ -133,9 +141,9 @@ class AdminSecurityTest extends TestCase
 
         return MoonshineUser::query()->create([
             'moonshine_user_role_id' => $role->id,
-            'email' => strtolower(str_replace(' ', '.', $roleName)) . '.' . uniqid('', true) . '@example.com',
+            'email' => strtolower(str_replace(' ', '.', $roleName)).'.'.uniqid('', true).'@example.com',
             'password' => bcrypt('password'),
-            'name' => $roleName . ' Agent',
+            'name' => $roleName.' Agent',
         ]);
     }
 }

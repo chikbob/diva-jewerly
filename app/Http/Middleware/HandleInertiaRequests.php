@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\User;
 use App\Support\CartCounter;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
@@ -18,7 +19,7 @@ class HandleInertiaRequests extends Middleware
     /**
      * Determine the current asset version.
      */
-    public function version(Request $request): string|null
+    public function version(Request $request): ?string
     {
         return parent::version($request);
     }
@@ -28,19 +29,30 @@ class HandleInertiaRequests extends Middleware
      *
      * @return array<string, mixed>
      */
-
     public function share(Request $request): array
     {
+        $appUser = $request->user() instanceof User ? $request->user() : null;
+
         return array_merge(parent::share($request), [
             'auth' => [
-                'user' => fn() => $request->user(),
+                'user' => fn () => $appUser,
+            ],
+            'backoffice' => [
+                'user' => fn () => auth(config('moonshine.auth.guard', 'moonshine'))->user()?->only([
+                    'id',
+                    'name',
+                    'email',
+                ]),
             ],
             'flash' => [
                 'message' => fn () => $request->session()->get('message'),
                 'error' => fn () => $request->session()->get('error'),
             ],
-            'cartCount' => fn () => $request->user()
-                ? CartCounter::countFor($request->user())
+            'cartCount' => fn () => $appUser !== null
+                ? CartCounter::countFor($appUser)
+                : 0,
+            'favoritesCount' => fn () => $appUser !== null
+                ? $appUser->favorites()->count()
                 : 0,
         ]);
     }

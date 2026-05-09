@@ -8,20 +8,20 @@
             <div
                 v-for="toast in toasts"
                 :key="toast.id"
-                class="pointer-events-auto rounded-2xl border px-4 py-3 shadow-lg backdrop-blur"
+                class="pointer-events-auto rounded-[1.35rem] border px-5 py-4 shadow-[0_16px_40px_rgba(46,128,106,0.18)] backdrop-blur"
                 :class="toastClass(toast.type)"
                 role="status"
             >
-                <div class="flex items-start gap-3">
-                    <div class="mt-0.5 h-2.5 w-2.5 rounded-full" :class="dotClass(toast.type)" />
-                    <div class="min-w-0 flex-1 text-sm font-medium">{{ toast.message }}</div>
+                <div class="flex items-center gap-3">
+                    <div class="h-2.5 w-2.5 shrink-0 rounded-full" :class="dotClass(toast.type)" />
+                    <div class="min-w-0 flex-1 text-sm font-medium leading-6">{{ toast.message }}</div>
                     <button
                         type="button"
-                        class="rounded-full p-1 text-current opacity-70 transition hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-current"
+                        class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-current opacity-70 transition hover:bg-white/40 hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-current"
                         @click="dismiss(toast.id)"
                         aria-label="Закрити повідомлення"
                     >
-                        ×
+                        <span class="text-lg leading-none">×</span>
                     </button>
                 </div>
             </div>
@@ -36,9 +36,9 @@ const { toasts, dismiss } = useToast()
 
 function toastClass(type) {
     return {
-        'border-emerald-200 bg-emerald-50 text-emerald-800': type === 'success',
-        'border-red-200 bg-red-50 text-red-800': type === 'error',
-        'border-slate-200 bg-white/90 text-slate-800': type !== 'success' && type !== 'error',
+        'border-emerald-200 bg-emerald-50/95 text-emerald-800': type === 'success',
+        'border-red-200 bg-red-50/95 text-red-800': type === 'error',
+        'border-slate-200 bg-white/95 text-slate-800': type !== 'success' && type !== 'error',
     }
 }
 

@@ -33,6 +33,11 @@ class UserResource extends ModelResource
         ];
     }
 
+    public function search(): array
+    {
+        return ['id', 'name', 'email'];
+    }
+
     public function rules(Model $item): array
     {
         return [

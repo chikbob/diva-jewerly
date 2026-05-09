@@ -77,4 +77,30 @@ class CartTest extends TestCase
         $response->assertRedirect();
         $this->assertSame(4, CartItem::query()->firstOrFail()->quantity);
     }
+
+    public function test_cart_quantity_cannot_be_updated_below_one(): void
+    {
+        $user = User::factory()->create();
+        $category = Category::factory()->create();
+        $product = Product::factory()->create([
+            'category_id' => $category->id,
+        ]);
+
+        CartItem::query()->create([
+            'user_id' => $user->id,
+            'product_id' => $product->id,
+            'quantity' => 1,
+        ]);
+
+        $response = $this->actingAs($user)
+            ->from(route('cart.index'))
+            ->patch(route('cart.update'), [
+                'product_id' => $product->id,
+                'quantity' => 0,
+            ]);
+
+        $response->assertRedirect(route('cart.index'));
+        $response->assertSessionHasErrors('quantity');
+        $this->assertSame(1, CartItem::query()->firstOrFail()->quantity);
+    }
 }

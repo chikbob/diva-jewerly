@@ -1,19 +1,29 @@
 <template>
     <page-layout>
-        <section class="container mx-auto max-w-5xl px-6 py-12">
-            <div class="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+        <section class="mx-auto w-full max-w-[1480px] px-4 py-12 sm:px-6 xl:px-8">
+            <div class="mb-8 flex flex-col gap-5 xl:flex-row xl:items-end xl:justify-between">
                 <div>
-                    <p class="text-xs font-semibold uppercase tracking-[0.35em] text-[#D09A9A]">Order History</p>
+                    <p class="text-xs font-semibold uppercase tracking-[0.35em] text-[#D09A9A]">Історія замовлень</p>
                     <h1 class="mt-2 text-4xl font-extrabold tracking-wide text-[#B46D6D]">Мої замовлення</h1>
+                    <p class="mt-3 max-w-2xl text-sm leading-7 text-[#8D6767]">
+                        Контролюйте статуси, переглядайте склад попередніх замовлень і швидко повторюйте покупку.
+                    </p>
                 </div>
 
-                <div class="rounded-2xl border border-[#E9CFCF] bg-[#FFF8F8] px-4 py-3 text-sm text-[#8D6767]">
-                    <strong class="text-[#B46D6D]">{{ orders.length }}</strong> замовлень у поточній вибірці
+                <div class="grid gap-3 sm:grid-cols-2 xl:min-w-[26rem]">
+                    <div class="rounded-[1.6rem] border border-[#E9CFCF] bg-[#FFF8F8] px-5 py-4 text-sm text-[#8D6767]">
+                        <p class="text-xs font-semibold uppercase tracking-[0.25em] text-[#C49B9B]">Замовлення</p>
+                        <p class="mt-2 text-2xl font-black text-[#B46D6D]">{{ orders.length }}</p>
+                    </div>
+                    <div class="rounded-[1.6rem] border border-[#E9CFCF] bg-[#FFF8F8] px-5 py-4 text-sm text-[#8D6767]">
+                        <p class="text-xs font-semibold uppercase tracking-[0.25em] text-[#C49B9B]">Фільтр</p>
+                        <p class="mt-2 text-base font-bold text-[#B46D6D]">{{ activeSummary }}</p>
+                    </div>
                 </div>
             </div>
 
             <form
-                class="mb-8 rounded-[2rem] border border-[#E7C5C5] bg-white p-5 shadow-sm"
+                class="mb-8 rounded-[2rem] border border-[#E7C5C5] bg-white p-6 shadow-[0_18px_50px_rgba(180,109,109,0.07)]"
                 @submit.prevent="applyFilters"
             >
                 <div class="grid gap-4 md:grid-cols-3">
@@ -80,27 +90,29 @@
                 <article
                     v-for="order in orders"
                     :key="order.id"
-                    class="rounded-[2rem] border border-[#E7C5C5] bg-white p-6 shadow-sm transition hover:shadow-md"
+                    class="rounded-[2rem] border border-[#E7C5C5] bg-white p-6 shadow-[0_18px_50px_rgba(180,109,109,0.07)] transition hover:-translate-y-0.5 hover:shadow-[0_24px_60px_rgba(180,109,109,0.1)]"
                 >
-                    <div class="mb-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+                    <div class="mb-5 flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
                         <div>
                             <p class="text-xs uppercase tracking-[0.3em] text-[#C49B9B]">Замовлення</p>
-                            <p class="mt-2 text-xl font-bold text-[#B46D6D]">#{{ order.id }}</p>
+                            <Link
+                                :href="route('orders.show', { order: order.id })"
+                                class="mt-2 inline-flex text-2xl font-bold text-[#B46D6D] transition hover:text-[#9E5757]"
+                            >
+                                #{{ order.id }}
+                            </Link>
+                            <p class="mt-2 text-sm text-[#8D6767]">{{ new Date(order.created_at).toLocaleString('uk-UA') }}</p>
                         </div>
 
-                        <div class="flex flex-wrap items-center gap-4 text-sm text-[#8D6767]">
-                            <span>{{ new Date(order.created_at).toLocaleString() }}</span>
-                            <span
-                                :class="statusClass(order.status)"
-                                class="rounded-full px-3 py-1 font-semibold"
-                            >
+                        <div class="flex flex-wrap items-center gap-3 text-sm text-[#8D6767]">
+                            <span :class="statusClass(order.status)" class="rounded-full px-4 py-2 font-semibold">
                                 {{ statusLabel(order.status) }}
                             </span>
-                            <span
-                                :class="paymentStatusClass(order.payment_status)"
-                                class="rounded-full px-3 py-1 font-semibold"
-                            >
+                            <span :class="paymentStatusClass(order.payment_status)" class="rounded-full px-4 py-2 font-semibold">
                                 {{ paymentStatusLabel(order.payment_status) }}
+                            </span>
+                            <span class="rounded-full bg-[#FFF4F4] px-4 py-2 font-semibold text-[#A05F5F]">
+                                {{ formatPrice(order.total) }} ₴
                             </span>
                         </div>
                     </div>
@@ -109,16 +121,26 @@
                         <li
                             v-for="item in order.items"
                             :key="item.id"
-                            class="flex flex-col gap-4 border-b border-[#F1E1E1] pb-4 sm:flex-row sm:items-center"
+                            class="flex flex-col gap-4 rounded-[1.5rem] border border-[#F3E2E2] bg-[#fffdfd] p-4 sm:flex-row sm:items-center"
                         >
                             <img
-                                :src="item.product.image_path"
-                                :alt="`Фото товару ${item.product.name}`"
+                                :src="item.product_image || 'https://placehold.co/160x160/F8E8E8/9A6B6B?text=Diva'"
+                                :alt="`Фото товару ${item.product_name}`"
                                 class="h-20 w-20 rounded-[1.25rem] object-cover"
                             />
                             <div class="min-w-0 flex-1">
-                                <p class="text-lg font-semibold text-[#6D4C4C]">{{ item.product.name }}</p>
-                                <p class="mt-1 text-sm text-[#8D6767]">{{ item.product.description }}</p>
+                                <Link
+                                    v-if="item.product"
+                                    :href="route('products.show', { product: item.product.id })"
+                                    class="text-lg font-semibold text-[#6D4C4C] transition hover:text-[#B46D6D]"
+                                >
+                                    {{ item.product_name }}
+                                </Link>
+                                <p v-else class="text-lg font-semibold text-[#6D4C4C]">{{ item.product_name }}</p>
+                                <p v-if="item.product_category" class="mt-1 text-xs uppercase tracking-[0.25em] text-[#C49B9B]">
+                                    {{ item.product_category }}
+                                </p>
+                                <p v-if="item.product_description" class="mt-2 text-sm leading-6 text-[#8D6767]">{{ item.product_description }}</p>
                             </div>
                             <div class="text-sm font-semibold text-[#6D4C4C]">
                                 {{ item.quantity }} × {{ formatPrice(item.price) }} ₴
@@ -126,15 +148,29 @@
                         </li>
                     </ul>
 
-                    <div class="mt-5 flex flex-col gap-2 text-sm text-[#8D6767] md:flex-row md:items-center md:justify-between">
+                    <div class="mt-5 flex flex-col gap-4 text-sm text-[#8D6767] xl:flex-row xl:items-center xl:justify-between">
                         <div class="flex flex-wrap items-center gap-3">
-                            <span>Payment reference: {{ order.payment_reference }}</span>
+                            <span class="rounded-full border border-[#F0DEDE] bg-[#FFF8F8] px-4 py-2">Платіжний референс: {{ order.payment_reference }}</span>
+                            <Link
+                                :href="route('orders.repeat', { order: order.id })"
+                                method="post"
+                                as="button"
+                                class="rounded-full border border-[#E3BEBE] px-4 py-2 text-sm font-semibold text-[#B46D6D] transition hover:bg-[#FFF1F1]"
+                            >
+                                Повторити замовлення
+                            </Link>
                             <Link
                                 v-if="order.payment_method === 'demo_card'"
                                 :href="route('payments.show', { paymentReference: order.payment_reference })"
-                                class="text-sm font-semibold text-[#B46D6D] transition hover:text-[#9E5757]"
+                                class="rounded-full border border-[#E3BEBE] px-4 py-2 text-sm font-semibold text-[#B46D6D] transition hover:bg-[#FFF1F1]"
                             >
-                                Відкрити payment status
+                                Відкрити статус оплати
+                            </Link>
+                            <Link
+                                :href="route('orders.show', { order: order.id })"
+                                class="rounded-full bg-[#B46D6D] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#9E5757]"
+                            >
+                                Деталі замовлення
                             </Link>
                         </div>
                         <strong class="text-lg text-[#B46D6D]">Разом: {{ formatPrice(order.total) }} ₴</strong>
@@ -146,7 +182,7 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { Link, router } from '@inertiajs/vue3'
 import PageLayout from '@/Components/page-layout.vue'
 
@@ -160,6 +196,21 @@ const props = defineProps({
 
 const isFiltering = ref(false)
 const localFilters = ref(buildFilters(props.filters))
+const activeSummary = computed(() => {
+    if (localFilters.value.status) {
+        const option = props.statusOptions.find((item) => item.value === localFilters.value.status)
+
+        return option?.label ?? 'Обраний статус'
+    }
+
+    if (localFilters.value.payment_status) {
+        const option = props.paymentStatusOptions.find((item) => item.value === localFilters.value.payment_status)
+
+        return option?.label ?? 'Фільтр оплати'
+    }
+
+    return 'Усі замовлення'
+})
 
 watch(() => props.filters, (filters) => {
     localFilters.value = buildFilters(filters)
@@ -217,10 +268,10 @@ function statusClass(status) {
 
 function paymentStatusLabel(status) {
     return {
-        paid: 'Payment paid',
-        pending: 'Payment pending',
-        failed: 'Payment failed',
-        cancelled: 'Payment cancelled',
+        paid: 'Оплачено',
+        pending: 'Оплата очікується',
+        failed: 'Оплата неуспішна',
+        cancelled: 'Оплату скасовано',
     }[status] ?? status
 }
 

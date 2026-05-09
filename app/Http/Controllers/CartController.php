@@ -15,7 +15,7 @@ class CartController extends Controller
     public function index(): \Inertia\Response
     {
         $items = CartItem::query()
-            ->with('product')
+            ->with('product.category')
             ->where('user_id', auth()->id())
             ->orderByDesc('updated_at')
             ->get();
@@ -45,9 +45,8 @@ class CartController extends Controller
             ]);
         });
 
-        return redirect()->back()->with('message', 'Добавлено в корзину!');
+        return redirect()->back()->with('message', 'Товар додано до кошика.');
     }
-
 
     public function remove(RemoveFromCartRequest $request): \Illuminate\Http\RedirectResponse
     {
@@ -56,7 +55,7 @@ class CartController extends Controller
             ->delete();
         CartCounter::forgetForUserId($request->user()->id);
 
-        return redirect()->back()->with('message', 'Удалено из корзины!');
+        return redirect()->back()->with('message', 'Товар видалено з кошика.');
     }
 
     public function update(UpdateCartQuantityRequest $request): \Illuminate\Http\RedirectResponse
@@ -69,6 +68,6 @@ class CartController extends Controller
                 'quantity' => $request->integer('quantity'),
             ]);
 
-        return redirect()->back()->with('message', 'Количество товара обновлено.');
+        return redirect()->back()->with('message', 'Кількість товару оновлено.');
     }
 }

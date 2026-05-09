@@ -99,7 +99,7 @@ return [
             'driver' => 'monolog',
             'level' => env('LOG_LEVEL', 'debug'),
             'handler' => StreamHandler::class,
-            'formatter' => env('LOG_STDERR_FORMATTER', JsonFormatter::class),
+            'formatter' => str_replace('\\\\', '\\', env('LOG_STDERR_FORMATTER', JsonFormatter::class)),
             'with' => [
                 'stream' => 'php://stderr',
             ],

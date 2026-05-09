@@ -6,6 +6,7 @@ use App\MoonShine\Resources\CartItemResource;
 use App\MoonShine\Resources\CategoryResource;
 use App\MoonShine\Resources\OrderItemResource;
 use App\MoonShine\Resources\OrderResource;
+use App\MoonShine\Resources\PaymentTransactionResource;
 use App\MoonShine\Resources\ProductResource;
 use App\MoonShine\Resources\UserResource;
 use Illuminate\Support\Str;
@@ -75,9 +76,27 @@ class BackofficeAccess
             $resource instanceof MoonShineUserRoleResource => $this->allowsDomainAbility($user, 'roles', $ability),
             $resource instanceof ProductResource, $resource instanceof CategoryResource => $this->allowsDomainAbility($user, 'catalog', $ability),
             $resource instanceof UserResource => $this->allowsDomainAbility($user, 'customers', $ability),
-            $resource instanceof OrderResource, $resource instanceof OrderItemResource, $resource instanceof CartItemResource => $this->allowsDomainAbility($user, 'operations', $ability, true),
+            $resource instanceof OrderResource, $resource instanceof OrderItemResource, $resource instanceof CartItemResource, $resource instanceof PaymentTransactionResource => $this->allowsDomainAbility($user, 'operations', $ability, true),
             default => true,
         };
+    }
+
+    public function canAccessAdminDomain(MoonshineUser $user, string $domain, string $ability): bool
+    {
+        if (! $this->canAccessPanel($user)) {
+            return false;
+        }
+
+        if ($this->isReadAbility($ability)) {
+            return $this->hasPermission($user, "{$domain}.view")
+                || $this->hasPermission($user, "{$domain}.manage");
+        }
+
+        if ($domain === 'operations' && $this->roleKeyFor($user) === 'admin') {
+            return true;
+        }
+
+        return $this->hasPermission($user, "{$domain}.manage");
     }
 
     public function allowsDomainAbility(MoonshineUser $user, string $domain, string $ability, bool $readOnly = false): bool

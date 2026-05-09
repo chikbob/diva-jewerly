@@ -1,10 +1,10 @@
 <template>
     <page-layout>
-        <section class="container mx-auto px-4 py-12 text-[#B46D6D]">
-            <div class="mx-auto max-w-6xl">
+        <section class="mx-auto w-full max-w-[1520px] px-4 py-12 text-[#B46D6D] sm:px-6 xl:px-8">
+            <div class="mx-auto max-w-[1480px]">
                 <div class="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
                     <div>
-                        <p class="text-xs font-semibold uppercase tracking-[0.35em] text-[#D09A9A]">Diva Collection</p>
+                        <p class="text-xs font-semibold uppercase tracking-[0.35em] text-[#D09A9A]">Колекція DIVA</p>
                         <h1 class="mt-2 text-4xl font-extrabold tracking-wide">Каталог ювелірних виробів</h1>
                         <p class="mt-3 max-w-2xl text-sm leading-6 text-[#8D6767]">
                             Підбирайте прикраси за категорією, бюджетом і способом сортування. Каталог оновлюється без повного перезавантаження сторінки.
@@ -81,6 +81,15 @@
                         </label>
                     </div>
 
+                    <label class="mt-5 inline-flex items-center gap-3 rounded-full border border-[#E3BEBE] bg-[#FFF8F8] px-4 py-3 text-sm font-medium text-[#6D4C4C]">
+                        <input
+                            v-model="localFilters.only_new"
+                            type="checkbox"
+                            class="rounded border-[#D8A8A8] text-[#B46D6D] focus:ring-[#E7B7B7]"
+                        />
+                        <span>Показувати лише новинки за останні 30 днів</span>
+                    </label>
+
                     <div class="mt-5 flex flex-wrap items-center gap-3">
                         <button
                             type="submit"
@@ -98,6 +107,16 @@
                         </button>
                         <span class="text-xs text-[#9B7B7B]">
                             Діапазон цін: {{ formatPrice(priceRange.min) }} ₴ - {{ formatPrice(priceRange.max) }} ₴
+                        </span>
+                    </div>
+
+                    <div v-if="activeFilterLabels.length" class="mt-4 flex flex-wrap gap-2">
+                        <span
+                            v-for="label in activeFilterLabels"
+                            :key="label"
+                            class="rounded-full bg-[#FFF1F1] px-3 py-1 text-xs font-semibold text-[#A05F5F]"
+                        >
+                            {{ label }}
                         </span>
                     </div>
                 </form>
@@ -123,11 +142,11 @@
                         </button>
                     </div>
 
-                    <div v-else class="grid grid-cols-1 gap-8 sm:grid-cols-2 xl:grid-cols-3">
+                    <div v-else class="grid grid-cols-1 gap-8 md:grid-cols-2 2xl:grid-cols-3">
                         <article
                             v-for="product in products.data"
                             :key="product.id"
-                            class="flex h-full flex-col rounded-[2rem] border border-[#E3BEBE] bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
+                            class="flex h-full min-h-[100%] flex-col rounded-[2rem] border border-[#E3BEBE] bg-white p-7 shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
                         >
                             <img
                                 :src="product.image_path"
@@ -139,25 +158,50 @@
                                 <div class="mb-3 flex items-start justify-between gap-3">
                                     <div>
                                         <p class="text-xs uppercase tracking-[0.28em] text-[#C49B9B]">{{ product.category.name }}</p>
-                                        <h2 class="mt-2 text-2xl font-bold leading-tight">{{ product.name }}</h2>
+                                        <h2 class="mt-2 min-h-[4rem] text-2xl font-bold leading-tight">{{ product.name }}</h2>
                                     </div>
-                                    <span class="rounded-full bg-[#FFF2F2] px-3 py-1 text-xs font-semibold text-[#A05F5F]">
-                                        {{ formatPrice(product.price) }} ₴
-                                    </span>
+                                    <div class="flex flex-col items-end gap-2">
+                                        <span class="rounded-full bg-[#FFF2F2] px-3 py-1 text-xs font-semibold text-[#A05F5F]">
+                                            {{ formatPrice(product.price) }} ₴
+                                        </span>
+                                        <span
+                                            v-if="isNewProduct(product)"
+                                            class="rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700"
+                                        >
+                                            Новинка
+                                        </span>
+                                    </div>
                                 </div>
 
-                                <p class="mb-6 flex-1 text-sm leading-6 text-[#8D6767]">
+                                <p class="mb-6 min-h-[4.5rem] flex-1 text-sm leading-6 text-[#8D6767]">
                                     {{ product.description || 'Лаконічна прикраса для повсякденних і святкових образів.' }}
                                 </p>
 
-                                <button
-                                    type="button"
-                                    :disabled="isAdding(product.id)"
-                                    class="w-full rounded-full bg-[#B46D6D] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#9E5757] disabled:cursor-not-allowed disabled:opacity-60"
-                                    @click="addToCart(product.id)"
-                                >
-                                    {{ isAdding(product.id) ? 'Додаємо...' : 'До кошика' }}
-                                </button>
+                                <div class="mt-auto grid gap-3 xl:grid-cols-3">
+                                    <button
+                                        type="button"
+                                        :disabled="isFavoritePending(product.id)"
+                                        class="rounded-full border border-[#E3BEBE] px-5 py-3 text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-60"
+                                        :class="isFavorite(product.id) ? 'bg-[#FFF1F1] text-[#B46D6D]' : 'text-[#8D6767] hover:bg-[#FFF1F1]'"
+                                        @click="toggleFavorite(product.id)"
+                                    >
+                                        {{ isFavorite(product.id) ? 'В обраному' : 'В обране' }}
+                                    </button>
+                                    <Link
+                                        :href="route('products.show', { product: product.id })"
+                                        class="inline-flex items-center justify-center rounded-full border border-[#E3BEBE] px-5 py-3 text-sm font-semibold text-[#8D6767] transition hover:bg-[#FFF1F1]"
+                                    >
+                                        Детальніше
+                                    </Link>
+                                    <button
+                                        type="button"
+                                        :disabled="isAdding(product.id)"
+                                        class="rounded-full bg-[#B46D6D] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#9E5757] disabled:cursor-not-allowed disabled:opacity-60"
+                                        @click="addToCart(product.id)"
+                                    >
+                                        {{ isAdding(product.id) ? 'Додаємо...' : 'До кошика' }}
+                                    </button>
+                                </div>
                             </div>
                         </article>
                     </div>
@@ -185,7 +229,7 @@
 
 <script setup>
 import { computed, ref, watch } from 'vue'
-import { router } from '@inertiajs/vue3'
+import { Link, router, usePage } from '@inertiajs/vue3'
 import PageLayout from '@/Components/page-layout.vue'
 import { useCartUi } from '@/composables/useCartUi'
 import { useToast } from '@/composables/useToast'
@@ -194,18 +238,53 @@ const props = defineProps({
     products: Object,
     categories: Array,
     filters: Object,
+    favoriteIds: Array,
     priceRange: Object,
     sortOptions: Array,
 })
 
+const page = usePage()
 const { adjust } = useCartUi()
 const { error } = useToast()
 const isFiltering = ref(false)
 const pendingCartIds = ref([])
+const pendingFavoriteIds = ref([])
 const localFilters = ref(buildFilters(props.filters))
+const localFavoriteIds = ref([...(props.favoriteIds ?? [])])
+const activeFilterLabels = computed(() => {
+    const labels = []
+    const selectedCategory = props.categories.find((category) => String(category.id) === localFilters.value.category_id)
+
+    if (localFilters.value.search) {
+        labels.push(`Пошук: ${localFilters.value.search}`)
+    }
+
+    if (selectedCategory) {
+        labels.push(`Категорія: ${selectedCategory.name}`)
+    }
+
+    if (localFilters.value.min_price) {
+        labels.push(`Від ${formatPrice(localFilters.value.min_price)} ₴`)
+    }
+
+    if (localFilters.value.max_price) {
+        labels.push(`До ${formatPrice(localFilters.value.max_price)} ₴`)
+    }
+
+    if (localFilters.value.only_new) {
+        labels.push('Лише новинки')
+    }
+
+    return labels
+})
+const isAuthenticated = computed(() => Boolean(page.props.auth?.user))
 
 watch(() => props.filters, (filters) => {
     localFilters.value = buildFilters(filters)
+}, { deep: true })
+
+watch(() => props.favoriteIds, (favoriteIds) => {
+    localFavoriteIds.value = [...(favoriteIds ?? [])]
 }, { deep: true })
 
 function buildFilters(filters = {}) {
@@ -214,13 +293,14 @@ function buildFilters(filters = {}) {
         category_id: filters.category_id ? String(filters.category_id) : '',
         min_price: filters.min_price ?? '',
         max_price: filters.max_price ?? '',
+        only_new: Boolean(filters.only_new),
         sort: filters.sort ?? 'name_asc',
     }
 }
 
 function normalizedFilters() {
     return Object.fromEntries(
-        Object.entries(localFilters.value).filter(([, value]) => value !== '' && value !== null)
+        Object.entries(localFilters.value).filter(([, value]) => value !== '' && value !== null && value !== false)
     )
 }
 
@@ -257,6 +337,65 @@ function goToPage(url) {
             isFiltering.value = false
         },
     })
+}
+
+function isNewProduct(product) {
+    if (!product?.created_at) {
+        return false
+    }
+
+    const createdAt = new Date(product.created_at)
+    const threshold = new Date()
+    threshold.setDate(threshold.getDate() - 30)
+
+    return createdAt >= threshold
+}
+
+function isFavorite(productId) {
+    return localFavoriteIds.value.includes(productId)
+}
+
+function isFavoritePending(productId) {
+    return pendingFavoriteIds.value.includes(productId)
+}
+
+function toggleFavorite(productId) {
+    if (isFavoritePending(productId)) {
+        return
+    }
+
+    if (!isAuthenticated.value) {
+        router.visit(route('login'))
+
+        return
+    }
+
+    const favorited = isFavorite(productId)
+    const snapshot = [...localFavoriteIds.value]
+    pendingFavoriteIds.value = [...pendingFavoriteIds.value, productId]
+    localFavoriteIds.value = favorited
+        ? localFavoriteIds.value.filter((id) => id !== productId)
+        : [...localFavoriteIds.value, productId]
+
+    const options = {
+        preserveScroll: true,
+        preserveState: true,
+        onError: () => {
+            localFavoriteIds.value = snapshot
+            error('Не вдалося оновити обране. Спробуйте ще раз.')
+        },
+        onFinish: () => {
+            pendingFavoriteIds.value = pendingFavoriteIds.value.filter((id) => id !== productId)
+        },
+    }
+
+    if (favorited) {
+        router.delete(route('favorites.destroy', { product: productId }), options)
+
+        return
+    }
+
+    router.post(route('favorites.store', { product: productId }), {}, options)
 }
 
 function addToCart(productId) {

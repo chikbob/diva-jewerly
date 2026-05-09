@@ -12,7 +12,7 @@
                 </div>
                 <div class="space-y-2">
                     <i class="fa fa-envelope text-3xl text-[#B46D6D] mb-2"></i>
-                    <h3 class="font-semibold text-xl">Email</h3>
+                    <h3 class="font-semibold text-xl">Електронна пошта</h3>
                     <p class="text-lg">support@diva-jewels.com</p>
                 </div>
                 <div class="space-y-2">

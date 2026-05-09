@@ -1,8 +1,11 @@
 <?php
 
-use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\Admin\AuthController as AdminAuthController;
+use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Admin\ResourceController as AdminResourceController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\HealthCheckController;
 use App\Http\Controllers\LivenessCheckController;
 use App\Http\Controllers\MetricsController;
@@ -37,6 +40,22 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/payments/{paymentReference}/simulate/{status}', [PaymentController::class, 'simulate'])->name('payments.simulate');
 });
 
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::get('/login', [AdminAuthController::class, 'create'])->name('login');
+    Route::post('/login', [AdminAuthController::class, 'store'])->name('authenticate');
+
+    Route::middleware(\App\Http\Middleware\EnsureBackofficeSession::class)->group(function () {
+        Route::get('/', AdminDashboardController::class)->name('dashboard');
+        Route::post('/logout', [AdminAuthController::class, 'destroy'])->name('logout');
+        Route::get('/resources/{resource}', [AdminResourceController::class, 'index'])->name('resources.index');
+        Route::get('/resources/{resource}/create', [AdminResourceController::class, 'create'])->name('resources.create');
+        Route::post('/resources/{resource}', [AdminResourceController::class, 'store'])->name('resources.store');
+        Route::get('/resources/{resource}/{record}/edit', [AdminResourceController::class, 'edit'])->name('resources.edit');
+        Route::put('/resources/{resource}/{record}', [AdminResourceController::class, 'update'])->name('resources.update');
+        Route::delete('/resources/{resource}/{record}', [AdminResourceController::class, 'destroy'])->name('resources.destroy');
+    });
+});
+
 // Главная страница - отображаем категории
 Route::get('/', [ProductController::class, 'home'])->name('home');
 Route::get('/live', LivenessCheckController::class)->name('health.live');
@@ -52,9 +71,15 @@ Route::get('/contacts', function () {
 
 // Страница каталога - фильтрация товаров
 Route::get('/catalog', [ProductController::class, 'index'])->name('catalog');
+Route::get('/products/{product}', [ProductController::class, 'show'])->name('products.show');
 
 Route::middleware(['auth'])->group(function () {
+    Route::get('/favorites', [FavoriteController::class, 'index'])->name('favorites.index');
+    Route::post('/favorites/{product}', [FavoriteController::class, 'store'])->name('favorites.store');
+    Route::delete('/favorites/{product}', [FavoriteController::class, 'destroy'])->name('favorites.destroy');
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+    Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
+    Route::post('/orders/{order}/repeat', [OrderController::class, 'repeat'])->name('orders.repeat');
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');

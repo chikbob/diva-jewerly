@@ -7,11 +7,11 @@ namespace App\MoonShine\Resources;
 use App\Models\Product;
 use Illuminate\Database\Eloquent\Model;
 use MoonShine\Fields\ID;
+use MoonShine\Fields\Number;
 use MoonShine\Fields\Preview;
+use MoonShine\Fields\Relationships\BelongsTo;
 use MoonShine\Fields\Text;
 use MoonShine\Fields\Textarea;
-use MoonShine\Fields\Number;
-use MoonShine\Fields\Relationships\BelongsTo;
 use MoonShine\Resources\ModelResource;
 
 /**
@@ -31,12 +31,17 @@ class ProductResource extends ModelResource
             ID::make()->sortable(),
             Text::make('Назва', 'name')->required(),
             Textarea::make('Опис', 'description'),
-            Number::make('Ціна', 'price')->min(0)->step(0.01)->required(),
+            Number::make('Ціна', 'price')->min(0)->step(0.01)->required()->sortable(),
             Text::make('URL зображення', 'image_path'),
             Preview::make('Зображення', 'image_path')
                 ->image(),
             BelongsTo::make('Категорія', 'category', CategoryResource::class),
         ];
+    }
+
+    public function search(): array
+    {
+        return ['id', 'name', 'description'];
     }
 
     public function rules(Model $item): array

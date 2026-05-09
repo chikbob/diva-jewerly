@@ -1,9 +1,25 @@
 <template>
     <page-layout>
-        <section class="container mx-auto max-w-6xl px-6 py-16">
-            <div class="mb-10">
-                <p class="text-xs font-semibold uppercase tracking-[0.35em] text-[#D09A9A]">Secure Checkout</p>
-                <h1 class="mt-2 text-4xl font-extrabold tracking-wide text-[#B46D6D]">Оформлення замовлення</h1>
+        <section class="mx-auto w-full max-w-[1480px] px-4 py-16 sm:px-6 xl:px-8">
+            <div class="mb-10 flex flex-col gap-5 xl:flex-row xl:items-end xl:justify-between">
+                <div>
+                    <p class="text-xs font-semibold uppercase tracking-[0.35em] text-[#D09A9A]">Безпечне оформлення</p>
+                    <h1 class="mt-2 text-4xl font-extrabold tracking-wide text-[#B46D6D]">Оформлення замовлення</h1>
+                    <p class="mt-3 max-w-2xl text-sm leading-7 text-[#8D6767]">
+                        Перевірте склад кошика, залиште контактні дані та оберіть demo-спосіб оплати без введення карткових реквізитів.
+                    </p>
+                </div>
+
+                <div v-if="items.length" class="grid gap-3 sm:grid-cols-2 xl:min-w-[28rem]">
+                    <div class="rounded-[1.6rem] border border-[#E9CFCF] bg-[#FFF8F8] px-5 py-4">
+                        <p class="text-xs font-semibold uppercase tracking-[0.25em] text-[#C49B9B]">Позиції</p>
+                        <p class="mt-2 text-2xl font-black text-[#B46D6D]">{{ items.length }}</p>
+                    </div>
+                    <div class="rounded-[1.6rem] border border-[#E9CFCF] bg-[#FFF8F8] px-5 py-4">
+                        <p class="text-xs font-semibold uppercase tracking-[0.25em] text-[#C49B9B]">Сума</p>
+                        <p class="mt-2 text-2xl font-black text-[#B46D6D]">{{ formatPrice(total) }} ₴</p>
+                    </div>
+                </div>
             </div>
 
             <div v-if="items.length === 0" class="rounded-[2rem] border border-dashed border-[#E7C5C5] bg-[#FFF9F9] px-6 py-16 text-center">
@@ -17,8 +33,8 @@
                 </Link>
             </div>
 
-            <div v-else class="grid grid-cols-1 gap-10 lg:grid-cols-[1.05fr_0.95fr]">
-                <section class="rounded-[2rem] border border-[#E7C5C5] bg-white p-8 shadow-sm">
+            <div v-else class="grid grid-cols-1 gap-10 xl:grid-cols-[1.05fr_0.95fr]">
+                <section class="rounded-[2rem] border border-[#E7C5C5] bg-white p-8 shadow-[0_18px_50px_rgba(180,109,109,0.07)]">
                     <div class="mb-6 flex items-center justify-between">
                         <h2 class="text-2xl font-semibold text-[#B46D6D]">Ваше замовлення</h2>
                         <span class="rounded-full bg-[#FFF2F2] px-4 py-2 text-sm font-semibold text-[#A05F5F]">
@@ -30,7 +46,7 @@
                         <li
                             v-for="item in items"
                             :key="item.id"
-                            class="flex flex-col gap-4 border-b border-[#F1E1E1] pb-5 sm:flex-row sm:items-center sm:justify-between"
+                            class="flex flex-col gap-4 rounded-[1.5rem] border border-[#F1E1E1] bg-[#fffdfd] p-4 sm:flex-row sm:items-center sm:justify-between"
                         >
                             <div class="flex items-center gap-4">
                                 <img
@@ -48,16 +64,16 @@
                         </li>
                     </ul>
 
-                    <div class="mt-6 rounded-[1.5rem] bg-[#FFF8F8] px-5 py-4">
+                    <div class="mt-6 rounded-[1.5rem] border border-[#F1E1E1] bg-[#FFF8F8] px-5 py-4">
                         <p class="text-sm uppercase tracking-[0.25em] text-[#C49B9B]">Загальна сума</p>
                         <p class="mt-2 text-3xl font-extrabold text-[#B46D6D]" aria-live="polite">{{ formatPrice(total) }} ₴</p>
                     </div>
                 </section>
 
-                <form class="rounded-[2rem] border border-[#E7C5C5] bg-white p-8 shadow-sm" @submit.prevent="submit">
+                <form class="rounded-[2rem] border border-[#E7C5C5] bg-white p-8 shadow-[0_18px_50px_rgba(180,109,109,0.07)]" @submit.prevent="submit">
                     <h2 class="text-2xl font-semibold text-[#B46D6D]">Контактні дані</h2>
                     <p class="mt-2 text-sm leading-6 text-[#8D6767]">
-                        Демо-оплата не запитує номер картки. Після створення замовлення ви перейдете на окремий payment status screen, а система збереже лише технічний transaction state без чутливих карткових даних.
+                        Демо-оплата не запитує номер картки. Після створення замовлення ви перейдете на окрему сторінку статусу оплати, а система збереже лише технічний стан транзакції без чутливих карткових даних.
                     </p>
 
                     <div class="mt-8 space-y-6">
@@ -77,7 +93,7 @@
                         </div>
 
                         <div>
-                            <label for="checkout-email" class="mb-2 block text-sm font-semibold text-[#6D4C4C]">Email</label>
+                            <label for="checkout-email" class="mb-2 block text-sm font-semibold text-[#6D4C4C]">Електронна пошта</label>
                             <input
                                 id="checkout-email"
                                 v-model="form.email"
@@ -123,10 +139,17 @@
                             {{ form.errors.cart }}
                         </div>
 
+                        <div class="rounded-[1.5rem] border border-[#F1E1E1] bg-[#FFF8F8] px-5 py-4">
+                            <p class="text-xs font-semibold uppercase tracking-[0.25em] text-[#C49B9B]">Перед підтвердженням</p>
+                            <p class="mt-2 text-sm leading-6 text-[#8D6767]">
+                                Переконайтеся, що ПІБ, email і спосіб оплати вказані коректно. Після цього замовлення буде створено одразу.
+                            </p>
+                        </div>
+
                         <button
                             type="submit"
                             :disabled="form.processing"
-                            class="w-full rounded-full bg-green-600 px-6 py-4 text-sm font-semibold text-white transition hover:bg-green-700 disabled:cursor-not-allowed disabled:opacity-60"
+                            class="w-full rounded-full bg-[#B46D6D] px-6 py-4 text-sm font-semibold text-white transition hover:bg-[#9E5757] disabled:cursor-not-allowed disabled:opacity-60"
                         >
                             {{ form.processing ? 'Створюємо замовлення...' : 'Підтвердити замовлення' }}
                         </button>
