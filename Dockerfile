@@ -39,12 +39,31 @@ RUN apt-get update \
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
+COPY composer.json composer.lock ./
+RUN composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader --no-scripts
+
+COPY package.json package-lock.json ./
+RUN npm ci
+
+COPY . .
+
+RUN cp .env.example .env \
+    && mkdir -p storage/framework/cache storage/framework/sessions storage/framework/views storage/logs bootstrap/cache \
+    && chmod -R ug+rwX storage bootstrap/cache \
+    && php artisan package:discover --ansi \
+    && npm run build \
+    && php artisan config:clear \
+    && php artisan route:clear \
+    && php artisan view:clear
+
 COPY docker/php/php.ini /usr/local/etc/php/conf.d/99-app.ini
 COPY docker/scripts/app-entrypoint.sh /usr/local/bin/docker-app-entrypoint.sh
 COPY docker/scripts/vite-entrypoint.sh /usr/local/bin/docker-vite-entrypoint.sh
 
 RUN chmod +x /usr/local/bin/docker-app-entrypoint.sh /usr/local/bin/docker-vite-entrypoint.sh
 
-EXPOSE 9000 5173
+ENTRYPOINT ["/usr/local/bin/docker-app-entrypoint.sh"]
 
-CMD ["php-fpm"]
+EXPOSE 8080
+
+CMD ["sh", "-lc", "exec php artisan serve --host=0.0.0.0 --port=${PORT:-8080}"]

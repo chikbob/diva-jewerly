@@ -7,6 +7,37 @@ if [ ! -f .env ]; then
     cp .env.docker.example .env
 fi
 
+set_env_var() {
+    key="$1"
+    value="$2"
+
+    if [ -z "$value" ]; then
+        return
+    fi
+
+    escaped_value=$(printf '%s' "$value" | sed 's/[\/&]/\\&/g')
+
+    if grep -q "^${key}=" .env; then
+        sed -i "s/^${key}=.*/${key}=${escaped_value}/" .env
+    else
+        printf '\n%s=%s\n' "$key" "$value" >> .env
+    fi
+}
+
+set_env_var APP_ENV "${APP_ENV:-}"
+set_env_var APP_DEBUG "${APP_DEBUG:-}"
+set_env_var APP_URL "${APP_URL:-}"
+set_env_var DB_CONNECTION "${DB_CONNECTION:-}"
+set_env_var DB_HOST "${DB_HOST:-}"
+set_env_var DB_PORT "${DB_PORT:-}"
+set_env_var DB_DATABASE "${DB_DATABASE:-}"
+set_env_var DB_USERNAME "${DB_USERNAME:-}"
+set_env_var DB_PASSWORD "${DB_PASSWORD:-}"
+set_env_var SESSION_SECURE_COOKIE "${SESSION_SECURE_COOKIE:-}"
+set_env_var TRUSTED_HOSTS "${TRUSTED_HOSTS:-}"
+set_env_var TRUSTED_PROXIES "${TRUSTED_PROXIES:-}"
+set_env_var CORS_ALLOWED_ORIGINS "${CORS_ALLOWED_ORIGINS:-}"
+
 mkdir -p storage/framework/cache storage/framework/sessions storage/framework/views storage/logs bootstrap/cache
 chmod -R ug+rwX storage bootstrap/cache
 
@@ -41,12 +72,14 @@ if ! grep -q '^APP_KEY=base64:' .env; then
     php artisan key:generate --force
 fi
 
-until mysqladmin ping -h"${DB_HOST:-db}" -P"${DB_PORT:-3306}" -u"${DB_USERNAME:-laravel}" -p"${DB_PASSWORD:-secret}" --silent; do
-    echo "Waiting for MySQL at ${DB_HOST:-db}:${DB_PORT:-3306}..."
-    sleep 2
-done
+if [ -n "${DB_HOST:-}" ] && [ -n "${DB_PORT:-}" ] && [ -n "${DB_USERNAME:-}" ] && [ -n "${DB_DATABASE:-}" ]; then
+    until mysqladmin ping -h"${DB_HOST}" -P"${DB_PORT}" -u"${DB_USERNAME}" -p"${DB_PASSWORD:-}" --silent; do
+        echo "Waiting for MySQL at ${DB_HOST}:${DB_PORT}..."
+        sleep 2
+    done
 
-php artisan migrate --force
+    php artisan migrate --force
+fi
 
 if [ ! -L public/storage ] && [ ! -e public/storage ]; then
     php artisan storage:link
