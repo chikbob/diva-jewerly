@@ -1,6 +1,11 @@
 #!/bin/sh
 set -eu
 
+if [ ! -f /var/www/html/artisan ] && [ -d /opt/app-template ]; then
+    mkdir -p /var/www/html
+    cp -a /opt/app-template/. /var/www/html/
+fi
+
 cd /var/www/html
 
 if [ ! -f .env ]; then
@@ -25,6 +30,7 @@ set_env_var() {
 }
 
 set_env_var APP_ENV "${APP_ENV:-}"
+set_env_var APP_KEY "${APP_KEY:-}"
 set_env_var APP_DEBUG "${APP_DEBUG:-}"
 set_env_var APP_URL "${APP_URL:-}"
 set_env_var DB_CONNECTION "${DB_CONNECTION:-}"
@@ -33,60 +39,23 @@ set_env_var DB_PORT "${DB_PORT:-}"
 set_env_var DB_DATABASE "${DB_DATABASE:-}"
 set_env_var DB_USERNAME "${DB_USERNAME:-}"
 set_env_var DB_PASSWORD "${DB_PASSWORD:-}"
+set_env_var SESSION_DRIVER "${SESSION_DRIVER:-}"
 set_env_var SESSION_SECURE_COOKIE "${SESSION_SECURE_COOKIE:-}"
 set_env_var TRUSTED_HOSTS "${TRUSTED_HOSTS:-}"
 set_env_var TRUSTED_PROXIES "${TRUSTED_PROXIES:-}"
 set_env_var CORS_ALLOWED_ORIGINS "${CORS_ALLOWED_ORIGINS:-}"
 
 mkdir -p storage/framework/cache storage/framework/sessions storage/framework/views storage/logs bootstrap/cache
+chown -R www-data:www-data storage bootstrap/cache
 chmod -R ug+rwX storage bootstrap/cache
 
-if [ ! -f vendor/autoload.php ]; then
-    composer install --no-interaction --prefer-dist
-fi
+until [ -z "${DB_HOST:-}" ] || [ -z "${DB_PORT:-}" ] || [ -z "${DB_USERNAME:-}" ] || [ -z "${DB_DATABASE:-}" ] || mysqladmin ping -h"${DB_HOST}" -P"${DB_PORT}" -u"${DB_USERNAME}" -p"${DB_PASSWORD:-}" --silent; do
+    echo "Waiting for MySQL at ${DB_HOST}:${DB_PORT}..."
+    sleep 2
+done
 
-LOCKFILE_HASH_FILE="node_modules/.package-lock.sha256"
-NEEDS_NPM_INSTALL="false"
-
-if [ ! -x node_modules/.bin/vite ]; then
-    NEEDS_NPM_INSTALL="true"
-elif [ -f package-lock.json ]; then
-    CURRENT_LOCKFILE_HASH="$(sha256sum package-lock.json | awk '{print $1}')"
-    STORED_LOCKFILE_HASH="$(cat "$LOCKFILE_HASH_FILE" 2>/dev/null || true)"
-
-    if [ "$CURRENT_LOCKFILE_HASH" != "$STORED_LOCKFILE_HASH" ]; then
-        NEEDS_NPM_INSTALL="true"
-    fi
-fi
-
-if [ "$NEEDS_NPM_INSTALL" = "true" ]; then
-    npm install
-
-    if [ -f package-lock.json ]; then
-        mkdir -p node_modules
-        sha256sum package-lock.json | awk '{print $1}' > "$LOCKFILE_HASH_FILE"
-    fi
-fi
-
-if ! grep -q '^APP_KEY=base64:' .env; then
-    php artisan key:generate --force
-fi
-
-if [ -n "${DB_HOST:-}" ] && [ -n "${DB_PORT:-}" ] && [ -n "${DB_USERNAME:-}" ] && [ -n "${DB_DATABASE:-}" ]; then
-    until mysqladmin ping -h"${DB_HOST}" -P"${DB_PORT}" -u"${DB_USERNAME}" -p"${DB_PASSWORD:-}" --silent; do
-        echo "Waiting for MySQL at ${DB_HOST}:${DB_PORT}..."
-        sleep 2
-    done
-
-    php artisan migrate --force
-fi
-
-if [ ! -L public/storage ] && [ ! -e public/storage ]; then
-    php artisan storage:link
-fi
-
-if [ ! -f public/vendor/moonshine/manifest.json ]; then
-    php artisan vendor:publish --tag=moonshine-assets --force
+if [ -f artisan ]; then
+    php artisan migrate --force --ansi
 fi
 
 exec "$@"
