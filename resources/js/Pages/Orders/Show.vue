@@ -44,6 +44,30 @@
                 <span class="rounded-full border border-[#F0DEDE] bg-[#FFF8F8] px-4 py-2 text-sm font-semibold text-[#8D6767]">
                     {{ paymentMethodLabel(order.payment_method) }}
                 </span>
+                <a
+                    :href="route('orders.receipt.show', { order: order.id })"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="inline-flex rounded-full border border-[#E3BEBE] bg-white px-4 py-2 text-sm font-semibold text-[#8D6767] transition hover:bg-[#FFF1F1]"
+                >
+                    Відкрити чек
+                </a>
+                <a
+                    :href="route('orders.receipt.show', { order: order.id, print: 1 })"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="inline-flex rounded-full border border-[#E3BEBE] bg-white px-4 py-2 text-sm font-semibold text-[#8D6767] transition hover:bg-[#FFF1F1]"
+                >
+                    Друк чека
+                </a>
+                <button
+                    type="button"
+                    :disabled="isDownloadingReceiptPdf"
+                    class="inline-flex rounded-full border border-[#E3BEBE] bg-white px-4 py-2 text-sm font-semibold text-[#8D6767] transition hover:bg-[#FFF1F1] disabled:cursor-not-allowed disabled:opacity-60"
+                    @click="downloadReceiptPdf"
+                >
+                    {{ isDownloadingReceiptPdf ? 'Готуємо PDF...' : 'Завантажити PDF' }}
+                </button>
             </div>
 
             <div class="grid gap-6 xl:grid-cols-[1.15fr_0.85fr]">
@@ -142,13 +166,16 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { Link } from '@inertiajs/vue3'
 import PageLayout from '@/Components/page-layout.vue'
+import { downloadOrderReceiptPdf } from '@/composables/usePdf'
 
 const props = defineProps({
     order: Object,
 })
+
+const isDownloadingReceiptPdf = ref(false)
 
 const formattedDate = computed(() => {
     if (!props.order?.created_at) {
@@ -208,5 +235,15 @@ function formatPrice(value) {
         minimumFractionDigits: 0,
         maximumFractionDigits: 2,
     })
+}
+
+async function downloadReceiptPdf() {
+    isDownloadingReceiptPdf.value = true
+
+    try {
+        await downloadOrderReceiptPdf(props.order)
+    } finally {
+        isDownloadingReceiptPdf.value = false
+    }
 }
 </script>

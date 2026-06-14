@@ -54,7 +54,10 @@ RUN cp .env.example .env \
     && npm run build \
     && php artisan config:clear \
     && php artisan route:clear \
-    && php artisan view:clear
+    && php artisan view:clear \
+    && rm -rf /opt/app-template \
+    && mkdir -p /opt/app-template \
+    && cp -a /var/www/html/. /opt/app-template/
 
 COPY docker/php/php.ini /usr/local/etc/php/conf.d/99-app.ini
 COPY docker/scripts/app-entrypoint.sh /usr/local/bin/docker-app-entrypoint.sh

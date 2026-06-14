@@ -68,13 +68,22 @@
                     </div>
                 </form>
 
-                <Link
-                    v-if="resource.permissions.create"
-                    :href="route('admin.resources.create', { resource: resource.key })"
-                    class="inline-flex rounded-full bg-[#b46d6d] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#9e5757]"
-                >
-                    Створити запис
-                </Link>
+                <div class="flex flex-wrap gap-3">
+                    <Link
+                        v-if="resource.key === 'orders'"
+                        :href="route('admin.reports.orders')"
+                        class="inline-flex rounded-full border border-[#efcfdb] px-5 py-3 text-sm font-semibold text-[#9e5757] transition hover:bg-[#fff1f5]"
+                    >
+                        Сформувати звіт
+                    </Link>
+                    <Link
+                        v-if="resource.permissions.create"
+                        :href="route('admin.resources.create', { resource: resource.key })"
+                        class="inline-flex rounded-full bg-[#b46d6d] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#9e5757]"
+                    >
+                        Створити запис
+                    </Link>
+                </div>
             </div>
 
             <div class="mt-6 overflow-x-auto">

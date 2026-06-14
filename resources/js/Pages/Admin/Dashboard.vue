@@ -38,6 +38,12 @@
                 >
                     Відкрити всі замовлення
                 </Link>
+                <Link
+                    :href="route('admin.reports.orders')"
+                    class="inline-flex rounded-full bg-[#b46d6d] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#9e5757]"
+                >
+                    Сформувати звіт
+                </Link>
             </div>
 
             <div class="mt-6 overflow-x-auto">

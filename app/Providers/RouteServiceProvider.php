@@ -52,7 +52,7 @@ class RouteServiceProvider extends ServiceProvider
         });
 
         $this->routes(function () {
-            Route::group(base_path('routes/health.php'));
+            Route::group([], base_path('routes/health.php'));
 
             Route::middleware('api')
                 ->prefix('api')

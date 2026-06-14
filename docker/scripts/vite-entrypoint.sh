@@ -1,6 +1,11 @@
 #!/bin/sh
 set -eu
 
+if [ ! -f /var/www/html/artisan ] && [ -d /opt/app-template ]; then
+    mkdir -p /var/www/html
+    cp -a /opt/app-template/. /var/www/html/
+fi
+
 cd /var/www/html
 
 if [ ! -f .env ]; then
