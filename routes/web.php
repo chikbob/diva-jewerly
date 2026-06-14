@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AuthController as AdminAuthController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Admin\OrderReportController as AdminOrderReportController;
 use App\Http\Controllers\Admin\ResourceController as AdminResourceController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
@@ -44,6 +45,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::middleware(\App\Http\Middleware\EnsureBackofficeSession::class)->group(function () {
         Route::get('/', AdminDashboardController::class)->name('dashboard');
         Route::post('/logout', [AdminAuthController::class, 'destroy'])->name('logout');
+        Route::get('/reports/orders', [AdminOrderReportController::class, 'index'])->name('reports.orders');
+        Route::get('/reports/orders/export', [AdminOrderReportController::class, 'export'])->name('reports.orders.export');
         Route::get('/resources/{resource}', [AdminResourceController::class, 'index'])->name('resources.index');
         Route::get('/resources/{resource}/create', [AdminResourceController::class, 'create'])->name('resources.create');
         Route::post('/resources/{resource}', [AdminResourceController::class, 'store'])->name('resources.store');
