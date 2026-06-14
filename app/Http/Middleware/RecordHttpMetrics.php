@@ -32,32 +32,30 @@ class RecordHttpMetrics
             $route = $request->route()?->getName() ?? trim($request->path(), '/');
             $route = $route === '' ? '/' : $route;
 
-            if (in_array($route, config('operations.metrics.http.excluded_routes', []), true)) {
-                return;
-            }
+            if (! in_array($route, config('operations.metrics.http.excluded_routes', []), true)) {
+                $labels = [
+                    'method' => $request->method(),
+                    'route' => $route,
+                    'status_class' => $this->statusClass($statusCode),
+                ];
 
-            $labels = [
-                'method' => $request->method(),
-                'route' => $route,
-                'status_class' => $this->statusClass($statusCode),
-            ];
+                try {
+                    $this->metricStore->incrementCounter(
+                        'http_requests_total',
+                        'Total HTTP requests observed by route, method and status class.',
+                        $labels
+                    );
 
-            try {
-                $this->metricStore->incrementCounter(
-                    'http_requests_total',
-                    'Total HTTP requests observed by route, method and status class.',
-                    $labels
-                );
-
-                $this->metricStore->observeHistogram(
-                    'http_request_duration_seconds',
-                    'HTTP request duration in seconds by route, method and status class.',
-                    microtime(true) - $startedAt,
-                    $labels,
-                    config('operations.metrics.http.duration_buckets')
-                );
-            } catch (Throwable $exception) {
-                report($exception);
+                    $this->metricStore->observeHistogram(
+                        'http_request_duration_seconds',
+                        'HTTP request duration in seconds by route, method and status class.',
+                        microtime(true) - $startedAt,
+                        $labels,
+                        config('operations.metrics.http.duration_buckets')
+                    );
+                } catch (Throwable $exception) {
+                    report($exception);
+                }
             }
         }
     }

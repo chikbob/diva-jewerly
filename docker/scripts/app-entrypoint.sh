@@ -12,6 +12,25 @@ if [ ! -f .env ]; then
     cp .env.docker.example .env
 fi
 
+if [ -z "${DB_CONNECTION:-}" ]; then
+    case "${DATABASE_URL:-}" in
+        postgres://*|postgresql://*|pgsql://*)
+            DB_CONNECTION=pgsql
+            export DB_CONNECTION
+            ;;
+    esac
+fi
+
+if [ "${DB_CONNECTION:-}" = "pgsql" ]; then
+    : "${DB_HOST:=${PGHOST:-}}"
+    : "${DB_PORT:=${PGPORT:-5432}}"
+    : "${DB_DATABASE:=${PGDATABASE:-}}"
+    : "${DB_USERNAME:=${PGUSER:-}}"
+    : "${DB_PASSWORD:=${PGPASSWORD:-}}"
+
+    export DB_HOST DB_PORT DB_DATABASE DB_USERNAME DB_PASSWORD
+fi
+
 set_env_var() {
     key="$1"
     value="$2"
@@ -33,6 +52,7 @@ set_env_var APP_ENV "${APP_ENV:-}"
 set_env_var APP_KEY "${APP_KEY:-}"
 set_env_var APP_DEBUG "${APP_DEBUG:-}"
 set_env_var APP_URL "${APP_URL:-}"
+set_env_var DATABASE_URL "${DATABASE_URL:-}"
 set_env_var DB_CONNECTION "${DB_CONNECTION:-}"
 set_env_var DB_HOST "${DB_HOST:-}"
 set_env_var DB_PORT "${DB_PORT:-}"
@@ -49,10 +69,22 @@ mkdir -p storage/framework/cache storage/framework/sessions storage/framework/vi
 chown -R www-data:www-data storage bootstrap/cache
 chmod -R ug+rwX storage bootstrap/cache
 
-until [ -z "${DB_HOST:-}" ] || [ -z "${DB_PORT:-}" ] || [ -z "${DB_USERNAME:-}" ] || [ -z "${DB_DATABASE:-}" ] || mysqladmin ping -h"${DB_HOST}" -P"${DB_PORT}" -u"${DB_USERNAME}" -p"${DB_PASSWORD:-}" --silent; do
-    echo "Waiting for MySQL at ${DB_HOST}:${DB_PORT}..."
-    sleep 2
-done
+case "${DB_CONNECTION:-}" in
+    pgsql)
+        export PGPASSWORD="${DB_PASSWORD:-}"
+
+        until [ -z "${DB_HOST:-}" ] || [ -z "${DB_PORT:-}" ] || [ -z "${DB_USERNAME:-}" ] || [ -z "${DB_DATABASE:-}" ] || pg_isready -h "${DB_HOST}" -p "${DB_PORT}" -U "${DB_USERNAME}" -d "${DB_DATABASE}" > /dev/null 2>&1; do
+            echo "Waiting for PostgreSQL at ${DB_HOST}:${DB_PORT}..."
+            sleep 2
+        done
+        ;;
+    mysql)
+        until [ -z "${DB_HOST:-}" ] || [ -z "${DB_PORT:-}" ] || [ -z "${DB_USERNAME:-}" ] || [ -z "${DB_DATABASE:-}" ] || mysqladmin ping -h"${DB_HOST}" -P"${DB_PORT}" -u"${DB_USERNAME}" -p"${DB_PASSWORD:-}" --silent; do
+            echo "Waiting for MySQL at ${DB_HOST}:${DB_PORT}..."
+            sleep 2
+        done
+        ;;
+esac
 
 if [ -f artisan ]; then
     php artisan migrate --force --ansi

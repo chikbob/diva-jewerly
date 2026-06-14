@@ -20,6 +20,7 @@ RUN apt-get update \
         libpng-dev \
         libxml2-dev \
         libzip-dev \
+        postgresql-client \
         unzip \
         zip \
     && curl -fsSL https://deb.nodesource.com/setup_${NODE_MAJOR}.x | bash - \
@@ -33,6 +34,7 @@ RUN apt-get update \
         gd \
         intl \
         mbstring \
+        pdo_pgsql \
         pdo_mysql \
         zip \
     && rm -rf /var/lib/apt/lists/*

@@ -15,7 +15,20 @@ return [
     |
     */
 
-    'default' => env('DB_CONNECTION', 'mysql'),
+    'default' => env('DB_CONNECTION', (static function (): string {
+        $databaseUrl = strtolower((string) env('DATABASE_URL', ''));
+
+        if (
+            str_starts_with($databaseUrl, 'pgsql://')
+            || str_starts_with($databaseUrl, 'postgres://')
+            || str_starts_with($databaseUrl, 'postgresql://')
+            || env('PGHOST') !== null
+        ) {
+            return 'pgsql';
+        }
+
+        return 'mysql';
+    })()),
 
     /*
     |--------------------------------------------------------------------------
