@@ -39,7 +39,7 @@ docker compose up --build
 
 3. The app container will automatically:
 
-- copy `.env.docker.example` to `.env` when needed
+- copy `.env.example` to `.env` when needed
 - install Composer dependencies
 - install frontend dependencies
 - generate an application key

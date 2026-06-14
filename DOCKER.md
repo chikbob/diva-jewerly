@@ -21,7 +21,7 @@ docker compose up --build
 
 ## Environment
 
-- If `.env` does not exist, the container copies `.env.docker.example` to `.env`.
+- If `.env` does not exist, the container copies `.env.example` to `.env`.
 - Docker runtime overrides the DB settings so Laravel uses the `db` container.
 - Default Docker database credentials:
   - database: `diva_jewelry`

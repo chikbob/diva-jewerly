@@ -9,7 +9,7 @@ fi
 cd /var/www/html
 
 if [ ! -f .env ]; then
-    cp .env.docker.example .env
+    cp .env.example .env
 fi
 
 if ! grep -q '^APP_KEY=base64:' .env 2>/dev/null && [ -z "${APP_KEY:-}" ]; then

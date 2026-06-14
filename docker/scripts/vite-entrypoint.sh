@@ -9,7 +9,7 @@ fi
 cd /var/www/html
 
 if [ ! -f .env ]; then
-    cp .env.docker.example .env
+    cp .env.example .env
 fi
 
 LOCKFILE_HASH_FILE="node_modules/.package-lock.sha256"
