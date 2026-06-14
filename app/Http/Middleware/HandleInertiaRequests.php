@@ -5,7 +5,9 @@ namespace App\Http\Middleware;
 use App\Models\User;
 use App\Support\CartCounter;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Middleware;
+use Throwable;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -38,11 +40,7 @@ class HandleInertiaRequests extends Middleware
                 'user' => fn () => $appUser,
             ],
             'backoffice' => [
-                'user' => fn () => auth(config('moonshine.auth.guard', 'moonshine'))->user()?->only([
-                    'id',
-                    'name',
-                    'email',
-                ]),
+                'user' => fn () => $this->backofficeUser(),
             ],
             'flash' => [
                 'message' => fn () => $request->session()->get('message'),
@@ -55,5 +53,24 @@ class HandleInertiaRequests extends Middleware
                 ? $appUser->favorites()->count()
                 : 0,
         ]);
+    }
+
+    private function backofficeUser(): ?array
+    {
+        $guard = (string) config('moonshine.auth.guard', 'moonshine');
+
+        if (! is_array(config("auth.guards.{$guard}"))) {
+            return null;
+        }
+
+        try {
+            return Auth::guard($guard)->user()?->only([
+                    'id',
+                    'name',
+                    'email',
+            ]);
+        } catch (Throwable) {
+            return null;
+        }
     }
 }
