@@ -12,6 +12,11 @@ if [ ! -f .env ]; then
     cp .env.docker.example .env
 fi
 
+if ! grep -q '^APP_KEY=base64:' .env 2>/dev/null && [ -z "${APP_KEY:-}" ]; then
+    APP_KEY="$(php -r 'echo "base64:".base64_encode(random_bytes(32));')"
+    export APP_KEY
+fi
+
 if [ -z "${DB_CONNECTION:-}" ]; then
     case "${DATABASE_URL:-}" in
         postgres://*|postgresql://*|pgsql://*)
