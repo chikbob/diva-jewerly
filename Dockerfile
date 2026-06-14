@@ -17,6 +17,7 @@ RUN apt-get update \
         libicu-dev \
         libjpeg62-turbo-dev \
         libonig-dev \
+        libpq-dev \
         libpng-dev \
         libxml2-dev \
         libzip-dev \
