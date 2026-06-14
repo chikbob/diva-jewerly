@@ -49,6 +49,7 @@ set_env_var() {
 }
 
 set_env_var APP_ENV "${APP_ENV:-}"
+set_env_var APP_NAME "${APP_NAME:-}"
 set_env_var APP_KEY "${APP_KEY:-}"
 set_env_var APP_DEBUG "${APP_DEBUG:-}"
 set_env_var APP_URL "${APP_URL:-}"
@@ -59,11 +60,20 @@ set_env_var DB_PORT "${DB_PORT:-}"
 set_env_var DB_DATABASE "${DB_DATABASE:-}"
 set_env_var DB_USERNAME "${DB_USERNAME:-}"
 set_env_var DB_PASSWORD "${DB_PASSWORD:-}"
+set_env_var CACHE_DRIVER "${CACHE_DRIVER:-}"
+set_env_var QUEUE_CONNECTION "${QUEUE_CONNECTION:-}"
 set_env_var SESSION_DRIVER "${SESSION_DRIVER:-}"
 set_env_var SESSION_SECURE_COOKIE "${SESSION_SECURE_COOKIE:-}"
+set_env_var SESSION_SAME_SITE "${SESSION_SAME_SITE:-}"
 set_env_var TRUSTED_HOSTS "${TRUSTED_HOSTS:-}"
 set_env_var TRUSTED_PROXIES "${TRUSTED_PROXIES:-}"
 set_env_var CORS_ALLOWED_ORIGINS "${CORS_ALLOWED_ORIGINS:-}"
+set_env_var REDIS_URL "${REDIS_URL:-}"
+set_env_var REDIS_HOST "${REDIS_HOST:-}"
+set_env_var REDIS_PORT "${REDIS_PORT:-}"
+set_env_var REDIS_USERNAME "${REDIS_USERNAME:-}"
+set_env_var REDIS_PASSWORD "${REDIS_PASSWORD:-}"
+set_env_var REDIS_CLIENT "${REDIS_CLIENT:-}"
 
 mkdir -p storage/framework/cache storage/framework/sessions storage/framework/views storage/logs bootstrap/cache
 chown -R www-data:www-data storage bootstrap/cache

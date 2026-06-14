@@ -58,6 +58,7 @@ RUN cp .env.example .env \
     && php artisan config:clear \
     && php artisan route:clear \
     && php artisan view:clear \
+    && rm -f .env \
     && rm -rf /opt/app-template \
     && mkdir -p /opt/app-template \
     && cp -a /var/www/html/. /opt/app-template/
