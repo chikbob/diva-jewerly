@@ -62,11 +62,10 @@
                 </a>
                 <button
                     type="button"
-                    :disabled="isDownloadingReceiptPdf"
-                    class="inline-flex rounded-full border border-[#E3BEBE] bg-white px-4 py-2 text-sm font-semibold text-[#8D6767] transition hover:bg-[#FFF1F1] disabled:cursor-not-allowed disabled:opacity-60"
-                    @click="downloadReceiptPdf"
+                    class="inline-flex rounded-full border border-[#E3BEBE] bg-white px-4 py-2 text-sm font-semibold text-[#8D6767] transition hover:bg-[#FFF1F1]"
+                    @click="openReceiptPdf"
                 >
-                    {{ isDownloadingReceiptPdf ? 'Готуємо PDF...' : 'Завантажити PDF' }}
+                    Завантажити PDF
                 </button>
             </div>
 
@@ -166,16 +165,13 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 import { Link } from '@inertiajs/vue3'
 import PageLayout from '@/Components/page-layout.vue'
-import { downloadOrderReceiptPdf } from '@/composables/usePdf'
 
 const props = defineProps({
     order: Object,
 })
-
-const isDownloadingReceiptPdf = ref(false)
 
 const formattedDate = computed(() => {
     if (!props.order?.created_at) {
@@ -237,13 +233,7 @@ function formatPrice(value) {
     })
 }
 
-async function downloadReceiptPdf() {
-    isDownloadingReceiptPdf.value = true
-
-    try {
-        await downloadOrderReceiptPdf(props.order)
-    } finally {
-        isDownloadingReceiptPdf.value = false
-    }
+function openReceiptPdf() {
+    window.open(route('orders.receipt.download', { order: props.order.id }), '_blank', 'noopener,noreferrer')
 }
 </script>

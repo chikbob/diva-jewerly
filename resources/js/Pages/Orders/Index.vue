@@ -151,6 +151,30 @@
                     <div class="mt-5 flex flex-col gap-4 text-sm text-[#8D6767] xl:flex-row xl:items-center xl:justify-between">
                         <div class="flex flex-wrap items-center gap-3">
                             <span class="rounded-full border border-[#F0DEDE] bg-[#FFF8F8] px-4 py-2">Платіжний референс: {{ order.payment_reference }}</span>
+                            <a
+                                :href="route('orders.receipt.show', { order: order.id })"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="rounded-full border border-[#E3BEBE] px-4 py-2 text-sm font-semibold text-[#8D6767] transition hover:bg-[#FFF1F1]"
+                            >
+                                Відкрити чек
+                            </a>
+                            <a
+                                :href="route('orders.receipt.show', { order: order.id, print: 1 })"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="rounded-full border border-[#E3BEBE] px-4 py-2 text-sm font-semibold text-[#8D6767] transition hover:bg-[#FFF1F1]"
+                            >
+                                Друк чека
+                            </a>
+                            <a
+                                :href="route('orders.receipt.download', { order: order.id })"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="rounded-full border border-[#E3BEBE] px-4 py-2 text-sm font-semibold text-[#8D6767] transition hover:bg-[#FFF1F1]"
+                            >
+                                Завантажити PDF
+                            </a>
                             <Link
                                 :href="route('orders.repeat', { order: order.id })"
                                 method="post"

@@ -5,6 +5,7 @@
         description="Фільтрований звіт по продажах, середньому чеку, щоденній динаміці та товарах-лідерах."
         eyebrow="Аналітика продажів"
     >
+        <div ref="reportRoot">
         <section class="rounded-[2rem] border border-[#f0d7e3] bg-white/95 p-6 shadow-[0_18px_45px_rgba(180,109,109,0.08)]">
             <div class="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
                 <form class="grid flex-1 gap-3 md:grid-cols-2 xl:grid-cols-4" @submit.prevent="applyFilters">
@@ -210,6 +211,7 @@
                 </section>
             </div>
         </section>
+        </div>
     </AdminLayout>
 </template>
 
@@ -231,6 +233,7 @@ const props = defineProps({
 
 const localFilters = ref(buildFilters(props.filters))
 const isDownloadingPdf = ref(false)
+const reportRoot = ref(null)
 
 watch(() => props.filters, (filters) => {
     localFilters.value = buildFilters(filters)
@@ -294,13 +297,7 @@ async function downloadPdf() {
     isDownloadingPdf.value = true
 
     try {
-        await downloadOrdersReportPdf({
-            filters: props.filters,
-            summary: props.summary,
-            orders: props.orders.data,
-            topProducts: props.topProducts,
-            dailyBreakdown: props.dailyBreakdown,
-        })
+        await downloadOrdersReportPdf(reportRoot.value)
     } finally {
         isDownloadingPdf.value = false
     }

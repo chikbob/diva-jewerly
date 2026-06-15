@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Чек замовлення #{{ $order->id }}</title>
-    <script src="/vendor/jspdf/jspdf.umd.min.js"></script>
+    @vite('resources/js/receipt.js')
     <style>
         :root {
             color-scheme: light;
@@ -162,7 +162,9 @@
         }
     </style>
 </head>
-<body>
+<body data-auto-print="{{ $autoPrint ? '1' : '0' }}" data-auto-download-pdf="{{ $autoDownloadPdf ? '1' : '0' }}">
+    <script id="receipt-order-data" type="application/json">{!! \Illuminate\Support\Js::encode($receiptPayload) !!}</script>
+
     <div class="page">
         @if ($showActions)
             <div class="toolbar">
@@ -260,214 +262,5 @@
         </article>
     </div>
 
-    <script>
-        const receiptOrder = @json([
-            'id' => $order->id,
-            'created_at' => $order->created_at?->toIso8601String(),
-            'full_name' => $order->full_name,
-            'email' => $order->email,
-            'payment_method' => $order->payment_method,
-            'payment_status' => $order->payment_status,
-            'payment_reference' => $order->payment_reference,
-            'status' => $order->status,
-            'total' => (float) $order->total,
-            'items' => $order->items->map(fn ($item) => [
-                'product_name' => $item->product?->name ?? 'Товар недоступний',
-                'product_category' => $item->product?->category?->name,
-                'product_description' => $item->product?->description,
-                'quantity' => $item->quantity,
-                'price' => (float) $item->price,
-                'line_total' => (float) $item->price * (int) $item->quantity,
-            ])->values()->all(),
-        ]);
-
-        let fontPromise;
-
-        function formatPrice(value) {
-            return Number(value ?? 0).toLocaleString('uk-UA', {
-                minimumFractionDigits: 0,
-                maximumFractionDigits: 2,
-            });
-        }
-
-        function formatDate(value) {
-            if (!value) {
-                return 'невідомо';
-            }
-
-            return new Date(value).toLocaleString('uk-UA');
-        }
-
-        function statusLabel(status) {
-            return {
-                pending: 'В очікуванні',
-                paid: 'Сплачено',
-                failed: 'Помилка',
-                cancelled: 'Скасовано',
-            }[status] ?? status;
-        }
-
-        function paymentMethodLabel(paymentMethod) {
-            return {
-                demo_card: 'Демо-картка',
-                cash_on_delivery: 'Післяплата',
-            }[paymentMethod] ?? paymentMethod;
-        }
-
-        function paymentStatusLabel(status) {
-            return {
-                paid: 'Оплачено',
-                pending: 'Оплата очікується',
-                failed: 'Оплата неуспішна',
-                cancelled: 'Оплату скасовано',
-            }[status] ?? status;
-        }
-
-        function arrayBufferToBase64(buffer) {
-            const bytes = new Uint8Array(buffer);
-            const chunkSize = 0x8000;
-            let binary = '';
-
-            for (let i = 0; i < bytes.length; i += chunkSize) {
-                const chunk = bytes.subarray(i, i + chunkSize);
-                binary += String.fromCharCode(...chunk);
-            }
-
-            return btoa(binary);
-        }
-
-        async function loadFontBase64() {
-            if (fontPromise) {
-                return fontPromise;
-            }
-
-            fontPromise = fetch('/fonts/Roboto-Regular.ttf')
-                .then((response) => {
-                    if (!response.ok) {
-                        throw new Error('Failed to load PDF font');
-                    }
-
-                    return response.arrayBuffer();
-                })
-                .then((buffer) => arrayBufferToBase64(buffer));
-
-            return fontPromise;
-        }
-
-        async function createPdf() {
-            const doc = new window.jspdf.jsPDF({
-                orientation: 'portrait',
-                unit: 'mm',
-                format: 'a4',
-            });
-
-            const fontBase64 = await loadFontBase64();
-
-            if (!doc.getFontList().Roboto) {
-                doc.addFileToVFS('Roboto-Regular.ttf', fontBase64);
-                doc.addFont('Roboto-Regular.ttf', 'Roboto', 'normal');
-            }
-
-            doc.setFont('Roboto', 'normal');
-            doc.setTextColor(95, 61, 72);
-
-            return doc;
-        }
-
-        function ensureSpace(doc, cursor, heightNeeded) {
-            if (cursor.y + heightNeeded <= cursor.pageHeight - cursor.margin) {
-                return;
-            }
-
-            doc.addPage();
-            doc.setFont('Roboto', 'normal');
-            doc.setTextColor(95, 61, 72);
-            cursor.y = cursor.margin;
-        }
-
-        function drawLine(doc, cursor, text, options = {}) {
-            const size = options.size ?? 11;
-            const x = options.x ?? cursor.margin;
-            const color = options.color ?? [95, 61, 72];
-            const maxWidth = options.maxWidth ?? cursor.pageWidth - cursor.margin * 2;
-            const lineHeight = options.lineHeight ?? size * 0.42 + 2.2;
-
-            doc.setFontSize(size);
-            doc.setTextColor(...color);
-
-            const lines = doc.splitTextToSize(String(text ?? ''), maxWidth);
-            ensureSpace(doc, cursor, Math.max(lines.length, 1) * lineHeight);
-            doc.text(lines, x, cursor.y);
-            cursor.y += Math.max(lines.length, 1) * lineHeight;
-        }
-
-        async function downloadReceiptPdf() {
-            const doc = await createPdf();
-            const cursor = {
-                margin: 16,
-                pageWidth: doc.internal.pageSize.getWidth(),
-                pageHeight: doc.internal.pageSize.getHeight(),
-                y: 16,
-            };
-
-            drawLine(doc, cursor, 'DIVA Jewelry', { size: 12, color: [178, 123, 143] });
-            cursor.y += 2;
-            drawLine(doc, cursor, `Чек замовлення #${receiptOrder.id}`, { size: 22 });
-            drawLine(doc, cursor, `Створено: ${formatDate(receiptOrder.created_at)}`, { size: 11, color: [140, 103, 116] });
-            cursor.y += 5;
-
-            drawLine(doc, cursor, `Отримувач: ${receiptOrder.full_name}`, { size: 12 });
-            drawLine(doc, cursor, `Email: ${receiptOrder.email}`, { size: 12 });
-            drawLine(doc, cursor, `Статус замовлення: ${statusLabel(receiptOrder.status)}`, { size: 12 });
-            drawLine(doc, cursor, `Статус оплати: ${paymentStatusLabel(receiptOrder.payment_status)}`, { size: 12 });
-            drawLine(doc, cursor, `Спосіб оплати: ${paymentMethodLabel(receiptOrder.payment_method)}`, { size: 12 });
-
-            if (receiptOrder.payment_reference) {
-                drawLine(doc, cursor, `Платіжний референс: ${receiptOrder.payment_reference}`, { size: 12 });
-            }
-
-            cursor.y += 6;
-            drawLine(doc, cursor, 'Склад замовлення', { size: 16 });
-            cursor.y += 2;
-
-            receiptOrder.items.forEach((item, index) => {
-                drawLine(doc, cursor, `${index + 1}. ${item.product_name}`, { size: 12 });
-
-                if (item.product_category) {
-                    drawLine(doc, cursor, item.product_category, { size: 10, color: [178, 123, 143] });
-                }
-
-                drawLine(doc, cursor, `${item.quantity} x ${formatPrice(item.price)} грн = ${formatPrice(item.line_total)} грн`, {
-                    size: 11,
-                    color: [140, 103, 116],
-                });
-
-                if (item.product_description) {
-                    drawLine(doc, cursor, item.product_description, { size: 10, color: [140, 103, 116] });
-                }
-
-                cursor.y += 3;
-            });
-
-            drawLine(doc, cursor, `Разом: ${formatPrice(receiptOrder.total)} грн`, { size: 18 });
-            doc.save(`receipt-order-${receiptOrder.id}.pdf`);
-        }
-    </script>
-
-    @if ($autoPrint)
-        <script>
-            window.addEventListener('load', () => {
-                window.print()
-            })
-        </script>
-    @endif
-
-    @if ($autoDownloadPdf)
-        <script>
-            window.addEventListener('load', () => {
-                downloadReceiptPdf()
-            })
-        </script>
-    @endif
 </body>
 </html>

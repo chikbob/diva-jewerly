@@ -8,6 +8,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\OrderReceiptController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
@@ -73,6 +74,8 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/favorites/{product}', [FavoriteController::class, 'destroy'])->name('favorites.destroy');
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
     Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
+    Route::get('/orders/{order}/receipt', [OrderReceiptController::class, 'show'])->name('orders.receipt.show');
+    Route::get('/orders/{order}/receipt/download', [OrderReceiptController::class, 'download'])->name('orders.receipt.download');
     Route::post('/orders/{order}/repeat', [OrderController::class, 'repeat'])->name('orders.repeat');
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
