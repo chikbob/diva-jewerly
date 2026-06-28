@@ -12,6 +12,8 @@ Laravel 10 + Inertia.js + Vue 3 storefront for a jewelry shop with a customer-fa
 
 ## Screenshots
 
+Current demo screenshots use English UI copy and USD pricing.
+
 | Home | Catalog |
 | --- | --- |
 | ![Home](docs/screenshots/home.png) | ![Catalog](docs/screenshots/catalog.png) |
