@@ -8,27 +8,27 @@
                         class="inline-flex items-center gap-2 text-sm font-semibold text-[#B46D6D] transition hover:text-[#9E5757]"
                     >
                         <span aria-hidden="true">←</span>
-                        <span>Назад до замовлень</span>
+                        <span>Back to Orders</span>
                     </Link>
 
-                    <p class="mt-6 text-xs font-semibold uppercase tracking-[0.35em] text-[#D09A9A]">Деталі замовлення</p>
-                    <h1 class="mt-2 text-4xl font-extrabold tracking-wide text-[#B46D6D]">Замовлення #{{ order.id }}</h1>
+                    <p class="mt-6 text-xs font-semibold uppercase tracking-[0.35em] text-[#D09A9A]">Order Details</p>
+                    <h1 class="mt-2 text-4xl font-extrabold tracking-wide text-[#B46D6D]">Order #{{ order.id }}</h1>
                     <p class="mt-3 max-w-2xl text-sm leading-7 text-[#8D6767]">
-                        Створено {{ formattedDate }}
+                        Created {{ formattedDate }}
                     </p>
                 </div>
 
                 <div class="grid gap-3 sm:grid-cols-3 xl:min-w-[34rem]">
                     <div class="rounded-[1.6rem] border border-[#E9CFCF] bg-[#FFF8F8] px-5 py-4">
-                        <p class="text-xs font-semibold uppercase tracking-[0.25em] text-[#C49B9B]">Разом</p>
+                        <p class="text-xs font-semibold uppercase tracking-[0.25em] text-[#C49B9B]">Total</p>
                         <p class="mt-2 text-2xl font-black text-[#B46D6D]">{{ formatPrice(order.total) }} ₴</p>
                     </div>
                     <div class="rounded-[1.6rem] border border-[#E9CFCF] bg-[#FFF8F8] px-5 py-4">
-                        <p class="text-xs font-semibold uppercase tracking-[0.25em] text-[#C49B9B]">Позиції</p>
+                        <p class="text-xs font-semibold uppercase tracking-[0.25em] text-[#C49B9B]">Items</p>
                         <p class="mt-2 text-2xl font-black text-[#B46D6D]">{{ order.items.length }}</p>
                     </div>
                     <div class="rounded-[1.6rem] border border-[#E9CFCF] bg-[#FFF8F8] px-5 py-4">
-                        <p class="text-xs font-semibold uppercase tracking-[0.25em] text-[#C49B9B]">Товарів</p>
+                        <p class="text-xs font-semibold uppercase tracking-[0.25em] text-[#C49B9B]">Products</p>
                         <p class="mt-2 text-2xl font-black text-[#B46D6D]">{{ totalQuantity }}</p>
                     </div>
                 </div>
@@ -50,7 +50,7 @@
                     rel="noopener noreferrer"
                     class="inline-flex rounded-full border border-[#E3BEBE] bg-white px-4 py-2 text-sm font-semibold text-[#8D6767] transition hover:bg-[#FFF1F1]"
                 >
-                    Відкрити чек
+                    Open Receipt
                 </a>
                 <a
                     :href="route('orders.receipt.show', { order: order.id, print: 1 })"
@@ -58,28 +58,28 @@
                     rel="noopener noreferrer"
                     class="inline-flex rounded-full border border-[#E3BEBE] bg-white px-4 py-2 text-sm font-semibold text-[#8D6767] transition hover:bg-[#FFF1F1]"
                 >
-                    Друк чека
+                    Print Receipt
                 </a>
                 <button
                     type="button"
                     class="inline-flex rounded-full border border-[#E3BEBE] bg-white px-4 py-2 text-sm font-semibold text-[#8D6767] transition hover:bg-[#FFF1F1]"
                     @click="openReceiptPdf"
                 >
-                    Завантажити PDF
+                    Download PDF
                 </button>
             </div>
 
             <div class="grid gap-6 xl:grid-cols-[1.15fr_0.85fr]">
                 <div class="rounded-[2rem] border border-[#E7C5C5] bg-white p-6 shadow-[0_18px_50px_rgba(180,109,109,0.07)]">
                     <div class="mb-5 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-                        <h2 class="text-2xl font-bold text-[#B46D6D]">Склад замовлення</h2>
+                        <h2 class="text-2xl font-bold text-[#B46D6D]">Order Items</h2>
                         <Link
                             :href="route('orders.repeat', { order: order.id })"
                             method="post"
                             as="button"
                             class="rounded-full border border-[#E3BEBE] px-4 py-2 text-sm font-semibold text-[#8D6767] transition hover:bg-[#FFF1F1]"
                         >
-                            Повторити замовлення
+                            Repeat Order
                         </Link>
                     </div>
 
@@ -91,7 +91,7 @@
                         >
                             <img
                                 :src="item.product_image || 'https://placehold.co/180x180/F8E8E8/9A6B6B?text=Diva'"
-                                :alt="`Фото товару ${item.product_name}`"
+                                :alt="`Product photo: ${item.product_name}`"
                                 class="h-24 w-24 rounded-[1.25rem] object-cover"
                             />
 
@@ -123,31 +123,31 @@
 
                 <aside class="space-y-6">
                     <div class="rounded-[2rem] border border-[#E7C5C5] bg-white p-6 shadow-[0_18px_50px_rgba(180,109,109,0.07)]">
-                        <h2 class="text-2xl font-bold text-[#B46D6D]">Підсумок</h2>
+                        <h2 class="text-2xl font-bold text-[#B46D6D]">Summary</h2>
                         <div class="mt-5 space-y-3 text-sm text-[#8D6767]">
                             <div class="flex items-center justify-between">
-                                <span>Кількість позицій</span>
+                                <span>Line items</span>
                                 <strong class="text-[#6D4C4C]">{{ order.items.length }}</strong>
                             </div>
                             <div class="flex items-center justify-between">
-                                <span>Товарів у замовленні</span>
+                                <span>Products in order</span>
                                 <strong class="text-[#6D4C4C]">{{ totalQuantity }}</strong>
                             </div>
                             <div class="flex items-center justify-between border-t border-[#F1E1E1] pt-3 text-base">
-                                <span>Разом</span>
+                                <span>Total</span>
                                 <strong class="text-xl text-[#B46D6D]">{{ formatPrice(order.total) }} ₴</strong>
                             </div>
                         </div>
                     </div>
 
                     <div class="rounded-[2rem] border border-[#E7C5C5] bg-white p-6 shadow-[0_18px_50px_rgba(180,109,109,0.07)]">
-                        <h2 class="text-2xl font-bold text-[#B46D6D]">Оплата та контакт</h2>
+                        <h2 class="text-2xl font-bold text-[#B46D6D]">Payment and Contact</h2>
                         <div class="mt-5 space-y-3 text-sm leading-6 text-[#8D6767]">
-                            <p><strong class="text-[#6D4C4C]">Отримувач:</strong> {{ order.full_name }}</p>
-                            <p><strong class="text-[#6D4C4C]">Електронна пошта:</strong> {{ order.email }}</p>
-                            <p><strong class="text-[#6D4C4C]">Спосіб оплати:</strong> {{ paymentMethodLabel(order.payment_method) }}</p>
-                            <p v-if="order.payment_provider"><strong class="text-[#6D4C4C]">Провайдер:</strong> {{ order.payment_provider }}</p>
-                            <p v-if="order.payment_reference"><strong class="text-[#6D4C4C]">Платіжний референс:</strong> {{ order.payment_reference }}</p>
+                            <p><strong class="text-[#6D4C4C]">Recipient:</strong> {{ order.full_name }}</p>
+                            <p><strong class="text-[#6D4C4C]">Email:</strong> {{ order.email }}</p>
+                            <p><strong class="text-[#6D4C4C]">Payment method:</strong> {{ paymentMethodLabel(order.payment_method) }}</p>
+                            <p v-if="order.payment_provider"><strong class="text-[#6D4C4C]">Provider:</strong> {{ order.payment_provider }}</p>
+                            <p v-if="order.payment_reference"><strong class="text-[#6D4C4C]">Payment reference:</strong> {{ order.payment_reference }}</p>
                         </div>
 
                         <Link
@@ -155,7 +155,7 @@
                             :href="route('payments.show', { paymentReference: order.payment_reference })"
                             class="mt-5 inline-flex rounded-full border border-[#E3BEBE] px-4 py-2 text-sm font-semibold text-[#8D6767] transition hover:bg-[#FFF1F1]"
                         >
-                            Відкрити статус оплати
+                            Open Payment Status
                         </Link>
                     </div>
                 </aside>
@@ -175,20 +175,20 @@ const props = defineProps({
 
 const formattedDate = computed(() => {
     if (!props.order?.created_at) {
-        return 'невідомо'
+        return 'unknown'
     }
 
-    return new Date(props.order.created_at).toLocaleString('uk-UA')
+    return new Date(props.order.created_at).toLocaleString('en-US')
 })
 
 const totalQuantity = computed(() => props.order.items.reduce((sum, item) => sum + Number(item.quantity ?? 0), 0))
 
 function statusLabel(status) {
     return {
-        paid: 'Сплачено',
-        pending: 'В очікуванні',
-        failed: 'Помилка',
-        cancelled: 'Скасовано',
+        paid: 'Paid',
+        pending: 'Pending',
+        failed: 'Failed',
+        cancelled: 'Cancelled',
     }[status] ?? status
 }
 
@@ -203,10 +203,10 @@ function statusClass(status) {
 
 function paymentStatusLabel(status) {
     return {
-        paid: 'Оплачено',
-        pending: 'Оплата очікується',
-        failed: 'Оплата неуспішна',
-        cancelled: 'Оплату скасовано',
+        paid: 'Paid',
+        pending: 'Pending payment',
+        failed: 'Payment failed',
+        cancelled: 'Payment cancelled',
     }[status] ?? status
 }
 
@@ -221,13 +221,13 @@ function paymentStatusClass(status) {
 
 function paymentMethodLabel(paymentMethod) {
     return {
-        demo_card: 'Демо-картка',
-        cash_on_delivery: 'Післяплата',
+        demo_card: 'Demo card',
+        cash_on_delivery: 'Cash on delivery',
     }[paymentMethod] ?? paymentMethod
 }
 
 function formatPrice(value) {
-    return Number(value ?? 0).toLocaleString('uk-UA', {
+    return Number(value ?? 0).toLocaleString('en-US', {
         minimumFractionDigits: 0,
         maximumFractionDigits: 2,
     })

@@ -18,7 +18,7 @@ class OrderItemResource extends ModelResource
 {
     protected string $model = OrderItem::class;
 
-    protected string $title = 'Товари замовлення';
+    protected string $title = 'Order items';
 
     protected bool $withPolicy = true;
 
@@ -26,10 +26,10 @@ class OrderItemResource extends ModelResource
     {
         return [
             ID::make()->sortable(),
-            BelongsTo::make('Замовлення', 'order', OrderResource::class),
-            BelongsTo::make('Товар', 'product', ProductResource::class),
-            Number::make('Кількість', 'quantity')->min(1)->required(),
-            Number::make('Ціна', 'price')->min(0)->step(0.01),
+            BelongsTo::make('Orders', 'order', OrderResource::class),
+            BelongsTo::make('Product', 'product', ProductResource::class),
+            Number::make('Quantity', 'quantity')->min(1)->required(),
+            Number::make('Price', 'price')->min(0)->step(0.01),
         ];
     }
 

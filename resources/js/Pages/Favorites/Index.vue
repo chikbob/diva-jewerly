@@ -3,33 +3,33 @@
         <section class="mx-auto w-full max-w-[1480px] px-4 py-12 sm:px-6 xl:px-8">
             <div class="mb-8 flex flex-col gap-5 xl:flex-row xl:items-end xl:justify-between">
                 <div>
-                    <p class="text-xs font-semibold uppercase tracking-[0.35em] text-[#D09A9A]">Збережені прикраси</p>
-                    <h1 class="mt-2 text-4xl font-extrabold tracking-wide text-[#B46D6D]">Обране</h1>
+                    <p class="text-xs font-semibold uppercase tracking-[0.35em] text-[#D09A9A]">Saved Pieces</p>
+                    <h1 class="mt-2 text-4xl font-extrabold tracking-wide text-[#B46D6D]">Favorites</h1>
                     <p class="mt-3 max-w-2xl text-sm leading-7 text-[#8D6767]">
-                        Зберігайте цікаві прикраси, щоб швидко повернутися до них перед оформленням замовлення.
+                        Save the pieces you like so you can return to them quickly before checkout.
                     </p>
                 </div>
 
                 <div class="grid gap-3 sm:grid-cols-2 xl:min-w-[26rem]">
                     <div class="rounded-[1.6rem] border border-[#E9CFCF] bg-[#FFF8F8] px-5 py-4 text-sm text-[#8D6767]">
-                        <p class="text-xs font-semibold uppercase tracking-[0.25em] text-[#C49B9B]">Товарів</p>
+                        <p class="text-xs font-semibold uppercase tracking-[0.25em] text-[#C49B9B]">Items</p>
                         <p class="mt-2 text-2xl font-black text-[#B46D6D]">{{ localFavorites.length }}</p>
                     </div>
                     <div class="rounded-[1.6rem] border border-[#E9CFCF] bg-[#FFF8F8] px-5 py-4 text-sm text-[#8D6767]">
-                        <p class="text-xs font-semibold uppercase tracking-[0.25em] text-[#C49B9B]">Призначення</p>
-                        <p class="mt-2 text-base font-bold text-[#B46D6D]">Швидке повернення до вибраного</p>
+                        <p class="text-xs font-semibold uppercase tracking-[0.25em] text-[#C49B9B]">Purpose</p>
+                        <p class="mt-2 text-base font-bold text-[#B46D6D]">Quick return to saved pieces</p>
                     </div>
                 </div>
             </div>
 
             <div v-if="localFavorites.length === 0" class="rounded-[2rem] border border-dashed border-[#E7C5C5] bg-[#FFF9F9] px-6 py-16 text-center">
-                <h2 class="text-2xl font-bold text-[#B46D6D]">Список обраного порожній</h2>
-                <p class="mt-3 text-sm text-[#8D6767]">Додавайте прикраси в обране з каталогу або зі сторінки товару.</p>
+                <h2 class="text-2xl font-bold text-[#B46D6D]">Favorites List Is Empty</h2>
+                <p class="mt-3 text-sm text-[#8D6767]">Add jewelry pieces to favorites from the catalog or product page.</p>
                 <Link
                     :href="route('catalog')"
                     class="mt-6 inline-flex rounded-full bg-[#B46D6D] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#9E5757]"
                 >
-                    Перейти до каталогу
+                    Open Catalog
                 </Link>
             </div>
 
@@ -41,7 +41,7 @@
                 >
                     <img
                         :src="favorite.product.image_path"
-                        :alt="`Фото товару ${favorite.product.name}`"
+                        :alt="`Product photo: ${favorite.product.name}`"
                         class="mb-5 aspect-[4/3] w-full rounded-[1.5rem] object-cover"
                     />
 
@@ -60,13 +60,13 @@
                             {{ favorite.product.name }}
                         </Link>
                         <p class="mt-3 min-h-[4.5rem] flex-1 text-sm leading-7 text-[#8D6767]">
-                            {{ favorite.product.description || 'Ювелірний виріб із колекції Diva.' }}
+                            {{ favorite.product.description || 'A jewelry piece from the Diva collection.' }}
                         </p>
 
                         <div class="mt-5 rounded-[1.35rem] border border-[#F3E2E2] bg-[#FFF8F8] px-4 py-3">
-                            <p class="text-xs uppercase tracking-[0.25em] text-[#C49B9B]">Порада</p>
+                            <p class="text-xs uppercase tracking-[0.25em] text-[#C49B9B]">Tip</p>
                             <p class="mt-2 text-sm leading-6 text-[#8D6767]">
-                                Додайте виріб у кошик або відкрийте сторінку товару, щоб порівняти з іншими прикрасами.
+                                Add the piece to your cart or open the product page to compare it with other items.
                             </p>
                         </div>
 
@@ -77,7 +77,7 @@
                                 class="rounded-full bg-[#B46D6D] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#9E5757] disabled:cursor-not-allowed disabled:opacity-60"
                                 @click="addToCart(favorite.product.id)"
                             >
-                                {{ isAdding(favorite.product.id) ? 'Додаємо...' : 'Додати в кошик' }}
+                                {{ isAdding(favorite.product.id) ? 'Adding...' : 'Add to Cart' }}
                             </button>
                             <button
                                 type="button"
@@ -85,7 +85,7 @@
                                 class="rounded-full border border-[#E3BEBE] px-5 py-3 text-sm font-semibold text-[#8D6767] transition hover:bg-[#FFF1F1] disabled:cursor-not-allowed disabled:opacity-60"
                                 @click="removeFavorite(favorite)"
                             >
-                                {{ isRemoving(favorite.product.id) ? 'Видаляємо...' : 'Видалити з обраного' }}
+                                {{ isRemoving(favorite.product.id) ? 'Removing...' : 'Remove from Favorites' }}
                             </button>
                         </div>
                     </div>
@@ -139,7 +139,7 @@ function addToCart(productId) {
         preserveState: true,
         onError: () => {
             adjust(-1)
-            error('Не вдалося додати товар до кошика. Спробуйте ще раз.')
+            error('Could not add the item to the cart. Please try again.')
         },
         onFinish: () => {
             pendingAddIds.value = pendingAddIds.value.filter((id) => id !== productId)
@@ -161,7 +161,7 @@ function removeFavorite(favorite) {
         preserveState: true,
         onError: () => {
             localFavorites.value = snapshot
-            error('Не вдалося видалити товар з обраного. Спробуйте ще раз.')
+            error('Could not remove the item from favorites. Please try again.')
         },
         onFinish: () => {
             pendingRemoveIds.value = pendingRemoveIds.value.filter((id) => id !== favorite.product.id)
@@ -170,7 +170,7 @@ function removeFavorite(favorite) {
 }
 
 function formatPrice(value) {
-    return Number(value ?? 0).toLocaleString('uk-UA', {
+    return Number(value ?? 0).toLocaleString('en-US', {
         minimumFractionDigits: 0,
         maximumFractionDigits: 2,
     })

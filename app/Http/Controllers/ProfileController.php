@@ -32,7 +32,7 @@ class ProfileController extends Controller
 
         return redirect()
             ->route('profile.edit')
-            ->with('message', 'Профіль оновлено.');
+            ->with('message', 'Profile updated.');
     }
 
     public function destroy(Request $request): RedirectResponse

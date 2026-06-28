@@ -35,11 +35,11 @@ class ProductController extends Controller
             'favoriteIds' => $favoriteIds,
             'priceRange' => $this->catalogService->priceRange(),
             'sortOptions' => [
-                ['value' => 'name_asc', 'label' => 'Назва: А-Я'],
-                ['value' => 'name_desc', 'label' => 'Назва: Я-А'],
-                ['value' => 'price_asc', 'label' => 'Ціна: від дешевих'],
-                ['value' => 'price_desc', 'label' => 'Ціна: від дорогих'],
-                ['value' => 'newest', 'label' => 'Новинки'],
+                ['value' => 'name_asc', 'label' => 'Name: A-Z'],
+                ['value' => 'name_desc', 'label' => 'Name: Z-A'],
+                ['value' => 'price_asc', 'label' => 'Price: low to high'],
+                ['value' => 'price_desc', 'label' => 'Price: high to low'],
+                ['value' => 'newest', 'label' => 'New arrivals'],
             ],
         ]);
     }
@@ -65,7 +65,7 @@ class ProductController extends Controller
             'product' => $product,
             'availability' => [
                 'code' => 'available',
-                'label' => 'Доступно до замовлення',
+                'label' => 'Available for order',
             ],
             'isFavorited' => $request->user() !== null
                 && Favorite::query()

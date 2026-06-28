@@ -2,10 +2,10 @@
     <page-layout>
         <section class="container mx-auto max-w-4xl px-6 py-12">
             <div class="mb-8">
-                <p class="text-xs font-semibold uppercase tracking-[0.35em] text-[#D09A9A]">Статус оплати</p>
-                <h1 class="mt-2 text-4xl font-extrabold tracking-wide text-[#B46D6D]">Оплата замовлення #{{ order.id }}</h1>
+                <p class="text-xs font-semibold uppercase tracking-[0.35em] text-[#D09A9A]">Payment Status</p>
+                <h1 class="mt-2 text-4xl font-extrabold tracking-wide text-[#B46D6D]">Order Payment #{{ order.id }}</h1>
                 <p class="mt-3 max-w-2xl text-sm leading-6 text-[#8D6767]">
-                    Тут відображається поточний життєвий цикл оплати замовлення: провайдер, референс транзакції та останній відомий статус.
+                    This page shows the current order payment lifecycle: provider, transaction reference, and latest known status.
                 </p>
             </div>
 
@@ -22,40 +22,40 @@
 
                     <dl class="mt-8 grid gap-5 sm:grid-cols-2">
                         <div>
-                            <dt class="text-xs uppercase tracking-[0.25em] text-[#C49B9B]">Платіжний референс</dt>
+                            <dt class="text-xs uppercase tracking-[0.25em] text-[#C49B9B]">Payment reference</dt>
                             <dd class="mt-2 text-base font-semibold text-[#6D4C4C]">{{ order.payment_reference }}</dd>
                         </div>
                         <div>
-                            <dt class="text-xs uppercase tracking-[0.25em] text-[#C49B9B]">Провайдер</dt>
+                            <dt class="text-xs uppercase tracking-[0.25em] text-[#C49B9B]">Provider</dt>
                             <dd class="mt-2 text-base font-semibold text-[#6D4C4C]">{{ transaction.provider }}</dd>
                         </div>
                         <div>
-                            <dt class="text-xs uppercase tracking-[0.25em] text-[#C49B9B]">Референс провайдера</dt>
-                            <dd class="mt-2 text-base font-semibold text-[#6D4C4C]">{{ transaction.provider_reference || 'очікує призначення' }}</dd>
+                            <dt class="text-xs uppercase tracking-[0.25em] text-[#C49B9B]">Provider reference</dt>
+                            <dd class="mt-2 text-base font-semibold text-[#6D4C4C]">{{ transaction.provider_reference || 'pending assignment' }}</dd>
                         </div>
                         <div>
-                            <dt class="text-xs uppercase tracking-[0.25em] text-[#C49B9B]">Сума</dt>
+                            <dt class="text-xs uppercase tracking-[0.25em] text-[#C49B9B]">Total</dt>
                             <dd class="mt-2 text-base font-semibold text-[#6D4C4C]">{{ formatPrice(order.total) }} {{ transaction.currency }}</dd>
                         </div>
                     </dl>
 
                     <div class="mt-8 rounded-[1.5rem] bg-[#FFF8F8] px-5 py-5 text-sm text-[#8D6767]">
                         <p v-if="order.payment_status === 'pending'">
-                            Платіж ще не підтверджений. Для demo-card сценарію ви можете симулювати webhook-підтвердження праворуч.
+                            The payment has not been confirmed yet. For the demo card scenario, you can simulate webhook confirmation using the actions on the right.
                         </p>
                         <p v-else-if="order.payment_status === 'paid'">
-                            Платіж підтверджено. Замовлення перейшло в стан `paid`.
+                            The payment has been confirmed. The order is now in the `paid` state.
                         </p>
                         <p v-else>
-                            Платіж завершився неуспішно. Система зберегла технічний стан транзакції для подальшого аналізу та звірки.
+                            The payment failed. The system preserved the transaction state for later analysis and reconciliation.
                         </p>
                     </div>
                 </section>
 
                 <aside class="rounded-[2rem] border border-[#E7C5C5] bg-white p-8 shadow-sm">
-                    <h2 class="text-2xl font-semibold text-[#B46D6D]">Демо-дії</h2>
+                    <h2 class="text-2xl font-semibold text-[#B46D6D]">Demo Actions</h2>
                     <p class="mt-2 text-sm leading-6 text-[#8D6767]">
-                        Ці дії доступні тільки для платежів `demo_card` у стані `pending` і оновлюють замовлення через той самий webhook-сценарій.
+                        These actions are available only for `demo_card` payments in the `pending` state and update the order through the same webhook flow.
                     </p>
 
                     <div class="mt-6 space-y-3">
@@ -65,7 +65,7 @@
                             class="w-full rounded-full bg-green-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-green-700 disabled:cursor-not-allowed disabled:opacity-60"
                             @click="simulate('paid')"
                         >
-                            {{ loading === 'paid' ? 'Підтверджуємо...' : 'Симулювати успішну оплату' }}
+                            {{ loading === 'paid' ? 'Confirming...' : 'Simulate Successful Payment' }}
                         </button>
 
                         <button
@@ -74,7 +74,7 @@
                             class="w-full rounded-full bg-rose-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-rose-700 disabled:cursor-not-allowed disabled:opacity-60"
                             @click="simulate('failed')"
                         >
-                            {{ loading === 'failed' ? 'Оновлюємо...' : 'Симулювати неуспішну оплату' }}
+                            {{ loading === 'failed' ? 'Updating...' : 'Simulate Failed Payment' }}
                         </button>
                     </div>
 
@@ -82,7 +82,7 @@
                         :href="route('orders.index')"
                         class="mt-6 inline-flex text-sm font-semibold text-[#B46D6D] transition hover:text-[#9E5757]"
                     >
-                        Повернутися до замовлень
+                        Back to Orders
                     </Link>
                 </aside>
             </div>
@@ -119,10 +119,10 @@ function simulate(status) {
 
 function statusLabel(status) {
     return {
-        paid: 'Сплачено',
-        pending: 'В очікуванні',
-        failed: 'Помилка',
-        cancelled: 'Скасовано',
+        paid: 'Paid',
+        pending: 'Pending',
+        failed: 'Failed',
+        cancelled: 'Cancelled',
     }[status] ?? status
 }
 
@@ -137,10 +137,10 @@ function statusClass(status) {
 
 function paymentStatusLabel(status) {
     return {
-        paid: 'Оплату підтверджено',
-        pending: 'Оплата очікується',
-        failed: 'Оплата неуспішна',
-        cancelled: 'Оплату скасовано',
+        paid: 'Payment confirmed',
+        pending: 'Payment pending',
+        failed: 'Payment failed',
+        cancelled: 'Payment cancelled',
     }[status] ?? status
 }
 
@@ -154,7 +154,7 @@ function paymentStatusClass(status) {
 }
 
 function formatPrice(value) {
-    return Number(value ?? 0).toLocaleString('uk-UA', {
+    return Number(value ?? 0).toLocaleString('en-US', {
         minimumFractionDigits: 0,
         maximumFractionDigits: 2,
     })

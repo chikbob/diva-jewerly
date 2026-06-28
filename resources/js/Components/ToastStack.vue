@@ -19,7 +19,7 @@
                         type="button"
                         class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-current opacity-70 transition hover:bg-white/40 hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-current"
                         @click="dismiss(toast.id)"
-                        aria-label="Закрити повідомлення"
+                        aria-label="Dismiss notification"
                     >
                         <span class="text-lg leading-none">×</span>
                     </button>

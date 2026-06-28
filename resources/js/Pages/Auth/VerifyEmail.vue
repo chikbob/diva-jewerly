@@ -21,20 +21,20 @@ const verificationLinkSent = computed(() => props.status === 'verification-link-
 
 <template>
     <GuestLayout>
-        <Head title="Підтвердження електронної пошти" />
+        <Head title="Verify Email" />
 
         <div class="mb-4 text-sm text-gray-600">
-            Дякуємо за реєстрацію. Перш ніж почати, підтвердіть вашу електронну пошту за посиланням, яке ми щойно надіслали. Якщо лист не надійшов, ми можемо відправити його повторно.
+            Thanks for signing up. Before getting started, verify your email address by clicking the link we just emailed to you. If you did not receive it, we can send another one.
         </div>
 
         <div class="mb-4 font-medium text-sm text-green-600" v-if="verificationLinkSent">
-            Нове посилання для підтвердження вже надіслано на вашу електронну адресу.
+            A new verification link has been sent to your email address.
         </div>
 
         <form @submit.prevent="submit">
             <div class="mt-4 flex items-center justify-between">
                 <PrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                    Надіслати лист ще раз
+                    Resend Verification Email
                 </PrimaryButton>
 
                 <Link
@@ -42,7 +42,7 @@ const verificationLinkSent = computed(() => props.status === 'verification-link-
                     method="post"
                     as="button"
                     class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                    >Вийти</Link
+                    >Log Out</Link
                 >
             </div>
         </form>

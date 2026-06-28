@@ -56,7 +56,7 @@ class OrderReceiptController extends Controller
             'status' => $order->status,
             'total' => (float) $order->total,
             'items' => $order->items->map(fn ($item): array => [
-                'product_name' => $item->product?->name ?? 'Товар недоступний',
+                'product_name' => $item->product?->name ?? 'Product unavailable',
                 'product_category' => $item->product?->category?->name,
                 'product_description' => $item->product?->description,
                 'quantity' => $item->quantity,

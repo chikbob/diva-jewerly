@@ -61,7 +61,7 @@ class OrderReportController extends Controller
             ->whereIn('order_items.order_id', (clone $query)->select('orders.id'))
             ->groupBy('order_items.product_id', 'products.name')
             ->selectRaw('order_items.product_id')
-            ->selectRaw("COALESCE(products.name, 'Товар недоступний') as product_name")
+            ->selectRaw("COALESCE(products.name, 'Product unavailable') as product_name")
             ->selectRaw('SUM(order_items.quantity) as quantity_sold')
             ->selectRaw('SUM(order_items.quantity * order_items.price) as revenue_total')
             ->orderByDesc('quantity_sold')
@@ -205,10 +205,10 @@ class OrderReportController extends Controller
     private function statusOptions(): array
     {
         return [
-            ['value' => 'pending', 'label' => 'В очікуванні'],
-            ['value' => 'paid', 'label' => 'Сплачено'],
-            ['value' => 'failed', 'label' => 'Помилка'],
-            ['value' => 'cancelled', 'label' => 'Скасовано'],
+            ['value' => 'pending', 'label' => 'Pending'],
+            ['value' => 'paid', 'label' => 'Paid'],
+            ['value' => 'failed', 'label' => 'Failed'],
+            ['value' => 'cancelled', 'label' => 'Cancelled'],
         ];
     }
 }

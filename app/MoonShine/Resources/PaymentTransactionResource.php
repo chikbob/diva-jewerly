@@ -22,7 +22,7 @@ class PaymentTransactionResource extends ModelResource
 {
     protected string $model = PaymentTransaction::class;
 
-    protected string $title = 'Платежі';
+    protected string $title = 'Payments';
 
     protected bool $withPolicy = true;
 
@@ -35,28 +35,28 @@ class PaymentTransactionResource extends ModelResource
     {
         return [
             ID::make()->sortable(),
-            BelongsTo::make('Замовлення', 'order', OrderResource::class),
-            Date::make('Створено', 'created_at')
+            BelongsTo::make('Orders', 'order', OrderResource::class),
+            Date::make('Created', 'created_at')
                 ->format('d.m.Y')
                 ->sortable()
                 ->hideOnForm(),
-            Text::make('Провайдер', 'provider')->badge('purple'),
-            Text::make('Метод', 'payment_method'),
+            Text::make('Provider', 'provider')->badge('purple'),
+            Text::make('Method', 'payment_method'),
             Text::make('Reference', 'reference')->readonly(),
             Text::make('Provider reference', 'provider_reference')->readonly(),
-            Text::make('Статус', 'status')
+            Text::make('Status', 'status')
                 ->readonly()
                 ->badge(fn (string $value): string => $this->statusColor($value)),
-            Number::make('Сума', 'amount')->min(0)->step(0.01)->sortable(),
-            Text::make('Валюта', 'currency')->readonly(),
+            Number::make('Total', 'amount')->min(0)->step(0.01)->sortable(),
+            Text::make('Currency', 'currency')->readonly(),
         ];
     }
 
     public function filters(): array
     {
         return [
-            Select::make('Провайдер', 'provider')->options($this->providerOptions()),
-            Select::make('Статус', 'status')->options($this->statusOptions()),
+            Select::make('Provider', 'provider')->options($this->providerOptions()),
+            Select::make('Status', 'status')->options($this->statusOptions()),
         ];
     }
 
@@ -90,10 +90,10 @@ class PaymentTransactionResource extends ModelResource
     private function statusOptions(): array
     {
         return [
-            'pending' => 'В очікуванні',
-            'paid' => 'Сплачено',
-            'failed' => 'Помилка',
-            'cancelled' => 'Скасовано',
+            'pending' => 'Pending',
+            'paid' => 'Paid',
+            'failed' => 'Failed',
+            'cancelled' => 'Cancelled',
         ];
     }
 

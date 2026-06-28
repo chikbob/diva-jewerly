@@ -3,24 +3,24 @@
         <section class="mx-auto w-full max-w-[1480px] px-4 py-12 text-[#6D4C4C] sm:px-6 xl:px-8">
             <div class="mb-8 flex flex-col gap-5 xl:flex-row xl:items-end xl:justify-between">
                 <div>
-                    <p class="text-xs font-semibold uppercase tracking-[0.35em] text-[#D09A9A]">Вітрина DIVA</p>
+                    <p class="text-xs font-semibold uppercase tracking-[0.35em] text-[#D09A9A]">DIVA Showcase</p>
                     <h1 class="mt-2 text-4xl font-extrabold tracking-wide text-[#B46D6D] xl:text-5xl">{{ product.name }}</h1>
                     <p class="mt-3 max-w-2xl text-sm leading-7 text-[#8D6767]">
-                        Детальна сторінка прикраси з ключовою інформацією, статусом доступності та швидкими діями для покупки.
+                        A detailed product page with key information, availability status, and quick purchase actions.
                     </p>
                 </div>
 
                 <div class="grid gap-3 sm:grid-cols-3 xl:min-w-[33rem]">
                     <div class="rounded-[1.6rem] border border-[#E9CFCF] bg-[#FFF8F8] px-5 py-4">
-                        <p class="text-xs font-semibold uppercase tracking-[0.25em] text-[#C49B9B]">Категорія</p>
+                        <p class="text-xs font-semibold uppercase tracking-[0.25em] text-[#C49B9B]">Category</p>
                         <p class="mt-2 text-base font-bold text-[#B46D6D]">{{ product.category.name }}</p>
                     </div>
                     <div class="rounded-[1.6rem] border border-[#E9CFCF] bg-[#FFF8F8] px-5 py-4">
-                        <p class="text-xs font-semibold uppercase tracking-[0.25em] text-[#C49B9B]">Ціна</p>
+                        <p class="text-xs font-semibold uppercase tracking-[0.25em] text-[#C49B9B]">Price</p>
                         <p class="mt-2 text-base font-bold text-[#B46D6D]">{{ formatPrice(product.price) }} ₴</p>
                     </div>
                     <div class="rounded-[1.6rem] border border-[#E9CFCF] bg-[#FFF8F8] px-5 py-4">
-                        <p class="text-xs font-semibold uppercase tracking-[0.25em] text-[#C49B9B]">Статус</p>
+                        <p class="text-xs font-semibold uppercase tracking-[0.25em] text-[#C49B9B]">Status</p>
                         <p class="mt-2 text-base font-bold text-[#B46D6D]">{{ availability.label }}</p>
                     </div>
                 </div>
@@ -32,7 +32,7 @@
                     class="inline-flex items-center gap-2 text-sm font-semibold text-[#B46D6D] transition hover:text-[#9E5757]"
                 >
                     <span aria-hidden="true">←</span>
-                    <span>Повернутися до каталогу</span>
+                    <span>Back to Catalog</span>
                 </Link>
             </div>
 
@@ -40,7 +40,7 @@
                 <div class="overflow-hidden rounded-[1.9rem] border border-[#F3E2E2] bg-[#FFF8F8]">
                     <img
                         :src="product.image_path"
-                        :alt="`Фото товару ${product.name}`"
+                        :alt="`Product photo: ${product.name}`"
                         class="aspect-[4/3] h-full w-full object-cover xl:aspect-[5/4]"
                     />
                 </div>
@@ -57,7 +57,7 @@
                             v-if="isNewProduct"
                             class="rounded-full bg-emerald-50 px-4 py-2 text-xs font-semibold text-emerald-700"
                         >
-                            Новинка
+                            New
                         </span>
                     </div>
 
@@ -66,22 +66,22 @@
                     </p>
 
                     <p class="mt-6 max-w-2xl text-base leading-8 text-[#7E6161]">
-                        {{ product.description || 'Ювелірний виріб із колекції Diva з акцентом на щоденну елегантність.' }}
+                        {{ product.description || 'A Diva collection piece designed for everyday elegance.' }}
                     </p>
 
                     <div class="mt-8 grid gap-4 lg:grid-cols-2">
                         <div class="rounded-[1.6rem] border border-[#F3E2E2] bg-[#FFF8F8] p-5">
-                            <p class="text-sm uppercase tracking-[0.25em] text-[#C49B9B]">Статус товару</p>
+                            <p class="text-sm uppercase tracking-[0.25em] text-[#C49B9B]">Product status</p>
                             <p class="mt-2 text-lg font-semibold text-[#6D4C4C]">{{ availability.label }}</p>
                             <p class="mt-2 text-sm leading-6 text-[#8D6767]">
-                                Підійде для швидкого замовлення або додавання в обране без зайвих переходів.
+                                Ready for fast ordering or adding to favorites without extra steps.
                             </p>
                         </div>
                         <div class="rounded-[1.6rem] border border-[#F3E2E2] bg-[#FFF8F8] p-5">
-                            <p class="text-sm uppercase tracking-[0.25em] text-[#C49B9B]">Рекомендація</p>
-                            <p class="mt-2 text-lg font-semibold text-[#6D4C4C]">Поєднуйте в сет</p>
+                            <p class="text-sm uppercase tracking-[0.25em] text-[#C49B9B]">Recommendation</p>
+                            <p class="mt-2 text-lg font-semibold text-[#6D4C4C]">Style as a Set</p>
                             <p class="mt-2 text-sm leading-6 text-[#8D6767]">
-                                Перейдіть до інших товарів цієї категорії, щоб зібрати завершений ювелірний образ.
+                                Browse other pieces in this category to build a complete jewelry look.
                             </p>
                         </div>
                     </div>
@@ -94,7 +94,7 @@
                             :class="isFavorite ? 'bg-[#FFF1F1] text-[#B46D6D]' : 'text-[#8D6767] hover:bg-[#FFF1F1]'"
                             @click="toggleFavorite"
                         >
-                            {{ isFavorite ? 'В обраному' : 'В обране' }}
+                            {{ isFavorite ? 'In Favorites' : 'Add to Favorites' }}
                         </button>
                         <button
                             type="button"
@@ -102,13 +102,13 @@
                             class="rounded-full bg-[#B46D6D] px-6 py-4 text-sm font-semibold text-white transition hover:bg-[#9E5757] disabled:cursor-not-allowed disabled:opacity-60"
                             @click="addToCart"
                         >
-                            {{ isAdding ? 'Додаємо...' : actionLabel }}
+                            {{ isAdding ? 'Adding...' : actionLabel }}
                         </button>
                         <Link
                             :href="route('catalog', { category_id: product.category.id })"
                             class="rounded-full border border-[#E3BEBE] px-6 py-4 text-center text-sm font-semibold text-[#8D6767] transition hover:bg-[#FFF1F1]"
                         >
-                            Ще в цій категорії
+                            More in this Category
                         </Link>
                     </div>
                 </div>
@@ -137,7 +137,7 @@ const isAdding = ref(false)
 const isFavoritePending = ref(false)
 const isFavorite = ref(props.isFavorited)
 const isAuthenticated = computed(() => Boolean(page.props.auth?.user))
-const actionLabel = computed(() => (isAuthenticated.value ? 'Додати в кошик' : 'Увійти, щоб додати'))
+const actionLabel = computed(() => (isAuthenticated.value ? 'Add to Cart' : 'Sign in to add'))
 const availabilityClass = computed(() => ({
     'bg-emerald-50 text-emerald-700': props.availability?.code === 'available',
     'bg-amber-50 text-amber-700': props.availability?.code !== 'available',
@@ -174,7 +174,7 @@ function toggleFavorite() {
         preserveState: true,
         onError: () => {
             isFavorite.value = !nextValue
-            error('Не вдалося оновити обране. Спробуйте ще раз.')
+            error('Could not update favorites. Please try again.')
         },
         onFinish: () => {
             isFavoritePending.value = false
@@ -211,7 +211,7 @@ function addToCart() {
         preserveState: true,
         onError: () => {
             adjust(-1)
-            error('Не вдалося додати товар до кошика. Спробуйте ще раз.')
+            error('Could not add the item to the cart. Please try again.')
         },
         onFinish: () => {
             isAdding.value = false
@@ -220,7 +220,7 @@ function addToCart() {
 }
 
 function formatPrice(value) {
-    return Number(value ?? 0).toLocaleString('uk-UA', {
+    return Number(value ?? 0).toLocaleString('en-US', {
         minimumFractionDigits: 0,
         maximumFractionDigits: 2,
     })

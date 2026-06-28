@@ -23,7 +23,7 @@ class OrderResource extends ModelResource
 {
     protected string $model = Order::class;
 
-    protected string $title = 'Замовлення';
+    protected string $title = 'Orders';
 
     protected bool $withPolicy = true;
 
@@ -36,31 +36,31 @@ class OrderResource extends ModelResource
     {
         return [
             ID::make()->sortable(),
-            BelongsTo::make('Користувач', 'user', UserResource::class)->nullable(),
-            Date::make('Створено', 'created_at')
+            BelongsTo::make('User', 'user', UserResource::class)->nullable(),
+            Date::make('Created', 'created_at')
                 ->format('d.m.Y')
                 ->sortable()
                 ->hideOnForm(),
-            Text::make('ПІБ', 'full_name')->required(),
+            Text::make('Full name', 'full_name')->required(),
             Email::make('Email')->required(),
-            Text::make('Спосіб оплати', 'payment_method')->required(),
-            Text::make('Платіжний провайдер', 'payment_provider')->readonly(),
-            Text::make('Платіжне посилання', 'payment_reference')->readonly(),
-            Text::make('Статус оплати', 'payment_status')
+            Text::make('Payment method', 'payment_method')->required(),
+            Text::make('Payment provider', 'payment_provider')->readonly(),
+            Text::make('Payment reference', 'payment_reference')->readonly(),
+            Text::make('Payment status', 'payment_status')
                 ->readonly()
                 ->badge(fn (string $value): string => $this->statusColor($value)),
-            Text::make('Статус', 'status')
+            Text::make('Status', 'status')
                 ->readonly()
                 ->badge(fn (string $value): string => $this->statusColor($value)),
-            Number::make('Сума', 'total')->min(0)->step(0.01)->sortable(),
+            Number::make('Total', 'total')->min(0)->step(0.01)->sortable(),
         ];
     }
 
     public function filters(): array
     {
         return [
-            Select::make('Статус', 'status')->options($this->statusOptions()),
-            Select::make('Статус оплати', 'payment_status')->options($this->statusOptions()),
+            Select::make('Status', 'status')->options($this->statusOptions()),
+            Select::make('Payment status', 'payment_status')->options($this->statusOptions()),
         ];
     }
 
@@ -87,10 +87,10 @@ class OrderResource extends ModelResource
     private function statusOptions(): array
     {
         return [
-            'pending' => 'В очікуванні',
-            'paid' => 'Сплачено',
-            'failed' => 'Помилка',
-            'cancelled' => 'Скасовано',
+            'pending' => 'Pending',
+            'paid' => 'Paid',
+            'failed' => 'Failed',
+            'cancelled' => 'Cancelled',
         ];
     }
 

@@ -3,7 +3,7 @@
         :navigation="navigation"
         :title="resource.label"
         :description="resource.description"
-        eyebrow="Керування даними"
+        eyebrow="Data Management"
     >
         <section class="rounded-[2rem] border border-[#f0d7e3] bg-white/95 p-6 shadow-[0_18px_45px_rgba(180,109,109,0.08)]">
             <div class="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
@@ -13,7 +13,7 @@
                             v-if="resource.canSearch"
                             v-model="localFilters.search"
                             type="text"
-                            placeholder="Пошук по таблиці"
+                            placeholder="Search table"
                             class="min-w-[260px] flex-1 rounded-full border border-[#efcfdb] bg-[#fff7fa] px-5 py-3 text-sm text-[#7f485b] placeholder:text-[#c08da0] focus:border-[#b46d6d] focus:outline-none focus:ring-2 focus:ring-[#f3d3df]"
                         >
 
@@ -22,7 +22,7 @@
                             v-model="localFilters.sort"
                             class="rounded-full border border-[#efcfdb] bg-[#fff7fa] px-5 py-3 text-sm text-[#7f485b] focus:border-[#b46d6d] focus:outline-none focus:ring-2 focus:ring-[#f3d3df]"
                         >
-                            <option value="">Сортування за замовчуванням</option>
+                            <option value="">Default sorting</option>
                             <option v-for="sort in resource.sorts" :key="sort.name" :value="sort.name">
                                 {{ sort.label }}
                             </option>
@@ -33,8 +33,8 @@
                             v-model="localFilters.direction"
                             class="rounded-full border border-[#efcfdb] bg-[#fff7fa] px-5 py-3 text-sm text-[#7f485b] focus:border-[#b46d6d] focus:outline-none focus:ring-2 focus:ring-[#f3d3df]"
                         >
-                            <option value="desc">За спаданням</option>
-                            <option value="asc">За зростанням</option>
+                            <option value="desc">Descending</option>
+                            <option value="asc">Ascending</option>
                         </select>
 
                         <select
@@ -56,14 +56,14 @@
                             :disabled="isFiltering"
                             class="rounded-full bg-[#b46d6d] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#9e5757] disabled:cursor-not-allowed disabled:opacity-60"
                         >
-                            {{ isFiltering ? 'Оновлюємо...' : 'Застосувати' }}
+                            {{ isFiltering ? 'Refreshing...' : 'Apply' }}
                         </button>
                         <button
                             type="button"
                             class="rounded-full border border-[#efcfdb] px-5 py-3 text-sm font-semibold text-[#8f6674] transition hover:bg-[#fff1f5]"
                             @click="resetFilters"
                         >
-                            Скинути
+                            Reset
                         </button>
                     </div>
                 </form>
@@ -74,14 +74,14 @@
                         :href="route('admin.reports.orders')"
                         class="inline-flex rounded-full border border-[#efcfdb] px-5 py-3 text-sm font-semibold text-[#9e5757] transition hover:bg-[#fff1f5]"
                     >
-                        Сформувати звіт
+                        Build Report
                     </Link>
                     <Link
                         v-if="resource.permissions.create"
                         :href="route('admin.resources.create', { resource: resource.key })"
                         class="inline-flex rounded-full bg-[#b46d6d] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#9e5757]"
                     >
-                        Створити запис
+                        Create Record
                     </Link>
                 </div>
             </div>
@@ -90,17 +90,17 @@
                 <table class="min-w-full text-left text-sm">
                     <thead>
                         <tr class="border-b border-[#f6e3ea] text-xs uppercase tracking-[0.25em] text-[#bc8da0]">
-                            <th class="px-4 py-3">Запис</th>
+                            <th class="px-4 py-3">Record</th>
                             <th v-for="column in resource.columns" :key="column.key" class="px-4 py-3">
                                 {{ column.label }}
                             </th>
-                            <th class="px-4 py-3 text-right">Дії</th>
+                            <th class="px-4 py-3 text-right">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr v-if="records.data.length === 0">
                             <td :colspan="resource.columns.length + 2" class="px-4 py-10 text-center text-sm text-[#9b7482]">
-                                За поточними фільтрами записи не знайдено.
+                                No records matched the current filters.
                             </td>
                         </tr>
                         <tr
@@ -126,7 +126,7 @@
                                         :href="route('admin.resources.edit', { resource: resource.key, record: record.id })"
                                         class="rounded-full border border-[#efcfdb] px-4 py-2 text-xs font-semibold text-[#9e5757] transition hover:bg-[#fff1f5]"
                                     >
-                                        Редагувати
+                                        Edit
                                     </Link>
                                     <button
                                         v-if="resource.permissions.delete"
@@ -134,7 +134,7 @@
                                         class="rounded-full border border-rose-200 px-4 py-2 text-xs font-semibold text-rose-700 transition hover:bg-rose-50"
                                         @click="destroy(record)"
                                     >
-                                        Видалити
+                                        Delete
                                     </button>
                                 </div>
                             </td>
@@ -231,7 +231,7 @@ function goToPage(url) {
 }
 
 function destroy(record) {
-    if (!window.confirm(`Видалити запис "${record.title}"?`)) {
+    if (!window.confirm(`Delete record "${record.title}"?`)) {
         return
     }
 

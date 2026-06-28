@@ -15,7 +15,7 @@
                 <Link
                     :href="route('cart.index')"
                     class="relative inline-flex h-12 w-12 items-center justify-center rounded-full border border-[#f1d8d8] bg-[#fff8f8] transition hover:bg-[#fff1f1] lg:hidden"
-                    aria-label="Кошик"
+                    aria-label="Cart"
                 >
                     <ShoppingCartIcon class="h-6 w-6" />
                     <span
@@ -31,15 +31,15 @@
                 <nav class="grid grid-cols-3 gap-2 sm:flex sm:flex-wrap sm:justify-end sm:gap-3">
                     <Link :href="route('home')" class="nav-pill">
                         <HomeIcon class="h-5 w-5" />
-                        <span>Головна</span>
+                        <span>Home</span>
                     </Link>
                     <Link :href="route('catalog')" class="nav-pill">
                         <SparklesIcon class="h-5 w-5" />
-                        <span>Каталог</span>
+                        <span>Catalog</span>
                     </Link>
                     <Link href="/contacts" class="nav-pill">
                         <PhoneIcon class="h-5 w-5" />
-                        <span>Контакти</span>
+                        <span>Contacts</span>
                     </Link>
                 </nav>
 
@@ -51,7 +51,7 @@
                         </Link>
                         <Link :href="route('favorites.index')" class="nav-pill relative">
                             <HeartIcon class="h-5 w-5" />
-                            <span>Обране</span>
+                            <span>Favorites</span>
                             <span
                                 v-if="favoritesCount > 0"
                                 class="absolute -right-1 -top-1 min-w-[1.2rem] rounded-full bg-[#B46D6D] px-1 text-center text-[0.7rem] font-semibold text-white"
@@ -61,23 +61,23 @@
                         </Link>
                         <Link :href="route('orders.index')" class="nav-pill">
                             <TruckIcon class="h-5 w-5" />
-                            <span>Замовлення</span>
+                            <span>Orders</span>
                         </Link>
                     </template>
                     <template v-else>
                         <Link :href="route('login')" class="nav-pill">
                             <ArrowRightOnRectangleIcon class="h-5 w-5" />
-                            <span>Увійти</span>
+                            <span>Sign In</span>
                         </Link>
                         <Link :href="route('register')" class="nav-pill">
                             <UserPlusIcon class="h-5 w-5" />
-                            <span>Реєстрація</span>
+                            <span>Register</span>
                         </Link>
                     </template>
 
                     <Link :href="route('cart.index')" class="nav-pill relative hidden lg:inline-flex">
                         <ShoppingCartIcon class="h-5 w-5" />
-                        <span>Кошик</span>
+                        <span>Cart</span>
                         <span
                             v-if="cartCount > 0"
                             class="absolute -right-1 -top-1 min-w-[1.2rem] rounded-full bg-[#B46D6D] px-1 text-center text-[0.7rem] font-semibold text-white"

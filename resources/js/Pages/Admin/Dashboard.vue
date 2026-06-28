@@ -1,9 +1,9 @@
 <template>
     <AdminLayout
         :navigation="navigation"
-        title="Огляд бек-офісу"
-        description="Швидкий доступ до ключових метрик магазину, останніх замовлень і всіх основних даних."
-        eyebrow="Комерційна адмін-панель"
+        title="Backoffice Overview"
+        description="Quick access to the store's key metrics, latest orders, and primary operational data."
+        eyebrow="Commercial Admin Panel"
     >
         <section class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
             <article
@@ -26,9 +26,9 @@
         <section class="mt-8 rounded-[2rem] border border-[#f0d7e3] bg-white/95 p-6 shadow-[0_18px_45px_rgba(180,109,109,0.08)]">
             <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
                 <div>
-                    <h3 class="text-2xl font-black text-[#7f485b]">Останні замовлення</h3>
+                    <h3 class="text-2xl font-black text-[#7f485b]">Latest Orders</h3>
                     <p class="mt-2 text-sm leading-6 text-[#8f6674]">
-                        Операційний зріз по останніх оформленнях, статусах та сумі чека.
+                        Operational snapshot of recent checkouts, statuses, and order totals.
                     </p>
                 </div>
 
@@ -36,13 +36,13 @@
                     :href="route('admin.resources.index', { resource: 'orders' })"
                     class="inline-flex rounded-full border border-[#efcfdb] px-5 py-3 text-sm font-semibold text-[#9e5757] transition hover:bg-[#fff1f5]"
                 >
-                    Відкрити всі замовлення
+                    Open All Orders
                 </Link>
                 <Link
                     :href="route('admin.reports.orders')"
                     class="inline-flex rounded-full bg-[#b46d6d] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#9e5757]"
                 >
-                    Сформувати звіт
+                    Build Report
                 </Link>
             </div>
 
@@ -50,12 +50,12 @@
                 <table class="min-w-full text-left text-sm">
                     <thead>
                         <tr class="border-b border-[#f6e3ea] text-xs uppercase tracking-[0.25em] text-[#bc8da0]">
-                            <th class="px-4 py-3">Референс</th>
-                            <th class="px-4 py-3">Клієнт</th>
-                            <th class="px-4 py-3">Статус</th>
-                            <th class="px-4 py-3">Оплата</th>
-                            <th class="px-4 py-3">Сума</th>
-                            <th class="px-4 py-3">Дата</th>
+                            <th class="px-4 py-3">Reference</th>
+                            <th class="px-4 py-3">Customer</th>
+                            <th class="px-4 py-3">Status</th>
+                            <th class="px-4 py-3">Payment</th>
+                            <th class="px-4 py-3">Total</th>
+                            <th class="px-4 py-3">Date</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -109,24 +109,24 @@ function barClass(accent) {
 
 function statusLabel(status) {
     return {
-        pending: 'В очікуванні',
-        paid: 'Сплачено',
-        failed: 'Помилка',
-        cancelled: 'Скасовано',
+        pending: 'Pending',
+        paid: 'Paid',
+        failed: 'Failed',
+        cancelled: 'Cancelled',
     }[status] ?? status
 }
 
 function paymentStatusLabel(status) {
     return {
-        pending: 'Очікується',
-        paid: 'Сплачено',
-        failed: 'Помилка',
-        cancelled: 'Скасовано',
+        pending: 'Pending',
+        paid: 'Paid',
+        failed: 'Failed',
+        cancelled: 'Cancelled',
     }[status] ?? status
 }
 
 function formatPrice(value) {
-    return Number(value ?? 0).toLocaleString('uk-UA', {
+    return Number(value ?? 0).toLocaleString('en-US', {
         minimumFractionDigits: 0,
         maximumFractionDigits: 2,
     })

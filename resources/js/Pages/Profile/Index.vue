@@ -3,16 +3,16 @@
         <section class="mx-auto w-full max-w-[1480px] px-4 py-12 sm:px-6 xl:px-8">
             <div class="mb-8 flex flex-col gap-5 xl:flex-row xl:items-end xl:justify-between">
                 <div>
-                    <p class="text-xs font-semibold uppercase tracking-[0.35em] text-[#D09A9A]">Особистий кабінет</p>
-                    <h1 class="mt-2 text-4xl font-extrabold tracking-wide text-[#B46D6D]">Профіль користувача</h1>
+                    <p class="text-xs font-semibold uppercase tracking-[0.35em] text-[#D09A9A]">Account Area</p>
+                    <h1 class="mt-2 text-4xl font-extrabold tracking-wide text-[#B46D6D]">User Profile</h1>
                     <p class="mt-3 max-w-2xl text-sm leading-7 text-[#8D6767]">
-                        Керуйте особистими даними, безпекою акаунта та сесією входу в одному місці.
+                        Manage profile details, account security, and session controls in one place.
                     </p>
                 </div>
 
                 <div class="grid gap-3 sm:grid-cols-2 xl:min-w-[28rem]">
                     <div class="rounded-[1.6rem] border border-[#E9CFCF] bg-[#FFF8F8] px-5 py-4">
-                        <p class="text-xs font-semibold uppercase tracking-[0.25em] text-[#C49B9B]">Ім'я</p>
+                        <p class="text-xs font-semibold uppercase tracking-[0.25em] text-[#C49B9B]">Name</p>
                         <p class="mt-2 text-base font-bold text-[#B46D6D]">{{ user.name }}</p>
                     </div>
                     <div class="rounded-[1.6rem] border border-[#E9CFCF] bg-[#FFF8F8] px-5 py-4">
@@ -25,12 +25,12 @@
             <div class="grid gap-6 xl:grid-cols-[1fr_1fr]">
                 <form @submit.prevent="updateProfile" class="rounded-[2rem] border border-[#E7C5C5] bg-white p-8 shadow-[0_18px_50px_rgba(180,109,109,0.07)] space-y-6">
                     <div>
-                        <p class="text-xs font-semibold uppercase tracking-[0.35em] text-[#D09A9A]">Основні дані</p>
-                        <h2 class="mt-2 text-2xl font-bold text-[#B46D6D]">Контактна інформація</h2>
+                        <p class="text-xs font-semibold uppercase tracking-[0.35em] text-[#D09A9A]">Basic Details</p>
+                        <h2 class="mt-2 text-2xl font-bold text-[#B46D6D]">Contact Information</h2>
                     </div>
 
                     <div>
-                        <label class="mb-2 block text-sm font-semibold text-[#6D4C4C]">Ім'я</label>
+                        <label class="mb-2 block text-sm font-semibold text-[#6D4C4C]">Name</label>
                         <input
                             v-model="profileForm.name"
                             type="text"
@@ -41,7 +41,7 @@
                     </div>
 
                     <div>
-                        <label class="mb-2 block text-sm font-semibold text-[#6D4C4C]">Електронна пошта</label>
+                        <label class="mb-2 block text-sm font-semibold text-[#6D4C4C]">Email</label>
                         <input
                             v-model="profileForm.email"
                             type="email"
@@ -56,7 +56,7 @@
                         class="w-full rounded-full bg-[#B46D6D] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#9E5757] disabled:cursor-not-allowed disabled:opacity-60"
                         :disabled="profileForm.processing"
                     >
-                        {{ profileForm.processing ? 'Збереження...' : 'Зберегти профіль' }}
+                        {{ profileForm.processing ? 'Saving...' : 'Save Profile' }}
                     </button>
 
                     <p v-if="profileSuccessMessage" class="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-center text-sm font-medium text-emerald-700">
@@ -66,12 +66,12 @@
 
                 <form @submit.prevent="updatePassword" class="rounded-[2rem] border border-[#E7C5C5] bg-white p-8 shadow-[0_18px_50px_rgba(180,109,109,0.07)] space-y-6">
                     <div>
-                        <p class="text-xs font-semibold uppercase tracking-[0.35em] text-[#D09A9A]">Безпека</p>
-                        <h2 class="mt-2 text-2xl font-bold text-[#B46D6D]">Оновлення пароля</h2>
+                        <p class="text-xs font-semibold uppercase tracking-[0.35em] text-[#D09A9A]">Security</p>
+                        <h2 class="mt-2 text-2xl font-bold text-[#B46D6D]">Update Password</h2>
                     </div>
 
                     <div>
-                        <label class="mb-2 block text-sm font-semibold text-[#6D4C4C]">Поточний пароль</label>
+                        <label class="mb-2 block text-sm font-semibold text-[#6D4C4C]">Current Password</label>
                         <input
                             v-model="passwordForm.current_password"
                             type="password"
@@ -82,7 +82,7 @@
                     </div>
 
                     <div>
-                        <label class="mb-2 block text-sm font-semibold text-[#6D4C4C]">Новий пароль</label>
+                        <label class="mb-2 block text-sm font-semibold text-[#6D4C4C]">New Password</label>
                         <input
                             v-model="passwordForm.password"
                             type="password"
@@ -93,7 +93,7 @@
                     </div>
 
                     <div>
-                        <label class="mb-2 block text-sm font-semibold text-[#6D4C4C]">Підтвердіть новий пароль</label>
+                        <label class="mb-2 block text-sm font-semibold text-[#6D4C4C]">Confirm New Password</label>
                         <input
                             v-model="passwordForm.password_confirmation"
                             type="password"
@@ -106,7 +106,7 @@
                         class="w-full rounded-full bg-[#6D4C4C] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#5A3B3B] disabled:cursor-not-allowed disabled:opacity-60"
                         :disabled="passwordForm.processing"
                     >
-                        {{ passwordForm.processing ? 'Оновлення...' : 'Оновити пароль' }}
+                        {{ passwordForm.processing ? 'Updating...' : 'Update Password' }}
                     </button>
 
                     <p v-if="passwordSuccessMessage" class="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-center text-sm font-medium text-emerald-700">
@@ -116,15 +116,15 @@
 
                 <form @submit.prevent="deleteAccount" class="rounded-[2rem] border border-rose-200 bg-white p-8 shadow-[0_18px_50px_rgba(180,109,109,0.07)] space-y-6">
                     <div>
-                        <p class="text-xs font-semibold uppercase tracking-[0.35em] text-rose-400">Обережно</p>
-                        <h2 class="mt-2 text-2xl font-bold text-rose-700">Видалення акаунта</h2>
+                        <p class="text-xs font-semibold uppercase tracking-[0.35em] text-rose-400">Warning</p>
+                        <h2 class="mt-2 text-2xl font-bold text-rose-700">Delete Account</h2>
                         <p class="mt-3 text-sm leading-7 text-[#8D6767]">
-                            Після підтвердження парольним полем акаунт буде видалено. Використовуйте цю дію лише якщо впевнені.
+                            After password confirmation, the account will be deleted. Use this action only if you are sure.
                         </p>
                     </div>
 
                     <div>
-                        <label class="mb-2 block text-sm font-semibold text-[#6D4C4C]">Підтвердіть пароль для видалення акаунту</label>
+                        <label class="mb-2 block text-sm font-semibold text-[#6D4C4C]">Confirm password to delete the account</label>
                         <input
                             v-model="deleteForm.password"
                             type="password"
@@ -138,21 +138,21 @@
                         class="w-full rounded-full bg-rose-600 px-6 py-3 text-sm font-semibold text-white transition hover:bg-rose-700 disabled:cursor-not-allowed disabled:opacity-60"
                         :disabled="deleteForm.processing"
                     >
-                        {{ deleteForm.processing ? 'Видалення...' : 'Видалити акаунт' }}
+                        {{ deleteForm.processing ? 'Deleting...' : 'Delete Account' }}
                     </button>
                 </form>
 
                 <form @submit.prevent="logout" class="rounded-[2rem] border border-[#E7C5C5] bg-[#FFF9F9] p-8 text-center shadow-[0_18px_50px_rgba(180,109,109,0.05)]">
-                    <p class="text-xs font-semibold uppercase tracking-[0.35em] text-[#D09A9A]">Сесія</p>
-                    <h2 class="mt-2 text-2xl font-bold text-[#B46D6D]">Вихід з акаунта</h2>
+                    <p class="text-xs font-semibold uppercase tracking-[0.35em] text-[#D09A9A]">Session</p>
+                    <h2 class="mt-2 text-2xl font-bold text-[#B46D6D]">Log Out of Account</h2>
                     <p class="mt-3 text-sm leading-7 text-[#8D6767]">
-                        Завершіть поточну сесію на цьому пристрої, якщо закінчили роботу з особистим кабінетом.
+                        End the current session on this device when you are done using your account.
                     </p>
                     <button
                         type="submit"
                         class="mt-6 rounded-full border border-[#E3BEBE] px-6 py-3 text-sm font-semibold text-[#B46D6D] transition hover:bg-[#FFF1F1]"
                     >
-                        Вийти з акаунту
+                        Log Out
                     </button>
                 </form>
             </div>
@@ -188,7 +188,7 @@ const passwordSuccessMessage = ref('')
 function updateProfile() {
     profileForm.patch(route('profile.update'), {
         onSuccess: () => {
-            profileSuccessMessage.value = 'Профіль успішно оновлено!'
+            profileSuccessMessage.value = 'Profile updated successfully!'
         },
     })
 }
@@ -196,7 +196,7 @@ function updateProfile() {
 function updatePassword() {
     passwordForm.put(route('password.update'), {
         onSuccess: () => {
-            passwordSuccessMessage.value = 'Пароль успішно оновлено!'
+            passwordSuccessMessage.value = 'Password updated successfully!'
             passwordForm.reset()
         },
     })

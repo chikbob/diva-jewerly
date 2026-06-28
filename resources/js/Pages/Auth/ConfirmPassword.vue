@@ -19,15 +19,15 @@ const submit = () => {
 
 <template>
     <GuestLayout>
-        <Head title="Підтвердження пароля" />
+        <Head title="Confirm Password" />
 
         <div class="mb-4 text-sm text-gray-600">
-            Це захищена частина застосунку. Підтвердіть пароль, щоб продовжити.
+            This is a secure area of the application. Please confirm your password before continuing.
         </div>
 
         <form @submit.prevent="submit">
             <div>
-                <InputLabel for="password" value="Пароль" />
+                <InputLabel for="password" value="Password" />
                 <TextInput
                     id="password"
                     type="password"
@@ -42,7 +42,7 @@ const submit = () => {
 
             <div class="flex justify-end mt-4">
                 <PrimaryButton class="ms-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                    Підтвердити
+                    Confirm
                 </PrimaryButton>
             </div>
         </form>

@@ -22,7 +22,7 @@ class DatabaseSeeder extends Seeder
         $demoUser = User::query()->updateOrCreate([
             'email' => 'user@diva.local',
         ], [
-            'name' => 'Демо Олена Ковальчук',
+            'name' => 'Demo Olena Kovalchuk',
             'password' => Hash::make('user12345'),
             'email_verified_at' => now(),
         ]);
@@ -35,25 +35,25 @@ class DatabaseSeeder extends Seeder
             'email' => 'admin@diva.local',
         ], [
             'moonshine_user_role_id' => $adminRole->id,
-            'name' => 'Демо Ірина Левченко',
+            'name' => 'Demo Iryna Levchenko',
             'password' => Hash::make('admin12345'),
         ]);
 
         $showcaseUsers = collect([
             [
-                'name' => 'Демо Марина Гаврилюк',
+                'name' => 'Demo Maryna Havryliuk',
                 'email' => 'marina.demo@diva.local',
             ],
             [
-                'name' => 'Демо Софія Мельник',
+                'name' => 'Demo Sofiia Melnyk',
                 'email' => 'sofia.demo@diva.local',
             ],
             [
-                'name' => 'Демо Наталія Романюк',
+                'name' => 'Demo Nataliia Romaniuk',
                 'email' => 'natalia.demo@diva.local',
             ],
             [
-                'name' => 'Демо Катерина Шевчук',
+                'name' => 'Demo Kateryna Shevchuk',
                 'email' => 'kateryna.demo@diva.local',
             ],
         ])->map(fn (array $user): User => User::query()->updateOrCreate(
@@ -67,58 +67,58 @@ class DatabaseSeeder extends Seeder
 
         $categorySeeds = [
             [
-                'name' => 'Каблучки',
-                'description' => 'Вишукані каблучки для щоденного образу та особливих подій.',
+                'name' => 'Rings',
+                'description' => 'Refined rings for everyday looks and special occasions.',
                 'image_url' => 'https://g0.sunlight.net/media/products/ef9aacf9-7003-11ef-b516-005056bccafe.jpg',
                 'products' => [
-                    ['name' => 'Каблучка Демо Rose Glow', 'description' => 'Позолочена каблучка з рожевим кристалом для делікатного щоденного акценту.', 'price' => 2680.00, 'image_path' => 'https://g6.sunlight.net/media/products/61d5da03c8fe908a0b95f5422284bf6cbf7d36f6.jpg', 'days_ago' => 4],
-                    ['name' => 'Каблучка Демо Emerald Promise', 'description' => 'Каблучка з зеленим каменем і доріжкою фіанітів у сучасній оправі.', 'price' => 7191.91, 'image_path' => 'https://g6.sunlight.net/media/products/61d5da03c8fe908a0b95f5422284bf6cbf7d36f6.jpg', 'days_ago' => 10],
-                    ['name' => 'Каблучка Демо Golden Lace', 'description' => 'Тонка ажурна модель для комбінування з іншими прикрасами.', 'price' => 3190.00, 'image_path' => 'https://g6.sunlight.net/media/products/61d5da03c8fe908a0b95f5422284bf6cbf7d36f6.jpg', 'days_ago' => 38],
-                    ['name' => 'Каблучка Демо Pearl Line', 'description' => 'Лаконічна каблучка з перловим акцентом для офісного стилю.', 'price' => 4120.00, 'image_path' => 'https://g6.sunlight.net/media/products/61d5da03c8fe908a0b95f5422284bf6cbf7d36f6.jpg', 'days_ago' => 22],
+                    ['name' => 'Demo Ring Rose Glow', 'description' => 'Gold-plated ring with a pink crystal for a delicate everyday accent.', 'price' => 2680.00, 'image_path' => 'https://g6.sunlight.net/media/products/61d5da03c8fe908a0b95f5422284bf6cbf7d36f6.jpg', 'days_ago' => 4],
+                    ['name' => 'Demo Ring Emerald Promise', 'description' => 'Ring with a green stone and a row of cubic zirconia in a modern setting.', 'price' => 7191.91, 'image_path' => 'https://g6.sunlight.net/media/products/61d5da03c8fe908a0b95f5422284bf6cbf7d36f6.jpg', 'days_ago' => 10],
+                    ['name' => 'Demo Ring Golden Lace', 'description' => 'Fine openwork design made for stacking with other jewelry.', 'price' => 3190.00, 'image_path' => 'https://g6.sunlight.net/media/products/61d5da03c8fe908a0b95f5422284bf6cbf7d36f6.jpg', 'days_ago' => 38],
+                    ['name' => 'Demo Ring Pearl Line', 'description' => 'Minimal ring with a pearl accent for polished office styling.', 'price' => 4120.00, 'image_path' => 'https://g6.sunlight.net/media/products/61d5da03c8fe908a0b95f5422284bf6cbf7d36f6.jpg', 'days_ago' => 22],
                 ],
             ],
             [
-                'name' => 'Сережки',
-                'description' => 'Класичні та сучасні сережки з акцентом на стиль і легкість.',
+                'name' => 'Earrings',
+                'description' => 'Classic and contemporary earrings focused on style and lightness.',
                 'image_url' => 'https://g0.sunlight.net/media/products/ef9aacf9-7003-11ef-b516-005056bccafe.jpg',
                 'products' => [
-                    ['name' => 'Сережки Демо Blush Drop', 'description' => 'Подовжені сережки з делікатним рожевим блиском для вечірнього образу.', 'price' => 3580.00, 'image_path' => 'https://g6.sunlight.net/media/products/61d5da03c8fe908a0b95f5422284bf6cbf7d36f6.jpg', 'days_ago' => 7],
-                    ['name' => 'Сережки Демо Crystal Hoop', 'description' => 'Акуратні сережки-кільця з інкрустацією для щоденного носіння.', 'price' => 2890.00, 'image_path' => 'https://g6.sunlight.net/media/products/61d5da03c8fe908a0b95f5422284bf6cbf7d36f6.jpg', 'days_ago' => 14],
-                    ['name' => 'Сережки Демо Ivory Spark', 'description' => 'Ніжна модель із світлим каменем, що пасує до базового гардероба.', 'price' => 4310.00, 'image_path' => 'https://g6.sunlight.net/media/products/61d5da03c8fe908a0b95f5422284bf6cbf7d36f6.jpg', 'days_ago' => 45],
-                    ['name' => 'Сережки Демо Velvet Shine', 'description' => 'Мінімалістична пара з м’яким золотим блиском та делікатною геометрією.', 'price' => 3985.00, 'image_path' => 'https://g6.sunlight.net/media/products/61d5da03c8fe908a0b95f5422284bf6cbf7d36f6.jpg', 'days_ago' => 3],
+                    ['name' => 'Earrings Demo Blush Drop', 'description' => 'Long earrings with a soft pink glow for an evening look.', 'price' => 3580.00, 'image_path' => 'https://g6.sunlight.net/media/products/61d5da03c8fe908a0b95f5422284bf6cbf7d36f6.jpg', 'days_ago' => 7],
+                    ['name' => 'Earrings Demo Crystal Hoop', 'description' => 'Compact hoop earrings with stone detailing for daily wear.', 'price' => 2890.00, 'image_path' => 'https://g6.sunlight.net/media/products/61d5da03c8fe908a0b95f5422284bf6cbf7d36f6.jpg', 'days_ago' => 14],
+                    ['name' => 'Earrings Demo Ivory Spark', 'description' => 'A soft design with a pale stone that fits a versatile wardrobe.', 'price' => 4310.00, 'image_path' => 'https://g6.sunlight.net/media/products/61d5da03c8fe908a0b95f5422284bf6cbf7d36f6.jpg', 'days_ago' => 45],
+                    ['name' => 'Earrings Demo Velvet Shine', 'description' => 'Minimal pair with a soft golden shine and delicate geometry.', 'price' => 3985.00, 'image_path' => 'https://g6.sunlight.net/media/products/61d5da03c8fe908a0b95f5422284bf6cbf7d36f6.jpg', 'days_ago' => 3],
                 ],
             ],
             [
-                'name' => 'Підвіски',
-                'description' => 'Акуратні підвіски, що підкреслюють індивідуальність.',
+                'name' => 'Pendants',
+                'description' => 'Clean pendant silhouettes that underline personal style.',
                 'image_url' => 'https://g0.sunlight.net/media/products/ef9aacf9-7003-11ef-b516-005056bccafe.jpg',
                 'products' => [
-                    ['name' => 'Підвіска Демо Moon Charm', 'description' => 'Романтична підвіска з гладким металом і акцентом на чисту форму.', 'price' => 3907.51, 'image_path' => 'https://g6.sunlight.net/media/products/61d5da03c8fe908a0b95f5422284bf6cbf7d36f6.jpg', 'days_ago' => 12],
-                    ['name' => 'Підвіска Демо Love Script', 'description' => 'Легка підвіска з виразним контуром для подарункового настрою.', 'price' => 2470.00, 'image_path' => 'https://g6.sunlight.net/media/products/61d5da03c8fe908a0b95f5422284bf6cbf7d36f6.jpg', 'days_ago' => 29],
-                    ['name' => 'Підвіска Демо Aurora Star', 'description' => 'Яскравий акцент із каменем холодного сяйва в тонкому ланцюжку.', 'price' => 4510.00, 'image_path' => 'https://g6.sunlight.net/media/products/61d5da03c8fe908a0b95f5422284bf6cbf7d36f6.jpg', 'days_ago' => 61],
-                    ['name' => 'Підвіска Демо Signature Heart', 'description' => 'Комерційна bestseller-модель з м’якою формою серця.', 'price' => 3325.00, 'image_path' => 'https://g6.sunlight.net/media/products/61d5da03c8fe908a0b95f5422284bf6cbf7d36f6.jpg', 'days_ago' => 5],
+                    ['name' => 'Demo Pendant Moon Charm', 'description' => 'Romantic pendant with smooth metal surfaces and a clean silhouette.', 'price' => 3907.51, 'image_path' => 'https://g6.sunlight.net/media/products/61d5da03c8fe908a0b95f5422284bf6cbf7d36f6.jpg', 'days_ago' => 12],
+                    ['name' => 'Demo Pendant Love Script', 'description' => 'Light pendant with a defined contour and gift-ready mood.', 'price' => 2470.00, 'image_path' => 'https://g6.sunlight.net/media/products/61d5da03c8fe908a0b95f5422284bf6cbf7d36f6.jpg', 'days_ago' => 29],
+                    ['name' => 'Demo Pendant Aurora Star', 'description' => 'Bright accent with a cool-shine stone on a fine chain.', 'price' => 4510.00, 'image_path' => 'https://g6.sunlight.net/media/products/61d5da03c8fe908a0b95f5422284bf6cbf7d36f6.jpg', 'days_ago' => 61],
+                    ['name' => 'Demo Pendant Signature Heart', 'description' => 'Commercial best-seller with a soft heart silhouette.', 'price' => 3325.00, 'image_path' => 'https://g6.sunlight.net/media/products/61d5da03c8fe908a0b95f5422284bf6cbf7d36f6.jpg', 'days_ago' => 5],
                 ],
             ],
             [
-                'name' => 'Браслети',
-                'description' => 'Браслети для повсякденного носіння та святкових образів.',
+                'name' => 'Bracelets',
+                'description' => 'Bracelets for everyday wear and elevated occasion looks.',
                 'image_url' => 'https://g0.sunlight.net/media/products/ef9aacf9-7003-11ef-b516-005056bccafe.jpg',
                 'products' => [
-                    ['name' => 'Браслет Демо Silk Chain', 'description' => 'Легкий ланцюговий браслет, який добре поєднується з годинником.', 'price' => 4850.00, 'image_path' => 'https://g6.sunlight.net/media/products/61d5da03c8fe908a0b95f5422284bf6cbf7d36f6.jpg', 'days_ago' => 8],
-                    ['name' => 'Браслет Демо Tender Pearl', 'description' => 'Модель з перловою вставкою для стриманого жіночного стилю.', 'price' => 5290.00, 'image_path' => 'https://g6.sunlight.net/media/products/61d5da03c8fe908a0b95f5422284bf6cbf7d36f6.jpg', 'days_ago' => 18],
-                    ['name' => 'Браслет Демо Milano Shine', 'description' => 'Фактурне плетіння з виразним блиском для подарункової колекції.', 'price' => 6120.00, 'image_path' => 'https://g6.sunlight.net/media/products/61d5da03c8fe908a0b95f5422284bf6cbf7d36f6.jpg', 'days_ago' => 41],
-                    ['name' => 'Браслет Демо Daily Grace', 'description' => 'Комфортний базовий браслет на кожен день з м’якою посадкою.', 'price' => 2760.00, 'image_path' => 'https://g6.sunlight.net/media/products/61d5da03c8fe908a0b95f5422284bf6cbf7d36f6.jpg', 'days_ago' => 2],
+                    ['name' => 'Demo Bracelet Silk Chain', 'description' => 'Light chain bracelet that pairs well with a watch.', 'price' => 4850.00, 'image_path' => 'https://g6.sunlight.net/media/products/61d5da03c8fe908a0b95f5422284bf6cbf7d36f6.jpg', 'days_ago' => 8],
+                    ['name' => 'Demo Bracelet Tender Pearl', 'description' => 'Design with a pearl accent for understated feminine styling.', 'price' => 5290.00, 'image_path' => 'https://g6.sunlight.net/media/products/61d5da03c8fe908a0b95f5422284bf6cbf7d36f6.jpg', 'days_ago' => 18],
+                    ['name' => 'Demo Bracelet Milano Shine', 'description' => 'Textured weave with a rich shine suited for gift collections.', 'price' => 6120.00, 'image_path' => 'https://g6.sunlight.net/media/products/61d5da03c8fe908a0b95f5422284bf6cbf7d36f6.jpg', 'days_ago' => 41],
+                    ['name' => 'Demo Bracelet Daily Grace', 'description' => 'Comfortable everyday bracelet with an easy fit.', 'price' => 2760.00, 'image_path' => 'https://g6.sunlight.net/media/products/61d5da03c8fe908a0b95f5422284bf6cbf7d36f6.jpg', 'days_ago' => 2],
                 ],
             ],
             [
-                'name' => 'Кольє',
-                'description' => 'Елегантні кольє для завершення ювелірного комплекту.',
+                'name' => 'Necklaces',
+                'description' => 'Elegant necklaces to complete a jewelry set.',
                 'image_url' => 'https://g0.sunlight.net/media/products/ef9aacf9-7003-11ef-b516-005056bccafe.jpg',
                 'products' => [
-                    ['name' => 'Кольє Демо Soft Rosé', 'description' => 'Рожевий тон і м’яка лінія підкреслюють комерційний premium-настрій колекції.', 'price' => 6890.00, 'image_path' => 'https://g6.sunlight.net/media/products/61d5da03c8fe908a0b95f5422284bf6cbf7d36f6.jpg', 'days_ago' => 9],
-                    ['name' => 'Кольє Демо Evening Pearl', 'description' => 'Витончене кольє для суконь з відкритою лінією шиї.', 'price' => 7420.00, 'image_path' => 'https://g6.sunlight.net/media/products/61d5da03c8fe908a0b95f5422284bf6cbf7d36f6.jpg', 'days_ago' => 27],
-                    ['name' => 'Кольє Демо Riviera Light', 'description' => 'Святкова модель з виразним блиском та рівномірною посадкою.', 'price' => 9150.00, 'image_path' => 'https://g6.sunlight.net/media/products/61d5da03c8fe908a0b95f5422284bf6cbf7d36f6.jpg', 'days_ago' => 55],
-                    ['name' => 'Кольє Демо City Minimal', 'description' => 'Мінімалістичне кольє для базового гардероба і сучасного стилю.', 'price' => 4380.00, 'image_path' => 'https://g6.sunlight.net/media/products/61d5da03c8fe908a0b95f5422284bf6cbf7d36f6.jpg', 'days_ago' => 1],
+                    ['name' => 'Necklace Demo Soft Rose', 'description' => 'Rosy tone and a soft line create a premium commercial feel.', 'price' => 6890.00, 'image_path' => 'https://g6.sunlight.net/media/products/61d5da03c8fe908a0b95f5422284bf6cbf7d36f6.jpg', 'days_ago' => 9],
+                    ['name' => 'Necklace Demo Evening Pearl', 'description' => 'Elegant necklace designed for dresses with an open neckline.', 'price' => 7420.00, 'image_path' => 'https://g6.sunlight.net/media/products/61d5da03c8fe908a0b95f5422284bf6cbf7d36f6.jpg', 'days_ago' => 27],
+                    ['name' => 'Necklace Demo Riviera Light', 'description' => 'Occasion-focused design with vivid shine and an even drape.', 'price' => 9150.00, 'image_path' => 'https://g6.sunlight.net/media/products/61d5da03c8fe908a0b95f5422284bf6cbf7d36f6.jpg', 'days_ago' => 55],
+                    ['name' => 'Necklace Demo City Minimal', 'description' => 'Minimal necklace for a modern essential wardrobe.', 'price' => 4380.00, 'image_path' => 'https://g6.sunlight.net/media/products/61d5da03c8fe908a0b95f5422284bf6cbf7d36f6.jpg', 'days_ago' => 1],
                 ],
             ],
         ];
@@ -161,10 +161,10 @@ class DatabaseSeeder extends Seeder
         $productMap = $products->keyBy('name');
 
         $favoriteProducts = [
-            'Каблучка Демо Rose Glow',
-            'Сережки Демо Velvet Shine',
-            'Підвіска Демо Signature Heart',
-            'Кольє Демо Soft Rosé',
+            'Demo Ring Rose Glow',
+            'Earrings Demo Velvet Shine',
+            'Demo Pendant Signature Heart',
+            'Necklace Demo Soft Rose',
         ];
 
         foreach ($favoriteProducts as $productName) {
@@ -175,8 +175,8 @@ class DatabaseSeeder extends Seeder
         }
 
         foreach ([
-            ['name' => 'Каблучка Демо Emerald Promise', 'quantity' => 1],
-            ['name' => 'Браслет Демо Daily Grace', 'quantity' => 2],
+            ['name' => 'Demo Ring Emerald Promise', 'quantity' => 1],
+            ['name' => 'Demo Bracelet Daily Grace', 'quantity' => 2],
         ] as $cartItem) {
             CartItem::query()->updateOrCreate([
                 'user_id' => $demoUser->id,
@@ -195,8 +195,8 @@ class DatabaseSeeder extends Seeder
             'paid',
             'demo_card',
             [
-                ['name' => 'Каблучка Демо Rose Glow', 'quantity' => 1],
-                ['name' => 'Кольє Демо Soft Rosé', 'quantity' => 1],
+                ['name' => 'Demo Ring Rose Glow', 'quantity' => 1],
+                ['name' => 'Necklace Demo Soft Rose', 'quantity' => 1],
             ],
             $productMap,
             3
@@ -209,8 +209,8 @@ class DatabaseSeeder extends Seeder
             'pending',
             'demo_card',
             [
-                ['name' => 'Сережки Демо Blush Drop', 'quantity' => 1],
-                ['name' => 'Підвіска Демо Love Script', 'quantity' => 1],
+                ['name' => 'Earrings Demo Blush Drop', 'quantity' => 1],
+                ['name' => 'Demo Pendant Love Script', 'quantity' => 1],
             ],
             $productMap,
             2
@@ -223,8 +223,8 @@ class DatabaseSeeder extends Seeder
             'paid',
             'cash_on_delivery',
             [
-                ['name' => 'Браслет Демо Silk Chain', 'quantity' => 1],
-                ['name' => 'Сережки Демо Crystal Hoop', 'quantity' => 2],
+                ['name' => 'Demo Bracelet Silk Chain', 'quantity' => 1],
+                ['name' => 'Earrings Demo Crystal Hoop', 'quantity' => 2],
             ],
             $productMap,
             9
@@ -237,7 +237,7 @@ class DatabaseSeeder extends Seeder
             'failed',
             'demo_card',
             [
-                ['name' => 'Кольє Демо Evening Pearl', 'quantity' => 1],
+                ['name' => 'Necklace Demo Evening Pearl', 'quantity' => 1],
             ],
             $productMap,
             15
@@ -250,9 +250,9 @@ class DatabaseSeeder extends Seeder
             'paid',
             'demo_card',
             [
-                ['name' => 'Підвіска Демо Moon Charm', 'quantity' => 1],
-                ['name' => 'Каблучка Демо Pearl Line', 'quantity' => 1],
-                ['name' => 'Браслет Демо Tender Pearl', 'quantity' => 1],
+                ['name' => 'Demo Pendant Moon Charm', 'quantity' => 1],
+                ['name' => 'Demo Ring Pearl Line', 'quantity' => 1],
+                ['name' => 'Demo Bracelet Tender Pearl', 'quantity' => 1],
             ],
             $productMap,
             21

@@ -21,7 +21,7 @@ class ProductResource extends ModelResource
 {
     protected string $model = Product::class;
 
-    protected string $title = 'Товари';
+    protected string $title = 'Products';
 
     protected bool $withPolicy = true;
 
@@ -29,13 +29,13 @@ class ProductResource extends ModelResource
     {
         return [
             ID::make()->sortable(),
-            Text::make('Назва', 'name')->required(),
-            Textarea::make('Опис', 'description'),
-            Number::make('Ціна', 'price')->min(0)->step(0.01)->required()->sortable(),
-            Text::make('URL зображення', 'image_path'),
-            Preview::make('Зображення', 'image_path')
+            Text::make('Name', 'name')->required(),
+            Textarea::make('Description', 'description'),
+            Number::make('Price', 'price')->min(0)->step(0.01)->required()->sortable(),
+            Text::make('Image URL', 'image_path'),
+            Preview::make('Image', 'image_path')
                 ->image(),
-            BelongsTo::make('Категорія', 'category', CategoryResource::class),
+            BelongsTo::make('Category', 'category', CategoryResource::class),
         ];
     }
 

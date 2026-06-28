@@ -4,15 +4,15 @@
             <div class="mx-auto max-w-[1480px]">
                 <div class="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
                     <div>
-                        <p class="text-xs font-semibold uppercase tracking-[0.35em] text-[#D09A9A]">Колекція DIVA</p>
-                        <h1 class="mt-2 text-4xl font-extrabold tracking-wide">Каталог ювелірних виробів</h1>
+                        <p class="text-xs font-semibold uppercase tracking-[0.35em] text-[#D09A9A]">DIVA Collection</p>
+                        <h1 class="mt-2 text-4xl font-extrabold tracking-wide">Jewelry Catalog</h1>
                         <p class="mt-3 max-w-2xl text-sm leading-6 text-[#8D6767]">
-                            Підбирайте прикраси за категорією, бюджетом і способом сортування. Каталог оновлюється без повного перезавантаження сторінки.
+                            Browse pieces by category, budget, and sort order. The catalog updates without a full page reload.
                         </p>
                     </div>
 
                     <div class="rounded-2xl border border-[#E9CFCF] bg-[#FFF8F8] px-4 py-3 text-sm text-[#8D6767]">
-                        <strong class="text-[#B46D6D]">{{ products.total }}</strong> товарів знайдено
+                        <strong class="text-[#B46D6D]">{{ products.total }}</strong> products found
                     </div>
                 </div>
 
@@ -22,22 +22,22 @@
                 >
                     <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
                         <label class="flex flex-col gap-2 text-sm font-medium">
-                            <span>Пошук</span>
+                            <span>Search</span>
                             <input
                                 v-model="localFilters.search"
                                 type="search"
-                                placeholder="Назва прикраси"
+                                placeholder="Jewelry name"
                                 class="rounded-2xl border border-[#E3BEBE] px-4 py-3 text-[#6D4C4C] focus:border-[#B46D6D] focus:outline-none focus:ring-2 focus:ring-[#E7B7B7]"
                             />
                         </label>
 
                         <label class="flex flex-col gap-2 text-sm font-medium">
-                            <span>Категорія</span>
+                            <span>Category</span>
                             <select
                                 v-model="localFilters.category_id"
                                 class="rounded-2xl border border-[#E3BEBE] px-4 py-3 text-[#6D4C4C] focus:border-[#B46D6D] focus:outline-none focus:ring-2 focus:ring-[#E7B7B7]"
                             >
-                                <option value="">Всі категорії</option>
+                                <option value="">All categories</option>
                                 <option v-for="category in categories" :key="category.id" :value="String(category.id)">
                                     {{ category.name }}
                                 </option>
@@ -45,7 +45,7 @@
                         </label>
 
                         <label class="flex flex-col gap-2 text-sm font-medium">
-                            <span>Мін. ціна</span>
+                            <span>Min price</span>
                             <input
                                 v-model="localFilters.min_price"
                                 type="number"
@@ -57,7 +57,7 @@
                         </label>
 
                         <label class="flex flex-col gap-2 text-sm font-medium">
-                            <span>Макс. ціна</span>
+                            <span>Max price</span>
                             <input
                                 v-model="localFilters.max_price"
                                 type="number"
@@ -69,7 +69,7 @@
                         </label>
 
                         <label class="flex flex-col gap-2 text-sm font-medium">
-                            <span>Сортування</span>
+                            <span>Sorting</span>
                             <select
                                 v-model="localFilters.sort"
                                 class="rounded-2xl border border-[#E3BEBE] px-4 py-3 text-[#6D4C4C] focus:border-[#B46D6D] focus:outline-none focus:ring-2 focus:ring-[#E7B7B7]"
@@ -87,7 +87,7 @@
                             type="checkbox"
                             class="rounded border-[#D8A8A8] text-[#B46D6D] focus:ring-[#E7B7B7]"
                         />
-                        <span>Показувати лише новинки за останні 30 днів</span>
+                        <span>Show only items added in the last 30 days</span>
                     </label>
 
                     <div class="mt-5 flex flex-wrap items-center gap-3">
@@ -96,17 +96,17 @@
                             :disabled="isFiltering"
                             class="rounded-full bg-[#B46D6D] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#9E5757] disabled:cursor-not-allowed disabled:opacity-60"
                         >
-                            {{ isFiltering ? 'Оновлюємо каталог...' : 'Застосувати фільтри' }}
+                            {{ isFiltering ? 'Refreshing catalog...' : 'Apply Filters' }}
                         </button>
                         <button
                             type="button"
                             class="rounded-full border border-[#E3BEBE] px-6 py-3 text-sm font-semibold transition hover:bg-[#FFF1F1]"
                             @click="resetFilters"
                         >
-                            Скинути
+                            Reset
                         </button>
                         <span class="text-xs text-[#9B7B7B]">
-                            Діапазон цін: {{ formatPrice(priceRange.min) }} ₴ - {{ formatPrice(priceRange.max) }} ₴
+                            Price range: {{ formatPrice(priceRange.min) }} ₴ - {{ formatPrice(priceRange.max) }} ₴
                         </span>
                     </div>
 
@@ -131,14 +131,14 @@
                     />
 
                     <div v-if="products.data.length === 0" class="rounded-[2rem] border border-dashed border-[#E7C5C5] bg-[#FFF9F9] px-6 py-16 text-center">
-                        <h2 class="text-2xl font-bold">Нічого не знайдено</h2>
-                        <p class="mt-3 text-sm text-[#8D6767]">Спробуйте послабити фільтри або змінити пошуковий запит.</p>
+                        <h2 class="text-2xl font-bold">Nothing found</h2>
+                        <p class="mt-3 text-sm text-[#8D6767]">Try broadening the filters or changing the search query.</p>
                         <button
                             type="button"
                             class="mt-6 rounded-full bg-[#B46D6D] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#9E5757]"
                             @click="resetFilters"
                         >
-                            Скинути фільтри
+                            Reset Filters
                         </button>
                     </div>
 
@@ -150,7 +150,7 @@
                         >
                             <img
                                 :src="product.image_path"
-                                :alt="`Фото товару ${product.name}`"
+                                :alt="`Product photo: ${product.name}`"
                                 class="mb-5 aspect-[4/3] w-full rounded-[1.5rem] object-cover"
                             />
 
@@ -168,13 +168,13 @@
                                             v-if="isNewProduct(product)"
                                             class="rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700"
                                         >
-                                            Новинка
+                                            New
                                         </span>
                                     </div>
                                 </div>
 
                                 <p class="mb-6 min-h-[4.5rem] flex-1 text-sm leading-6 text-[#8D6767]">
-                                    {{ product.description || 'Лаконічна прикраса для повсякденних і святкових образів.' }}
+                                    {{ product.description || 'A refined piece for everyday and occasion styling.' }}
                                 </p>
 
                                 <div class="mt-auto grid gap-3 xl:grid-cols-3">
@@ -185,13 +185,13 @@
                                         :class="isFavorite(product.id) ? 'bg-[#FFF1F1] text-[#B46D6D]' : 'text-[#8D6767] hover:bg-[#FFF1F1]'"
                                         @click="toggleFavorite(product.id)"
                                     >
-                                        {{ isFavorite(product.id) ? 'В обраному' : 'В обране' }}
+                                        {{ isFavorite(product.id) ? 'In Favorites' : 'Add to Favorites' }}
                                     </button>
                                     <Link
                                         :href="route('products.show', { product: product.id })"
                                         class="inline-flex items-center justify-center rounded-full border border-[#E3BEBE] px-5 py-3 text-sm font-semibold text-[#8D6767] transition hover:bg-[#FFF1F1]"
                                     >
-                                        Детальніше
+                                        View Details
                                     </Link>
                                     <button
                                         type="button"
@@ -199,7 +199,7 @@
                                         class="rounded-full bg-[#B46D6D] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#9E5757] disabled:cursor-not-allowed disabled:opacity-60"
                                         @click="addToCart(product.id)"
                                     >
-                                        {{ isAdding(product.id) ? 'Додаємо...' : 'До кошика' }}
+                                        {{ isAdding(product.id) ? 'Adding...' : 'Add to Cart' }}
                                     </button>
                                 </div>
                             </div>
@@ -207,7 +207,7 @@
                     </div>
                 </div>
 
-                <nav v-if="products.links.length > 3" class="mt-12 flex flex-wrap justify-center gap-3" aria-label="Пагінація каталогу">
+                <nav v-if="products.links.length > 3" class="mt-12 flex flex-wrap justify-center gap-3" aria-label="Catalog pagination">
                     <button
                         v-for="(link, index) in products.links"
                         :key="index"
@@ -256,23 +256,23 @@ const activeFilterLabels = computed(() => {
     const selectedCategory = props.categories.find((category) => String(category.id) === localFilters.value.category_id)
 
     if (localFilters.value.search) {
-        labels.push(`Пошук: ${localFilters.value.search}`)
+        labels.push(`Search: ${localFilters.value.search}`)
     }
 
     if (selectedCategory) {
-        labels.push(`Категорія: ${selectedCategory.name}`)
+        labels.push(`Category: ${selectedCategory.name}`)
     }
 
     if (localFilters.value.min_price) {
-        labels.push(`Від ${formatPrice(localFilters.value.min_price)} ₴`)
+        labels.push(`From ${formatPrice(localFilters.value.min_price)} ₴`)
     }
 
     if (localFilters.value.max_price) {
-        labels.push(`До ${formatPrice(localFilters.value.max_price)} ₴`)
+        labels.push(`To ${formatPrice(localFilters.value.max_price)} ₴`)
     }
 
     if (localFilters.value.only_new) {
-        labels.push('Лише новинки')
+        labels.push('Only new items')
     }
 
     return labels
@@ -382,7 +382,7 @@ function toggleFavorite(productId) {
         preserveState: true,
         onError: () => {
             localFavoriteIds.value = snapshot
-            error('Не вдалося оновити обране. Спробуйте ще раз.')
+            error('Could not update favorites. Please try again.')
         },
         onFinish: () => {
             pendingFavoriteIds.value = pendingFavoriteIds.value.filter((id) => id !== productId)
@@ -413,7 +413,7 @@ function addToCart(productId) {
         preserveState: true,
         onError: () => {
             adjust(-1)
-            error('Не вдалося додати товар до кошика. Спробуйте ще раз.')
+            error('Could not add the item to the cart. Please try again.')
         },
         onFinish: () => {
             pendingCartIds.value = pendingCartIds.value.filter((id) => id !== productId)
@@ -426,7 +426,7 @@ function isAdding(productId) {
 }
 
 function formatPrice(value) {
-    return Number(value ?? 0).toLocaleString('uk-UA', {
+    return Number(value ?? 0).toLocaleString('en-US', {
         minimumFractionDigits: 0,
         maximumFractionDigits: 2,
     })

@@ -60,34 +60,34 @@ class MoonShineServiceProvider extends MoonShineApplicationServiceProvider
         $paymentTransactionsResource = new PaymentTransactionResource;
 
         return [
-            MenuGroup::make(static fn () => __('Адмін-панель'), [
+            MenuGroup::make(static fn () => __('Admin Panel'), [
                 MenuItem::make(
-                    static fn () => __('Адміністратори'),
+                    static fn () => __('Administrators'),
                     $adminUsersResource,
                     'heroicons.shield-check'
                 )->canSee(static fn () => $access->canAccessResource($moonshineUser(), $adminUsersResource, 'viewAny')),
                 MenuItem::make(
-                    static fn () => __('Ролі'),
+                    static fn () => __('Roles'),
                     $adminRolesResource,
                     'heroicons.key'
                 )->canSee(static fn () => $access->canAccessResource($moonshineUser(), $adminRolesResource, 'viewAny')),
             ])->canSee(static fn () => $access->hasPermission($moonshineUser(), 'admins.manage')
                 || $access->hasPermission($moonshineUser(), 'roles.manage')),
 
-            MenuGroup::make('Управління салоном', [
-                MenuItem::make('Користувачі', $usersResource, 'heroicons.user-group')
+            MenuGroup::make('Store Operations', [
+                MenuItem::make('Users', $usersResource, 'heroicons.user-group')
                     ->canSee(static fn () => $access->canAccessResource($moonshineUser(), $usersResource, 'viewAny')),
-                MenuItem::make('Категорії', $categoriesResource, 'heroicons.tag')
+                MenuItem::make('Categories', $categoriesResource, 'heroicons.tag')
                     ->canSee(static fn () => $access->canAccessResource($moonshineUser(), $categoriesResource, 'viewAny')),
-                MenuItem::make('Товари', $productsResource, 'heroicons.cube')
+                MenuItem::make('Products', $productsResource, 'heroicons.cube')
                     ->canSee(static fn () => $access->canAccessResource($moonshineUser(), $productsResource, 'viewAny')),
-                MenuItem::make('Кошики', $cartItemsResource, 'heroicons.shopping-cart')
+                MenuItem::make('Carts', $cartItemsResource, 'heroicons.shopping-cart')
                     ->canSee(static fn () => $access->canAccessResource($moonshineUser(), $cartItemsResource, 'viewAny')),
-                MenuItem::make('Замовлення', $ordersResource, 'heroicons.receipt-refund')
+                MenuItem::make('Orders', $ordersResource, 'heroicons.receipt-refund')
                     ->canSee(static fn () => $access->canAccessResource($moonshineUser(), $ordersResource, 'viewAny')),
-                MenuItem::make('Платежі', $paymentTransactionsResource, 'heroicons.credit-card')
+                MenuItem::make('Payments', $paymentTransactionsResource, 'heroicons.credit-card')
                     ->canSee(static fn () => $access->canAccessResource($moonshineUser(), $paymentTransactionsResource, 'viewAny')),
-                MenuItem::make('Товари в замовленнях', $orderItemsResource, 'heroicons.clipboard-document-check')
+                MenuItem::make('Products in orders', $orderItemsResource, 'heroicons.clipboard-document-check')
                     ->canSee(static fn () => $access->canAccessResource($moonshineUser(), $orderItemsResource, 'viewAny')),
             ])->canSee(static fn () => $access->hasPermission($moonshineUser(), 'catalog.view')
                 || $access->hasPermission($moonshineUser(), 'catalog.manage')

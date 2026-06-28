@@ -19,7 +19,7 @@ class CategoryResource extends ModelResource
 {
     protected string $model = Category::class;
 
-    protected string $title = 'Категорії';
+    protected string $title = 'Categories';
 
     protected bool $withPolicy = true;
 
@@ -27,10 +27,10 @@ class CategoryResource extends ModelResource
     {
         return [
             ID::make()->sortable(),
-            Text::make('Назва', 'name')->required(),
-            Textarea::make('Опис', 'description'),
-            Text::make('URL зображення', 'image_url'),
-            Preview::make('Зображення', 'image_url')
+            Text::make('Name', 'name')->required(),
+            Textarea::make('Description', 'description'),
+            Text::make('Image URL', 'image_url'),
+            Preview::make('Image', 'image_url')
                 ->image()
                 ->nullable(),
         ];

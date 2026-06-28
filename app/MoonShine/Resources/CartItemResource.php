@@ -18,7 +18,7 @@ class CartItemResource extends ModelResource
 {
     protected string $model = CartItem::class;
 
-    protected string $title = 'Кошик';
+    protected string $title = 'Cart';
 
     protected bool $withPolicy = true;
 
@@ -26,9 +26,9 @@ class CartItemResource extends ModelResource
     {
         return [
             ID::make()->sortable(),
-            BelongsTo::make('Користувач', 'user', UserResource::class)->nullable(),
-            BelongsTo::make('Товар', 'product', ProductResource::class),
-            Number::make('Кількість', 'quantity')->min(1)->required(),
+            BelongsTo::make('User', 'user', UserResource::class)->nullable(),
+            BelongsTo::make('Product', 'product', ProductResource::class),
+            Number::make('Quantity', 'quantity')->min(1)->required(),
         ];
     }
 

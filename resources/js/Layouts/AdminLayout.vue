@@ -3,10 +3,10 @@
         <div class="grid min-h-screen lg:grid-cols-[280px_1fr]">
             <aside class="border-b border-white/20 bg-[linear-gradient(180deg,_#9a5f74_0%,_#7f485b_100%)] px-5 py-6 text-white lg:border-b-0 lg:border-r lg:border-r-white/20">
                 <div class="rounded-[2rem] border border-white/20 bg-white/10 px-5 py-5 shadow-[0_20px_50px_rgba(92,42,59,0.24)] backdrop-blur">
-                    <p class="text-xs uppercase tracking-[0.35em] text-[#f9dce8]">Бек-офіс</p>
+                    <p class="text-xs uppercase tracking-[0.35em] text-[#f9dce8]">Backoffice</p>
                     <h1 class="mt-3 text-3xl font-black tracking-[0.18em] text-white">DIVA</h1>
                     <p class="mt-3 text-sm leading-6 text-[#fdeff4]">
-                        Комерційна панель керування каталогом, клієнтами та продажами.
+                        Commercial workspace for catalog, customer, order, and payment operations.
                     </p>
                 </div>
 
@@ -17,7 +17,7 @@
                             class="flex items-center justify-between rounded-2xl px-4 py-3 text-sm font-semibold transition"
                             :class="route().current('admin.dashboard') ? 'bg-[#ffe8f1] text-[#7f485b] shadow-sm' : 'text-[#fff5f8] hover:bg-white/10'"
                         >
-                            <span>Огляд панелі</span>
+                            <span>Dashboard</span>
                             <span class="text-xs uppercase tracking-[0.25em]">/admin</span>
                         </Link>
                     </div>
@@ -43,7 +43,7 @@
 
                 <div class="mt-8 rounded-[1.75rem] border border-white/20 bg-white/10 p-4 text-sm text-[#fff2f6]">
                     <p class="font-semibold text-white">DIVA Backoffice</p>
-                    <p class="mt-2 leading-6">Операційна навігація по клієнтах, товарах, замовленнях і платежах.</p>
+                    <p class="mt-2 leading-6">Operational navigation across customers, products, orders, and payments.</p>
                 </div>
             </aside>
 
@@ -58,8 +58,8 @@
 
                         <div class="flex items-center gap-3">
                             <div class="rounded-full border border-[#f1d8e3] bg-[#fff5f8] px-4 py-2 text-right">
-                                <p class="text-xs uppercase tracking-[0.25em] text-[#bf7a92]">Сесія</p>
-                                <p class="mt-1 text-sm font-semibold text-[#7f485b]">{{ backofficeUser?.name || 'Персонал' }}</p>
+                                <p class="text-xs uppercase tracking-[0.25em] text-[#bf7a92]">Session</p>
+                                <p class="mt-1 text-sm font-semibold text-[#7f485b]">{{ backofficeUser?.name || 'Staff' }}</p>
                             </div>
                             <Link
                                 :href="route('admin.logout')"
@@ -67,7 +67,7 @@
                                 as="button"
                                 class="rounded-full bg-[#b46d6d] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#9e5757]"
                             >
-                                Вийти
+                                Log Out
                             </Link>
                         </div>
                     </div>
@@ -114,7 +114,7 @@ const props = defineProps({
     },
     eyebrow: {
         type: String,
-        default: 'Адмін-панель',
+        default: 'Admin Panel',
     },
 })
 

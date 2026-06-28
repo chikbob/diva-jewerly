@@ -23,10 +23,10 @@ const submit = () => {
 
 <template>
     <GuestLayout>
-        <Head title="Відновлення пароля" />
+        <Head title="Forgot Password" />
 
         <div class="mb-4 text-sm text-gray-600">
-            Забули пароль? Вкажіть вашу email-адресу, і ми надішлемо посилання для створення нового пароля.
+            Forgot your password? Enter your email address and we will send you a link to create a new password.
         </div>
 
         <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
@@ -35,7 +35,7 @@ const submit = () => {
 
         <form @submit.prevent="submit">
             <div>
-                <InputLabel for="email" value="Електронна пошта" />
+                <InputLabel for="email" value="Email" />
 
                 <TextInput
                     id="email"
@@ -52,7 +52,7 @@ const submit = () => {
 
             <div class="flex items-center justify-end mt-4">
                 <PrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                    Надіслати посилання для скидання пароля
+                    Email Password Reset Link
                 </PrimaryButton>
             </div>
         </form>

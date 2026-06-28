@@ -31,7 +31,7 @@ class FavoriteController extends Controller
             'product_id' => $product->id,
         ]);
 
-        return redirect()->back()->with('message', 'Товар додано в обране.');
+        return redirect()->back()->with('message', 'Item added to favorites.');
     }
 
     public function destroy(Request $request, Product $product): RedirectResponse
@@ -41,6 +41,6 @@ class FavoriteController extends Controller
             ->where('product_id', $product->id)
             ->delete();
 
-        return redirect()->back()->with('message', 'Товар видалено з обраного.');
+        return redirect()->back()->with('message', 'Item removed from favorites.');
     }
 }

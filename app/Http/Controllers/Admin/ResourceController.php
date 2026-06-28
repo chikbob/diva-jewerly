@@ -96,7 +96,7 @@ class ResourceController extends Controller
 
         return redirect()
             ->route('admin.resources.index', $resourceConfig['key'])
-            ->with('message', "{$resourceConfig['label']} успішно створено.");
+            ->with('message', "{$resourceConfig['label']} created successfully.");
     }
 
     public function edit(string $resource, int $record): Response
@@ -138,7 +138,7 @@ class ResourceController extends Controller
 
         return redirect()
             ->route('admin.resources.index', $resourceConfig['key'])
-            ->with('message', "{$resourceConfig['label']} успішно оновлено.");
+            ->with('message', "{$resourceConfig['label']} updated successfully.");
     }
 
     public function destroy(string $resource, int $record): RedirectResponse
@@ -152,7 +152,7 @@ class ResourceController extends Controller
 
         return redirect()
             ->route('admin.resources.index', $resourceConfig['key'])
-            ->with('message', "{$resourceConfig['label']} успішно видалено.");
+            ->with('message', "{$resourceConfig['label']} deleted successfully.");
     }
 
     private function resource(string $key): array

@@ -3,20 +3,20 @@
         <section class="mx-auto w-full max-w-[1480px] px-4 py-12 sm:px-6 xl:px-8">
             <div class="mb-8 flex flex-col gap-5 xl:flex-row xl:items-end xl:justify-between">
                 <div>
-                    <p class="text-xs font-semibold uppercase tracking-[0.35em] text-[#D09A9A]">Історія замовлень</p>
-                    <h1 class="mt-2 text-4xl font-extrabold tracking-wide text-[#B46D6D]">Мої замовлення</h1>
+                    <p class="text-xs font-semibold uppercase tracking-[0.35em] text-[#D09A9A]">Order History</p>
+                    <h1 class="mt-2 text-4xl font-extrabold tracking-wide text-[#B46D6D]">My Orders</h1>
                     <p class="mt-3 max-w-2xl text-sm leading-7 text-[#8D6767]">
-                        Контролюйте статуси, переглядайте склад попередніх замовлень і швидко повторюйте покупку.
+                        Track statuses, review past order contents, and quickly repeat a purchase.
                     </p>
                 </div>
 
                 <div class="grid gap-3 sm:grid-cols-2 xl:min-w-[26rem]">
                     <div class="rounded-[1.6rem] border border-[#E9CFCF] bg-[#FFF8F8] px-5 py-4 text-sm text-[#8D6767]">
-                        <p class="text-xs font-semibold uppercase tracking-[0.25em] text-[#C49B9B]">Замовлення</p>
+                        <p class="text-xs font-semibold uppercase tracking-[0.25em] text-[#C49B9B]">Orders</p>
                         <p class="mt-2 text-2xl font-black text-[#B46D6D]">{{ orders.length }}</p>
                     </div>
                     <div class="rounded-[1.6rem] border border-[#E9CFCF] bg-[#FFF8F8] px-5 py-4 text-sm text-[#8D6767]">
-                        <p class="text-xs font-semibold uppercase tracking-[0.25em] text-[#C49B9B]">Фільтр</p>
+                        <p class="text-xs font-semibold uppercase tracking-[0.25em] text-[#C49B9B]">Filter</p>
                         <p class="mt-2 text-base font-bold text-[#B46D6D]">{{ activeSummary }}</p>
                     </div>
                 </div>
@@ -28,7 +28,7 @@
             >
                 <div class="grid gap-4 md:grid-cols-3">
                     <label class="flex flex-col gap-2 text-sm font-medium text-[#6D4C4C]">
-                        <span>Статус</span>
+                        <span>Status</span>
                         <select
                             v-model="localFilters.status"
                             class="rounded-2xl border border-[#E3BEBE] px-4 py-3 focus:border-[#B46D6D] focus:outline-none focus:ring-2 focus:ring-[#E7B7B7]"
@@ -40,7 +40,7 @@
                     </label>
 
                     <label class="flex flex-col gap-2 text-sm font-medium text-[#6D4C4C]">
-                        <span>Статус оплати</span>
+                        <span>Payment status</span>
                         <select
                             v-model="localFilters.payment_status"
                             class="rounded-2xl border border-[#E3BEBE] px-4 py-3 focus:border-[#B46D6D] focus:outline-none focus:ring-2 focus:ring-[#E7B7B7]"
@@ -52,7 +52,7 @@
                     </label>
 
                     <label class="flex flex-col gap-2 text-sm font-medium text-[#6D4C4C]">
-                        <span>Сортування</span>
+                        <span>Sorting</span>
                         <select
                             v-model="localFilters.sort"
                             class="rounded-2xl border border-[#E3BEBE] px-4 py-3 focus:border-[#B46D6D] focus:outline-none focus:ring-2 focus:ring-[#E7B7B7]"
@@ -70,20 +70,20 @@
                         :disabled="isFiltering"
                         class="rounded-full bg-[#B46D6D] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#9E5757] disabled:cursor-not-allowed disabled:opacity-60"
                     >
-                        {{ isFiltering ? 'Оновлюємо...' : 'Застосувати' }}
+                        {{ isFiltering ? 'Refreshing...' : 'Apply' }}
                     </button>
                     <button
                         type="button"
                         class="rounded-full border border-[#E3BEBE] px-5 py-3 text-sm font-semibold text-[#8D6767] transition hover:bg-[#FFF1F1]"
                         @click="resetFilters"
                     >
-                        Скинути
+                        Reset
                     </button>
                 </div>
             </form>
 
             <div v-if="orders.length === 0" class="rounded-[2rem] border border-dashed border-[#E7C5C5] bg-[#FFF9F9] px-6 py-16 text-center text-[#8D6767]">
-                У вас ще немає замовлень за поточними фільтрами.
+                You do not have any orders for the current filters yet.
             </div>
 
             <div v-else class="space-y-6" :aria-busy="isFiltering ? 'true' : 'false'">
@@ -94,14 +94,14 @@
                 >
                     <div class="mb-5 flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
                         <div>
-                            <p class="text-xs uppercase tracking-[0.3em] text-[#C49B9B]">Замовлення</p>
+                            <p class="text-xs uppercase tracking-[0.3em] text-[#C49B9B]">Orders</p>
                             <Link
                                 :href="route('orders.show', { order: order.id })"
                                 class="mt-2 inline-flex text-2xl font-bold text-[#B46D6D] transition hover:text-[#9E5757]"
                             >
                                 #{{ order.id }}
                             </Link>
-                            <p class="mt-2 text-sm text-[#8D6767]">{{ new Date(order.created_at).toLocaleString('uk-UA') }}</p>
+                            <p class="mt-2 text-sm text-[#8D6767]">{{ new Date(order.created_at).toLocaleString('en-US') }}</p>
                         </div>
 
                         <div class="flex flex-wrap items-center gap-3 text-sm text-[#8D6767]">
@@ -125,7 +125,7 @@
                         >
                             <img
                                 :src="item.product_image || 'https://placehold.co/160x160/F8E8E8/9A6B6B?text=Diva'"
-                                :alt="`Фото товару ${item.product_name}`"
+                                :alt="`Product photo: ${item.product_name}`"
                                 class="h-20 w-20 rounded-[1.25rem] object-cover"
                             />
                             <div class="min-w-0 flex-1">
@@ -150,14 +150,14 @@
 
                     <div class="mt-5 flex flex-col gap-4 text-sm text-[#8D6767] xl:flex-row xl:items-center xl:justify-between">
                         <div class="flex flex-wrap items-center gap-3">
-                            <span class="rounded-full border border-[#F0DEDE] bg-[#FFF8F8] px-4 py-2">Платіжний референс: {{ order.payment_reference }}</span>
+                            <span class="rounded-full border border-[#F0DEDE] bg-[#FFF8F8] px-4 py-2">Payment reference: {{ order.payment_reference }}</span>
                             <a
                                 :href="route('orders.receipt.show', { order: order.id })"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 class="rounded-full border border-[#E3BEBE] px-4 py-2 text-sm font-semibold text-[#8D6767] transition hover:bg-[#FFF1F1]"
                             >
-                                Відкрити чек
+                                Open Receipt
                             </a>
                             <a
                                 :href="route('orders.receipt.show', { order: order.id, print: 1 })"
@@ -165,7 +165,7 @@
                                 rel="noopener noreferrer"
                                 class="rounded-full border border-[#E3BEBE] px-4 py-2 text-sm font-semibold text-[#8D6767] transition hover:bg-[#FFF1F1]"
                             >
-                                Друк чека
+                                Print Receipt
                             </a>
                             <a
                                 :href="route('orders.receipt.download', { order: order.id })"
@@ -173,7 +173,7 @@
                                 rel="noopener noreferrer"
                                 class="rounded-full border border-[#E3BEBE] px-4 py-2 text-sm font-semibold text-[#8D6767] transition hover:bg-[#FFF1F1]"
                             >
-                                Завантажити PDF
+                                Download PDF
                             </a>
                             <Link
                                 :href="route('orders.repeat', { order: order.id })"
@@ -181,23 +181,23 @@
                                 as="button"
                                 class="rounded-full border border-[#E3BEBE] px-4 py-2 text-sm font-semibold text-[#B46D6D] transition hover:bg-[#FFF1F1]"
                             >
-                                Повторити замовлення
+                                Repeat Order
                             </Link>
                             <Link
                                 v-if="order.payment_method === 'demo_card'"
                                 :href="route('payments.show', { paymentReference: order.payment_reference })"
                                 class="rounded-full border border-[#E3BEBE] px-4 py-2 text-sm font-semibold text-[#B46D6D] transition hover:bg-[#FFF1F1]"
                             >
-                                Відкрити статус оплати
+                                Open Payment Status
                             </Link>
                             <Link
                                 :href="route('orders.show', { order: order.id })"
                                 class="rounded-full bg-[#B46D6D] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#9E5757]"
                             >
-                                Деталі замовлення
+                                Order Details
                             </Link>
                         </div>
-                        <strong class="text-lg text-[#B46D6D]">Разом: {{ formatPrice(order.total) }} ₴</strong>
+                        <strong class="text-lg text-[#B46D6D]">Total: {{ formatPrice(order.total) }} ₴</strong>
                     </div>
                 </article>
             </div>
@@ -224,16 +224,16 @@ const activeSummary = computed(() => {
     if (localFilters.value.status) {
         const option = props.statusOptions.find((item) => item.value === localFilters.value.status)
 
-        return option?.label ?? 'Обраний статус'
+        return option?.label ?? 'Selected status'
     }
 
     if (localFilters.value.payment_status) {
         const option = props.paymentStatusOptions.find((item) => item.value === localFilters.value.payment_status)
 
-        return option?.label ?? 'Фільтр оплати'
+        return option?.label ?? 'Payment filter'
     }
 
-    return 'Усі замовлення'
+    return 'All orders'
 })
 
 watch(() => props.filters, (filters) => {
@@ -274,10 +274,10 @@ function normalizedFilters() {
 
 function statusLabel(status) {
     return {
-        paid: 'Сплачено',
-        pending: 'В очікуванні',
-        failed: 'Помилка',
-        cancelled: 'Скасовано',
+        paid: 'Paid',
+        pending: 'Pending',
+        failed: 'Failed',
+        cancelled: 'Cancelled',
     }[status] ?? status
 }
 
@@ -292,10 +292,10 @@ function statusClass(status) {
 
 function paymentStatusLabel(status) {
     return {
-        paid: 'Оплачено',
-        pending: 'Оплата очікується',
-        failed: 'Оплата неуспішна',
-        cancelled: 'Оплату скасовано',
+        paid: 'Paid',
+        pending: 'Pending payment',
+        failed: 'Payment failed',
+        cancelled: 'Payment cancelled',
     }[status] ?? status
 }
 
@@ -309,7 +309,7 @@ function paymentStatusClass(status) {
 }
 
 function formatPrice(value) {
-    return Number(value ?? 0).toLocaleString('uk-UA', {
+    return Number(value ?? 0).toLocaleString('en-US', {
         minimumFractionDigits: 0,
         maximumFractionDigits: 2,
     })

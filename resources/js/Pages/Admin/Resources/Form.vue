@@ -1,9 +1,9 @@
 <template>
     <AdminLayout
         :navigation="navigation"
-        :title="mode === 'create' ? `Створення: ${resource.label}` : `Редагування: ${record?.title}`"
+        :title="mode === 'create' ? `Create: ${resource.label}` : `Edit: ${record?.title}`"
         :description="resource.description"
-        eyebrow="Форма запису"
+        eyebrow="Record Form"
     >
         <section class="rounded-[2rem] border border-[#f0d7e3] bg-white/95 p-6 shadow-[0_18px_45px_rgba(180,109,109,0.08)]">
             <form class="space-y-6" @submit.prevent="submit">
@@ -28,7 +28,7 @@
                             v-model="form[field.name]"
                             class="w-full rounded-2xl border border-[#efcfdb] bg-[#fff7fa] px-5 py-3 text-sm text-[#7f485b] focus:border-[#b46d6d] focus:outline-none focus:ring-2 focus:ring-[#f3d3df]"
                         >
-                            <option value="">Оберіть значення</option>
+                            <option value="">Choose a value</option>
                             <option v-for="option in field.options" :key="option.value" :value="option.value">
                                 {{ option.label }}
                             </option>
@@ -55,13 +55,13 @@
                         :disabled="form.processing"
                         class="rounded-full bg-[#b46d6d] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#9e5757] disabled:cursor-not-allowed disabled:opacity-60"
                     >
-                        {{ form.processing ? 'Зберігаємо...' : 'Зберегти зміни' }}
+                        {{ form.processing ? 'Saving...' : 'Save Changes' }}
                     </button>
                     <Link
                         :href="route('admin.resources.index', { resource: resource.key })"
                         class="rounded-full border border-[#efcfdb] px-6 py-3 text-center text-sm font-semibold text-[#9e5757] transition hover:bg-[#fff1f5]"
                     >
-                        Повернутися до списку
+                        Back to List
                     </Link>
                 </div>
             </form>

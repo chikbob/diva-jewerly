@@ -45,7 +45,7 @@ class AuthController extends Controller
 
         if (! Auth::guard($guard)->attempt($credentials, $request->boolean('remember'))) {
             return back()->withErrors([
-                'email' => 'Невірний email або пароль.',
+                'email' => 'Invalid email or password.',
             ])->onlyInput('email');
         }
 
@@ -59,7 +59,7 @@ class AuthController extends Controller
             $request->session()->regenerateToken();
 
             return back()->withErrors([
-                'email' => 'Ваш обліковий запис не має доступу до бек-офісу.',
+                'email' => 'Your account does not have access to the backoffice.',
             ])->onlyInput('email');
         }
 

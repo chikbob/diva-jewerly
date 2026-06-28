@@ -19,7 +19,7 @@ class UserResource extends ModelResource
 {
     protected string $model = User::class;
 
-    protected string $title = 'Користувачі';
+    protected string $title = 'Users';
 
     protected bool $withPolicy = true;
 
@@ -27,9 +27,9 @@ class UserResource extends ModelResource
     {
         return [
             ID::make()->sortable(),
-            Text::make('Ім\'я', 'name')->required(),
+            Text::make('Name', 'name')->required(),
             Email::make('Email')->required(),
-            Password::make('Пароль', 'password')->hideOnIndex(),
+            Password::make('Password', 'password')->hideOnIndex(),
         ];
     }
 

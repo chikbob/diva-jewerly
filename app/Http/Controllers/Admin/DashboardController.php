@@ -28,12 +28,12 @@ class DashboardController extends Controller
         $user = Auth::guard(config('moonshine.auth.guard', 'moonshine'))->user();
 
         $stats = [
-            ['label' => 'Товари', 'value' => Product::query()->count(), 'accent' => 'rose'],
-            ['label' => 'Категорії', 'value' => Category::query()->count(), 'accent' => 'gold'],
-            ['label' => 'Клієнти', 'value' => User::query()->count(), 'accent' => 'slate'],
-            ['label' => 'Замовлення', 'value' => Order::query()->count(), 'accent' => 'emerald'],
-            ['label' => 'Платежі', 'value' => PaymentTransaction::query()->count(), 'accent' => 'violet'],
-            ['label' => 'Обране', 'value' => Favorite::query()->count(), 'accent' => 'amber'],
+            ['label' => 'Products', 'value' => Product::query()->count(), 'accent' => 'rose'],
+            ['label' => 'Categories', 'value' => Category::query()->count(), 'accent' => 'gold'],
+            ['label' => 'Customers', 'value' => User::query()->count(), 'accent' => 'slate'],
+            ['label' => 'Orders', 'value' => Order::query()->count(), 'accent' => 'emerald'],
+            ['label' => 'Payments', 'value' => PaymentTransaction::query()->count(), 'accent' => 'violet'],
+            ['label' => 'Favorites', 'value' => Favorite::query()->count(), 'accent' => 'amber'],
         ];
 
         $latestOrders = Order::query()

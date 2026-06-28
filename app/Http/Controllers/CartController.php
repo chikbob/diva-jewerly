@@ -45,7 +45,7 @@ class CartController extends Controller
             ]);
         });
 
-        return redirect()->back()->with('message', 'Товар додано до кошика.');
+        return redirect()->back()->with('message', 'Item added to cart.');
     }
 
     public function remove(RemoveFromCartRequest $request): \Illuminate\Http\RedirectResponse
@@ -55,7 +55,7 @@ class CartController extends Controller
             ->delete();
         CartCounter::forgetForUserId($request->user()->id);
 
-        return redirect()->back()->with('message', 'Товар видалено з кошика.');
+        return redirect()->back()->with('message', 'Item removed from cart.');
     }
 
     public function update(UpdateCartQuantityRequest $request): \Illuminate\Http\RedirectResponse
@@ -68,6 +68,6 @@ class CartController extends Controller
                 'quantity' => $request->integer('quantity'),
             ]);
 
-        return redirect()->back()->with('message', 'Кількість товару оновлено.');
+        return redirect()->back()->with('message', 'Item quantity updated.');
     }
 }

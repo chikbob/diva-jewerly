@@ -41,24 +41,24 @@ class OrderController extends Controller
             'orders' => $orders,
             'filters' => $filters,
             'statusOptions' => [
-                ['value' => '', 'label' => 'Усі статуси'],
-                ['value' => 'pending', 'label' => 'В очікуванні'],
-                ['value' => 'paid', 'label' => 'Сплачено'],
-                ['value' => 'failed', 'label' => 'Помилка оплати'],
-                ['value' => 'cancelled', 'label' => 'Скасовано'],
+                ['value' => '', 'label' => 'All statuses'],
+                ['value' => 'pending', 'label' => 'Pending'],
+                ['value' => 'paid', 'label' => 'Paid'],
+                ['value' => 'failed', 'label' => 'Payment failed'],
+                ['value' => 'cancelled', 'label' => 'Cancelled'],
             ],
             'paymentStatusOptions' => [
-                ['value' => '', 'label' => 'Будь-який статус оплати'],
-                ['value' => 'pending', 'label' => 'Оплата очікується'],
-                ['value' => 'paid', 'label' => 'Оплачено'],
-                ['value' => 'failed', 'label' => 'Оплата неуспішна'],
-                ['value' => 'cancelled', 'label' => 'Оплату скасовано'],
+                ['value' => '', 'label' => 'Any payment status'],
+                ['value' => 'pending', 'label' => 'Pending payment'],
+                ['value' => 'paid', 'label' => 'Paid'],
+                ['value' => 'failed', 'label' => 'Payment failed'],
+                ['value' => 'cancelled', 'label' => 'Payment cancelled'],
             ],
             'sortOptions' => [
-                ['value' => 'newest', 'label' => 'Спочатку нові'],
-                ['value' => 'oldest', 'label' => 'Спочатку старі'],
-                ['value' => 'total_desc', 'label' => 'Сума: за спаданням'],
-                ['value' => 'total_asc', 'label' => 'Сума: за зростанням'],
+                ['value' => 'newest', 'label' => 'Newest first'],
+                ['value' => 'oldest', 'label' => 'Oldest first'],
+                ['value' => 'total_desc', 'label' => 'Total: high to low'],
+                ['value' => 'total_asc', 'label' => 'Total: low to high'],
             ],
         ]);
     }
@@ -83,7 +83,7 @@ class OrderController extends Controller
         if ($order->items->isEmpty()) {
             return redirect()
                 ->route('orders.index')
-                ->with('error', 'У замовленні немає товарів для повторного додавання.');
+                ->with('error', 'The order has no items to add again.');
         }
 
         DB::transaction(function () use ($order, $request): void {
@@ -114,7 +114,7 @@ class OrderController extends Controller
 
         return redirect()
             ->route('cart.index')
-            ->with('message', 'Товари з замовлення повторно додано до кошика.');
+            ->with('message', 'Items from the order were added to the cart again.');
     }
 
     private function userOrderQuery(Request $request, array $with = ['items.product.category', 'paymentTransaction']): Builder
@@ -146,7 +146,7 @@ class OrderController extends Controller
                     'quantity' => $item->quantity,
                     'price' => $item->price,
                     'line_total' => (float) $item->price * $item->quantity,
-                    'product_name' => $product?->name ?? 'Товар більше недоступний',
+                    'product_name' => $product?->name ?? 'Product no longer available',
                     'product_description' => $product?->description,
                     'product_image' => $product?->image_path,
                     'product_category' => $product?->category?->name,
