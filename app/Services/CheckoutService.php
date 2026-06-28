@@ -61,7 +61,7 @@ class CheckoutService
                     'reference' => $order->payment_reference,
                     'provider_reference' => $paymentSnapshot['provider_reference'],
                     'amount' => $order->total,
-                    'currency' => (string) config('payments.currency', 'UAH'),
+                    'currency' => (string) config('payments.currency', 'USD'),
                     'status' => $paymentSnapshot['status'],
                     'checkout_url' => $paymentSnapshot['checkout_url'],
                     'provider_payload' => $paymentSnapshot['provider_payload'] ?? [],

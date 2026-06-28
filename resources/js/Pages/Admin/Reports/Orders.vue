@@ -94,7 +94,7 @@
             </article>
             <article class="rounded-[2rem] border border-[#f0d7e3] bg-white/95 p-6 shadow-[0_18px_45px_rgba(180,109,109,0.08)]">
                 <p class="text-xs font-semibold uppercase tracking-[0.3em] text-[#c67e97]">Revenue</p>
-                <p class="mt-4 text-4xl font-black text-[#7f485b]">{{ formatPrice(summary.revenue_total) }} ₴</p>
+                <p class="mt-4 text-4xl font-black text-[#7f485b]">${{ formatPrice(summary.revenue_total) }}</p>
             </article>
             <article class="rounded-[2rem] border border-[#f0d7e3] bg-white/95 p-6 shadow-[0_18px_45px_rgba(180,109,109,0.08)]">
                 <p class="text-xs font-semibold uppercase tracking-[0.3em] text-[#c67e97]">Paid Orders</p>
@@ -102,7 +102,7 @@
             </article>
             <article class="rounded-[2rem] border border-[#f0d7e3] bg-white/95 p-6 shadow-[0_18px_45px_rgba(180,109,109,0.08)]">
                 <p class="text-xs font-semibold uppercase tracking-[0.3em] text-[#c67e97]">Average order</p>
-                <p class="mt-4 text-4xl font-black text-[#7f485b]">{{ formatPrice(summary.average_total) }} ₴</p>
+                <p class="mt-4 text-4xl font-black text-[#7f485b]">${{ formatPrice(summary.average_total) }}</p>
             </article>
         </section>
 
@@ -150,7 +150,7 @@
                                 <td class="px-4 py-4 text-[#7f626d]">{{ statusLabel(order.status) }}</td>
                                 <td class="px-4 py-4 text-[#7f626d]">{{ statusLabel(order.payment_status) }}</td>
                                 <td class="px-4 py-4 text-[#7f626d]">{{ order.quantity_total }}</td>
-                                <td class="px-4 py-4 font-semibold text-[#7f485b]">{{ formatPrice(order.total) }} ₴</td>
+                                <td class="px-4 py-4 font-semibold text-[#7f485b]">${{ formatPrice(order.total) }}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -185,7 +185,7 @@
                             <p class="font-semibold text-[#7f485b]">{{ product.product_name }}</p>
                             <div class="mt-2 flex items-center justify-between text-sm text-[#8f6674]">
                                 <span>{{ product.quantity_sold }} units</span>
-                                <strong class="text-[#7f485b]">{{ formatPrice(product.revenue_total) }} ₴</strong>
+                                <strong class="text-[#7f485b]">${{ formatPrice(product.revenue_total) }}</strong>
                             </div>
                         </div>
                         <p v-if="topProducts.length === 0" class="text-sm text-[#9b7482]">No product data available.</p>
@@ -204,7 +204,7 @@
                                 <p class="font-semibold text-[#7f485b]">{{ row.date }}</p>
                                 <p class="mt-1 text-[#8f6674]">{{ row.orders_count }} orders</p>
                             </div>
-                            <strong class="text-[#7f485b]">{{ formatPrice(row.revenue_total) }} ₴</strong>
+                            <strong class="text-[#7f485b]">${{ formatPrice(row.revenue_total) }}</strong>
                         </div>
                         <p v-if="dailyBreakdown.length === 0" class="text-sm text-[#9b7482]">No daily data available.</p>
                     </div>

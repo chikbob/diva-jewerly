@@ -76,7 +76,7 @@
                                     {{ paymentStatusLabel(order.payment_status) }}
                                 </span>
                             </td>
-                            <td class="px-4 py-4 font-semibold text-[#7f485b]">{{ formatPrice(order.total) }} ₴</td>
+                            <td class="px-4 py-4 font-semibold text-[#7f485b]">${{ formatPrice(order.total) }}</td>
                             <td class="px-4 py-4 text-[#8f6674]">{{ order.created_at }}</td>
                         </tr>
                     </tbody>

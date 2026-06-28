@@ -49,7 +49,7 @@
                         <div class="flex items-start justify-between gap-3">
                             <p class="text-xs uppercase tracking-[0.28em] text-[#C49B9B]">{{ favorite.product.category.name }}</p>
                             <span class="rounded-full bg-[#FFF2F2] px-3 py-1 text-xs font-semibold text-[#A05F5F]">
-                                {{ formatPrice(favorite.product.price) }} ₴
+                                ${{ formatPrice(favorite.product.price) }}
                             </span>
                         </div>
 

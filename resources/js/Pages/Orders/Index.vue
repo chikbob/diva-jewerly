@@ -112,7 +112,7 @@
                                 {{ paymentStatusLabel(order.payment_status) }}
                             </span>
                             <span class="rounded-full bg-[#FFF4F4] px-4 py-2 font-semibold text-[#A05F5F]">
-                                {{ formatPrice(order.total) }} ₴
+                                ${{ formatPrice(order.total) }}
                             </span>
                         </div>
                     </div>
@@ -143,7 +143,7 @@
                                 <p v-if="item.product_description" class="mt-2 text-sm leading-6 text-[#8D6767]">{{ item.product_description }}</p>
                             </div>
                             <div class="text-sm font-semibold text-[#6D4C4C]">
-                                {{ item.quantity }} × {{ formatPrice(item.price) }} ₴
+                                {{ item.quantity }} × ${{ formatPrice(item.price) }}
                             </div>
                         </li>
                     </ul>
@@ -197,7 +197,7 @@
                                 Order Details
                             </Link>
                         </div>
-                        <strong class="text-lg text-[#B46D6D]">Total: {{ formatPrice(order.total) }} ₴</strong>
+                        <strong class="text-lg text-[#B46D6D]">Total: ${{ formatPrice(order.total) }}</strong>
                     </div>
                 </article>
             </div>

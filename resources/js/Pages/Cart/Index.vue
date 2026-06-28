@@ -17,7 +17,7 @@
                     </div>
                     <div class="rounded-[1.6rem] border border-[#E9CFCF] bg-[#FFF8F8] px-5 py-4 text-sm text-[#8D6767]">
                         <p class="text-xs font-semibold uppercase tracking-[0.25em] text-[#C49B9B]">Total</p>
-                        <p class="mt-2 text-2xl font-black text-[#B46D6D]">{{ formatPrice(total) }} ₴</p>
+                        <p class="mt-2 text-2xl font-black text-[#B46D6D]">${{ formatPrice(total) }}</p>
                     </div>
                 </div>
             </div>
@@ -52,14 +52,14 @@
                                         </p>
                                     </div>
                                     <div class="rounded-full bg-[#FFF2F2] px-4 py-2 text-sm font-semibold text-[#A05F5F]">
-                                        {{ formatPrice(item.product.price * item.quantity) }} ₴
+                                        ${{ formatPrice(item.product.price * item.quantity) }}
                                     </div>
                                 </div>
 
                                 <div class="mt-5 grid gap-4 lg:grid-cols-[0.8fr_1fr_auto] lg:items-center">
                                     <div class="rounded-[1.35rem] border border-[#F3E2E2] bg-[#FFF8F8] px-4 py-3">
                                         <p class="text-xs uppercase tracking-[0.25em] text-[#C49B9B]">Unit price</p>
-                                        <p class="mt-1 text-base font-semibold text-[#6D4C4C]">{{ formatPrice(item.product.price) }} ₴</p>
+                                        <p class="mt-1 text-base font-semibold text-[#6D4C4C]">${{ formatPrice(item.product.price) }}</p>
                                     </div>
 
                                     <div class="flex items-center gap-3">
@@ -106,7 +106,7 @@
                 <aside class="space-y-5">
                     <div class="rounded-[2rem] border border-[#E7C5C5] bg-white p-6 shadow-[0_18px_50px_rgba(180,109,109,0.07)]">
                         <p class="text-xs font-semibold uppercase tracking-[0.35em] text-[#D09A9A]">Cart Summary</p>
-                        <p class="mt-3 text-3xl font-black text-[#B46D6D]" aria-live="polite">{{ formatPrice(total) }} ₴</p>
+                        <p class="mt-3 text-3xl font-black text-[#B46D6D]" aria-live="polite">${{ formatPrice(total) }}</p>
                         <div class="mt-5 space-y-3 text-sm text-[#8D6767]">
                             <div class="flex items-center justify-between">
                                 <span>Total items</span>

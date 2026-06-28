@@ -318,7 +318,7 @@ class DatabaseSeeder extends Seeder
             'reference' => $order->payment_reference,
             'provider_reference' => 'DEMO-' . str_replace('DIVA-', '', $order->payment_reference),
             'amount' => $total,
-            'currency' => 'UAH',
+            'currency' => 'USD',
             'status' => $paymentStatus,
             'provider_payload' => [
                 'provider_status' => $paymentStatus,

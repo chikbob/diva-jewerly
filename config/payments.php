@@ -4,7 +4,7 @@ use App\Payments\Gateways\CashOnDeliveryGateway;
 use App\Payments\Gateways\DemoCardGateway;
 
 return [
-    'currency' => env('PAYMENTS_CURRENCY', 'UAH'),
+    'currency' => env('PAYMENTS_CURRENCY', 'USD'),
 
     'methods' => [
         'demo_card' => DemoCardGateway::class,

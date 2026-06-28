@@ -568,7 +568,7 @@ class AdminResourceRegistry
                     ['name' => 'reference', 'label' => 'Reference', 'type' => 'text', 'placeholder' => 'PAY-...'],
                     ['name' => 'provider_reference', 'label' => 'Provider reference', 'type' => 'text', 'placeholder' => 'PROVIDER-...'],
                     ['name' => 'amount', 'label' => 'Total', 'type' => 'number', 'placeholder' => '0.00'],
-                    ['name' => 'currency', 'label' => 'Currency', 'type' => 'text', 'placeholder' => 'UAH', 'default' => 'UAH'],
+                    ['name' => 'currency', 'label' => 'Currency', 'type' => 'text', 'placeholder' => 'USD', 'default' => 'USD'],
                     ['name' => 'status', 'label' => 'Status', 'type' => 'select', 'options' => 'payment_statuses'],
                     ['name' => 'checkout_url', 'label' => 'Checkout URL', 'type' => 'url', 'placeholder' => 'https://...'],
                     ['name' => 'provider_payload', 'label' => 'Provider payload (JSON)', 'type' => 'textarea', 'placeholder' => '{"meta":true}'],
@@ -667,7 +667,7 @@ class AdminResourceRegistry
         }
 
         return match ($type) {
-            'money' => number_format((float) $value, 2, '.', ' ').' ₴',
+            'money' => '$'.number_format((float) $value, 2, '.', ' '),
             'datetime' => method_exists($value, 'format')
                 ? $value->format('d.m.Y H:i')
                 : (string) $value,

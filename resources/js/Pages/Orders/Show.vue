@@ -21,7 +21,7 @@
                 <div class="grid gap-3 sm:grid-cols-3 xl:min-w-[34rem]">
                     <div class="rounded-[1.6rem] border border-[#E9CFCF] bg-[#FFF8F8] px-5 py-4">
                         <p class="text-xs font-semibold uppercase tracking-[0.25em] text-[#C49B9B]">Total</p>
-                        <p class="mt-2 text-2xl font-black text-[#B46D6D]">{{ formatPrice(order.total) }} ₴</p>
+                        <p class="mt-2 text-2xl font-black text-[#B46D6D]">${{ formatPrice(order.total) }}</p>
                     </div>
                     <div class="rounded-[1.6rem] border border-[#E9CFCF] bg-[#FFF8F8] px-5 py-4">
                         <p class="text-xs font-semibold uppercase tracking-[0.25em] text-[#C49B9B]">Items</p>
@@ -114,8 +114,8 @@
                             </div>
 
                             <div class="text-right text-sm text-[#8D6767]">
-                                <p>{{ item.quantity }} × {{ formatPrice(item.price) }} ₴</p>
-                                <p class="mt-2 text-lg font-bold text-[#B46D6D]">{{ formatPrice(item.line_total) }} ₴</p>
+                                <p>{{ item.quantity }} × ${{ formatPrice(item.price) }}</p>
+                                <p class="mt-2 text-lg font-bold text-[#B46D6D]">${{ formatPrice(item.line_total) }}</p>
                             </div>
                         </li>
                     </ul>
@@ -135,7 +135,7 @@
                             </div>
                             <div class="flex items-center justify-between border-t border-[#F1E1E1] pt-3 text-base">
                                 <span>Total</span>
-                                <strong class="text-xl text-[#B46D6D]">{{ formatPrice(order.total) }} ₴</strong>
+                                <strong class="text-xl text-[#B46D6D]">${{ formatPrice(order.total) }}</strong>
                             </div>
                         </div>
                     </div>

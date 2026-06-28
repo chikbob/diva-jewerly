@@ -106,7 +106,7 @@
                             Reset
                         </button>
                         <span class="text-xs text-[#9B7B7B]">
-                            Price range: {{ formatPrice(priceRange.min) }} ₴ - {{ formatPrice(priceRange.max) }} ₴
+                            Price range: ${{ formatPrice(priceRange.min) }} - ${{ formatPrice(priceRange.max) }}
                         </span>
                     </div>
 
@@ -162,7 +162,7 @@
                                     </div>
                                     <div class="flex flex-col items-end gap-2">
                                         <span class="rounded-full bg-[#FFF2F2] px-3 py-1 text-xs font-semibold text-[#A05F5F]">
-                                            {{ formatPrice(product.price) }} ₴
+                                            ${{ formatPrice(product.price) }}
                                         </span>
                                         <span
                                             v-if="isNewProduct(product)"
@@ -264,11 +264,11 @@ const activeFilterLabels = computed(() => {
     }
 
     if (localFilters.value.min_price) {
-        labels.push(`From ${formatPrice(localFilters.value.min_price)} ₴`)
+        labels.push(`From $${formatPrice(localFilters.value.min_price)}`)
     }
 
     if (localFilters.value.max_price) {
-        labels.push(`To ${formatPrice(localFilters.value.max_price)} ₴`)
+        labels.push(`To $${formatPrice(localFilters.value.max_price)}`)
     }
 
     if (localFilters.value.only_new) {

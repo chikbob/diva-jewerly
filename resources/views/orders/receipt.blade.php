@@ -186,7 +186,7 @@
 
                 <div style="text-align: right;">
                     <p class="muted">Сума</p>
-                    <p style="margin-top: 10px; font-size: 28px; font-weight: 700;">{{ number_format((float) $order->total, 2, '.', ' ') }} ₴</p>
+                    <p style="margin-top: 10px; font-size: 28px; font-weight: 700;">${{ number_format((float) $order->total, 2, '.', ' ') }}</p>
                 </div>
             </header>
 
@@ -230,9 +230,9 @@
                             </div>
 
                             <div style="text-align: right;">
-                                <p>{{ $item->quantity }} x {{ number_format((float) $item->price, 2, '.', ' ') }} ₴</p>
+                                <p>{{ $item->quantity }} x ${{ number_format((float) $item->price, 2, '.', ' ') }}</p>
                                 <p style="margin-top: 8px; font-weight: 700;">
-                                    {{ number_format((float) $item->price * (int) $item->quantity, 2, '.', ' ') }} ₴
+                                    ${{ number_format((float) $item->price * (int) $item->quantity, 2, '.', ' ') }}
                                 </p>
                             </div>
                         </div>
@@ -251,7 +251,7 @@
                 </div>
                 <div class="summary-row total">
                     <span>Разом</span>
-                    <strong>{{ number_format((float) $order->total, 2, '.', ' ') }} ₴</strong>
+                    <strong>${{ number_format((float) $order->total, 2, '.', ' ') }}</strong>
                 </div>
             </section>
 

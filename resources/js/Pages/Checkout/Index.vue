@@ -17,7 +17,7 @@
                     </div>
                     <div class="rounded-[1.6rem] border border-[#E9CFCF] bg-[#FFF8F8] px-5 py-4">
                         <p class="text-xs font-semibold uppercase tracking-[0.25em] text-[#C49B9B]">Total</p>
-                        <p class="mt-2 text-2xl font-black text-[#B46D6D]">{{ formatPrice(total) }} ₴</p>
+                        <p class="mt-2 text-2xl font-black text-[#B46D6D]">${{ formatPrice(total) }}</p>
                     </div>
                 </div>
             </div>
@@ -60,13 +60,13 @@
                                 </div>
                             </div>
 
-                            <p class="text-lg font-semibold text-[#B46D6D]">{{ formatPrice(item.quantity * item.product.price) }} ₴</p>
+                            <p class="text-lg font-semibold text-[#B46D6D]">${{ formatPrice(item.quantity * item.product.price) }}</p>
                         </li>
                     </ul>
 
                     <div class="mt-6 rounded-[1.5rem] border border-[#F1E1E1] bg-[#FFF8F8] px-5 py-4">
                         <p class="text-sm uppercase tracking-[0.25em] text-[#C49B9B]">Grand Total</p>
-                        <p class="mt-2 text-3xl font-extrabold text-[#B46D6D]" aria-live="polite">{{ formatPrice(total) }} ₴</p>
+                        <p class="mt-2 text-3xl font-extrabold text-[#B46D6D]" aria-live="polite">${{ formatPrice(total) }}</p>
                     </div>
                 </section>
 

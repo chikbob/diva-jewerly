@@ -17,7 +17,7 @@
                     </div>
                     <div class="rounded-[1.6rem] border border-[#E9CFCF] bg-[#FFF8F8] px-5 py-4">
                         <p class="text-xs font-semibold uppercase tracking-[0.25em] text-[#C49B9B]">Price</p>
-                        <p class="mt-2 text-base font-bold text-[#B46D6D]">{{ formatPrice(product.price) }} ₴</p>
+                        <p class="mt-2 text-base font-bold text-[#B46D6D]">${{ formatPrice(product.price) }}</p>
                     </div>
                     <div class="rounded-[1.6rem] border border-[#E9CFCF] bg-[#FFF8F8] px-5 py-4">
                         <p class="text-xs font-semibold uppercase tracking-[0.25em] text-[#C49B9B]">Status</p>
@@ -62,7 +62,7 @@
                     </div>
 
                     <p class="mt-6 text-4xl font-black text-[#A05F5F] xl:text-[2.75rem]">
-                        {{ formatPrice(product.price) }} ₴
+                        ${{ formatPrice(product.price) }}
                     </p>
 
                     <p class="mt-6 max-w-2xl text-base leading-8 text-[#7E6161]">

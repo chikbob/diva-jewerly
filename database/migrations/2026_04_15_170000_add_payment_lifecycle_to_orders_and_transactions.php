@@ -34,7 +34,7 @@ return new class extends Migration
             $table->string('reference')->unique();
             $table->string('provider_reference')->nullable()->unique();
             $table->decimal('amount', 10, 2);
-            $table->string('currency', 3)->default('UAH');
+            $table->string('currency', 3)->default('USD');
             $table->string('status')->default('pending');
             $table->string('checkout_url')->nullable();
             $table->json('provider_payload')->nullable();
