@@ -1,156 +1,100 @@
 # Diva Jewelry
 
-Laravel 10 + Inertia.js + Vue 3 application for a jewelry storefront with:
+Laravel 10 + Inertia.js + Vue 3 storefront for a jewelry shop with a customer-facing catalog, cart and checkout flow, plus a separate backoffice for catalog, customer, order and payment operations.
 
-- product catalog and category landing pages
-- authentication, profile management, password reset and email verification
-- cart and checkout flows
-- order history
-- MoonShine admin panel
-- Docker-based local development
+## What is inside
+
+- storefront with category landing, catalog, product page, favorites, cart and checkout
+- auth flows for customers
+- order history and payment status pages
+- MoonShine-based backoffice with dashboard and resource management
+- Docker-based local runtime with MySQL, Redis, PHP-FPM, Nginx and Vite
+
+## Screenshots
+
+| Home | Catalog |
+| --- | --- |
+| ![Home](docs/screenshots/home.png) | ![Catalog](docs/screenshots/catalog.png) |
+
+| Product | Cart |
+| --- | --- |
+| ![Product](docs/screenshots/product.png) | ![Cart](docs/screenshots/cart.png) |
+
+| Checkout | Admin Dashboard |
+| --- | --- |
+| ![Checkout](docs/screenshots/checkout.png) | ![Admin Dashboard](docs/screenshots/admin-dashboard.png) |
 
 ## Stack
 
 - PHP 8.1 / Laravel 10
 - Vue 3 / Inertia.js / Vite / Tailwind CSS
-- MySQL 8 for local development
-- SQLite in-memory for automated tests
-- MoonShine for back-office management
-- Redis for cache and queue workers in Docker runtime
+- MySQL 8
+- Redis 7
+- MoonShine admin panel
 
-## Local Development
-
-1. Start Docker:
+## Quick Start
 
 ```bash
-docker compose up --build
+docker compose up --build -d
+docker compose exec -T app php artisan db:seed --force
 ```
 
-2. Open the app:
+Open:
 
 - storefront: `http://localhost`
+- admin login: `http://localhost/admin/login`
 - Vite HMR: `http://localhost:5173`
-- admin: `http://localhost/admin`
-- liveness: `http://localhost/live`
-- readiness: `http://localhost/ready`
+- live: `http://localhost/live`
+- ready: `http://localhost/ready`
 - metrics: `http://localhost/metrics`
-- compatibility health alias: `http://localhost/up`
-- demo payment webhook: `POST http://localhost/api/payments/webhooks/demo_card`
 
-3. The app container will automatically:
+## Demo Accounts
 
-- copy `.env.example` to `.env` when needed
-- install Composer dependencies
-- install frontend dependencies
-- generate an application key
-- run migrations
-- publish MoonShine assets when they are missing
+Storefront user:
 
-4. Background services started by Docker:
+- email: `user@diva.local`
+- password: `user12345`
 
-- `redis` for cache and queue transport
-- `queue` worker for asynchronous jobs and failed-job capture
+Backoffice user:
 
-## Test Commands
+- email: `admin@diva.local`
+- password: `admin12345`
 
-Run the backend test suite inside Docker:
+## Useful Commands
+
+Run backend tests:
 
 ```bash
-docker compose run --rm -e APP_ENV=testing app php artisan test
+docker compose exec -T app php artisan test
 ```
 
-Run the frontend production build:
+Run frontend production build:
 
 ```bash
-docker compose run --rm vite npm run build
+docker compose exec -T vite npm run build
 ```
 
-Run HTTP smoke checks against a running environment:
+Stop the stack:
 
 ```bash
-./scripts/smoke-check.sh http://localhost
+docker compose down
 ```
 
-Validate runtime metrics after deploy:
+## Services
 
-```bash
-./scripts/metrics-check.sh http://localhost
-```
+- `web`: Nginx entrypoint for the application
+- `app`: Laravel application on PHP-FPM
+- `vite`: frontend dev server with HMR
+- `db`: MySQL database
+- `redis`: cache, session and queue backend
 
-Reconcile payment state against stored provider transactions:
+## Project Layout
 
-```bash
-php artisan payments:reconcile
-```
-
-Render Prometheus and Alertmanager configuration from the current threshold env vars:
-
-```bash
-./scripts/render-monitoring-config.sh
-```
-
-Create a compressed database backup:
-
-```bash
-DB_HOST=127.0.0.1 DB_PORT=3306 DB_DATABASE=diva_jewelry DB_USERNAME=root DB_PASSWORD=root \
-./scripts/backup-database.sh
-```
-
-Create a storage backup:
-
-```bash
-./scripts/backup-storage.sh
-```
-
-Run post-deploy automation on the target host:
-
-```bash
-POST_DEPLOY_DB_BACKUP=1 POST_DEPLOY_STORAGE_BACKUP=1 \
-./scripts/post-deploy.sh https://your-domain
-```
-
-## Security Notes
-
-- checkout no longer stores raw card numbers
-- orders keep only payment method and generated payment reference
-- password changes use Laravel's dedicated password update flow
-- account deletion requires current password confirmation
-- CORS and session cookie behavior are now controlled through env variables instead of permissive hard-coded defaults
-- every HTTP response now includes an `X-Request-Id` header for request correlation
-- container logging uses JSON on `stderr` by default for production-friendly aggregation
-- audit logs now cover auth, checkout and privileged admin access events with structured context
-- Docker runtime now uses Redis-backed cache and queue profiles instead of file/sync defaults
-- readiness now degrades on failed-jobs and queue-backlog thresholds, and `/metrics` exposes Prometheus-compatible operational signals
-- `/metrics` now also exports HTTP/auth/checkout/queue counters and latency histograms for production monitoring
-- generated Prometheus rules and Alertmanager routing can be rendered from local env vars with `scripts/render-monitoring-config.sh`
-
-## Project Structure
-
-- `app/Http/Controllers` HTTP entry points
-- `app/Http/Requests` request validation
-- `app/Services` business logic orchestration
-- `app/Models` Eloquent models
-- `app/MoonShine` admin panel resources
-- `resources/js` Inertia pages and Vue components
-- `database/migrations` schema changes
-- `tests` feature and unit tests
-- `docs/operations.md` release, backup, recovery and environment runbook
-- `scripts` operational smoke-check, backup and restore helpers
-- `.github/workflows/post-deploy-checks.yml` reusable post-deploy smoke/metrics verification workflow
-- `config/operations.php` metrics token and alert threshold configuration
-
-## CI
-
-GitHub Actions validates:
-
-- Composer install
-- Composer audit
-- frontend dependency install
-- npm audit
-- health routes registration
-- metrics route registration
-- Vite production build
-- live HTTP smoke checks through `php artisan serve`
-- runtime metrics checks through `/metrics`
-- monitoring rule rendering
-- Laravel test suite
+- `app/Http/Controllers` - HTTP entrypoints
+- `app/Services` - business logic
+- `app/MoonShine` - admin resources
+- `resources/js` - Inertia pages and Vue components
+- `database/migrations` - schema
+- `database/seeders` - demo data
+- `tests` - feature and unit tests
+- `docs/screenshots` - project screenshots used in this README
