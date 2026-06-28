@@ -368,7 +368,7 @@ class AdminResourceRegistry
             ],
             'favorites' => [
                 'label' => 'Favorites',
-                'description' => 'Users' saved items',
+                'description' => "Users' saved items",
                 'group' => 'Customers',
                 'icon' => 'heart',
                 'domain' => 'customers',
